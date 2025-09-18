@@ -1,12 +1,12 @@
 {
     "ordersText": [
         {
-            "title": "FAITHFUL ADVANCE",
-            "general": "While resolving this order, you may move up to 2 of your units through 1 uncontrolled world as if it were a friendly area. *newline* LIMIT ONCE PER ROUND."
-        },
-        {
             "title": "DIVINE DELIVERANCE",
             "general": "When rolling dice during the preparation step of a combat you start with this order, roll 1 additional die for each Sister Repentia on the contested world. *newline* LIMIT ONCE PER ROUND."
+        },
+        {
+            "title": "FAITHFUL ADVANCE",
+            "general": "While resolving this order, you may move up to 2 of your units through 1 uncontrolled world as if it were a friendly area. *newline* LIMIT ONCE PER ROUND."
         },
         {
             "title": "LEAD THE RIGHTEOUS",
