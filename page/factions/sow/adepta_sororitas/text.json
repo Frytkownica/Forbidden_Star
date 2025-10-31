@@ -10,7 +10,7 @@
         },
         {
             "title": "LEAD THE RIGHTEOUS",
-            "general": "After you resolve this order, you may place 1 free reinforcement token on a friendly world in the active system that contains a bastion and no reinforcement token. When this world becomes contested, this reinforcement token participates in combat, but is not treated as a unit during the reinforce step. If the bastion is destroyed outside of combat, return the reinforcement token to the supply. *newline* LIMIT ONCE PER ROUND."
+            "general": "After you resolve this order, you may place 1 free reinforcement token on a friendly world in the active system that contains a bastion and no reinforcement token. When this world becomes contested, this reinforcement token participates in combat. If the bastion is destroyed outside of combat, return the reinforcement token to the supply. *newline* LIMIT ONCE PER ROUND."
         },
         {
             "title": "WAR HYMNS",
