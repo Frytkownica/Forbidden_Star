@@ -18,8 +18,19 @@ document.addEventListener('DOMContentLoaded', function () {
 	const marginWidth = maxWidth * 0.0578;
 	const maxTextWidth = maxWidth - 2 * marginWidth;
 
+	// Icons positioning predefinitions.
+	const iconSize = maxWidth * 0.08;
+	const iconSpacing = maxWidth * 0.01;
+	const iconY = maxHeight * 0.91;
+	const startX = maxWidth * 0.05;
 
-	// MENU SECTION 
+	const iconMap = {
+		'B': 'pictures/bolter.png',
+		'S': 'pictures/shield.png',
+		'M': 'pictures/moral.png'
+	};
+
+	// MENU SECTION
 	fetch('factions/file_names.json')
 		.then(response => response.json())
 		.then(data => {
@@ -145,7 +156,6 @@ document.addEventListener('DOMContentLoaded', function () {
 							})
 							.catch(error => console.error(`Error loading text data for ${faction} in ${expansionFolder}:`, error));
 					}
-					
 					document.getElementById('loading-spinner').style.display = 'none';
 				};
 			};
@@ -176,14 +186,13 @@ document.addEventListener('DOMContentLoaded', function () {
 		Object.keys(sections).forEach(section => {
 			const sectionContainer = document.createElement('div');
 			sectionContainer.classList.add('grid', 'combat', section);
-
-
 			sections[section].forEach((file, idx) => {
 				const jsonData = {};
 				jsonData["picture"] = `factions/${expansionFolder}/${factionfolder}/combat/${file}`;
-				jsonData["title"] = `${combatText[section][idx].title}`;
-				jsonData["background"] = `${combatText[section][idx].general}`;
-				jsonData["foreground"] = `${combatText[section][idx].unit}`;
+				jsonData["title"] = combatText[section][idx].title || "";
+				jsonData["background"] = combatText[section][idx].general || "";
+				jsonData["foreground"] = combatText[section][idx].unit || "";
+				jsonData["icons"] = combatText[section][idx].icons || "";
 				const canvas = document.createElement('canvas');
 				canvas.width = maxWidth;
 				canvas.height = maxHeight;
@@ -199,7 +208,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		const categoryContainer = document.createElement('div');
 		categoryContainer.classList.add('grid', 'orders');
 		files.forEach((file, idx) => {
-
 			const jsonData = {};
 			jsonData["picture"] = `factions/${expansionFolder}/${factionfolder}/orders/${file}`;
 			jsonData["title"] = `${textData[idx].title}`;
@@ -399,7 +407,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			ctx.drawImage(img, 0, 0, textBackgroundSize, maxHeight - height, 0, height, maxWidth, maxHeight - height);
 		};
 
-		// Draw the main picture resized		
+		// Draw the main picture resized
 		ctx.drawImage(picture, 0, 0, maxWidth, maxHeight);
 
 		// Draw the Title
@@ -411,14 +419,23 @@ document.addEventListener('DOMContentLoaded', function () {
 			drawImageCropped(background, backgroundY);
 			drawText(backgroundWithFbElements, backgroundY, extraBackgroundborder);
 		}
-
 		if (data.foreground.length > 0) {
 			const foregroundY = maxHeight - (foregroundTextHeight + extraForegroundTriangle * 0.35);
 			drawImageCropped(foreground, foregroundY);
 			drawText(foregroundWithFbElements, foregroundY, extraForegroundTriangle);
 		}
+		if (data.icons && data.icons.length > 0) {
+			let currentX = startX;
+			for (let letterPosition = 0; letterPosition < data.icons.length; letterPosition++) {
+				const iconChar = data.icons[letterPosition].toUpperCase();
+				if (iconMap[iconChar]) {
+					const iconImg = await loadImage(iconMap[iconChar]);
+					ctx.drawImage(iconImg, currentX, iconY, iconSize, iconSize);
+					currentX += iconSize + iconSpacing;
+				}
+			}
+		}
 		ctx.drawImage(bottomImage, 0, 0, textBottomBarWidth, textBottomBarHeight, 0, maxHeight - bottomImageheight, maxWidth, bottomImageheight);
-
 	}
 
 	function drawOrderCard(data, ctx) {
@@ -575,5 +592,4 @@ document.addEventListener('DOMContentLoaded', function () {
 		};
 	};
 	document.getElementById('loading-spinner').style.display = 'none';
-
 });
