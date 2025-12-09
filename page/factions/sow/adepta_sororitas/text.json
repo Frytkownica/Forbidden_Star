@@ -67,72 +67,86 @@
         {
             "title": "DRIVEN ONWARDS",
             "general": "Gain 2 [B] and 1 (B).",
-            "unit": "Sister Repentia/Light Cruiser: When 1 of your Sisters Repentia or Light Cruisers is destroyed during the assess damage step of this execution round, destroy 1 of your opponent's command level 0 units."
+            "unit": "Sister Repentia/Light Cruiser: When 1 of your Sisters Repentia or Light Cruisers is destroyed during the assess damage step of this execution round, destroy 1 of your opponent's command level 0 units.",
+            "icons": ""
         },
         {
             "title": "BEACON OF FAITH",
             "general": "",
-            "unit": "Resolve one of the following: *newline* Sister Repentia: Replace 1 of your Sisters Repentia on this world with 1 free Battle Sister and gain 2 [D]. *newpara* Bastion/Light Cruiser: Gain 1 [M] and 2 (S)."
+            "unit": "Resolve one of the following: *newline* Sister Repentia: Replace 1 of your Sisters Repentia on this world with 1 free Battle Sister and gain 2 [D]. *newpara* Bastion/Light Cruiser: Gain 1 [M] and 2 (S).",
+            "icons": "M"
         },
         {
             "title": "GUIDED RETRIBUTION",
             "general": "",
-            "unit": "Bastion/Sister Repentia/Light Cruiser: Gain either 1 (B) or 1 (S). *newline* Play 1 combat card from your hand. Then discard this card."
+            "unit": "Bastion/Sister Repentia/Light Cruiser: Gain either 1 (B) or 1 (S). *newline* Play 1 combat card from your hand. Then discard this card.",
+            "icons": ""
         },
         {
             "title": "HOLY TRINITY",
             "general": "Your opponent rerolls 3 dice of his choice.",
-            "unit": "Bastion/Battle Sister/Light Cruiser: Gain 1 (S) for each [B] rolled by your opponent while resolving the general ability of this card."
+            "unit": "Bastion/Battle Sister/Light Cruiser: Gain 1 (S) for each [B] rolled by your opponent while resolving the general ability of this card.",
+            "icons": "SS"
         },
         {
             "title": "SANCTIFIED CHARGE",
             "general": "Reroll 1 of your dice. *newpara* Gain 2 [D].",
-            "unit": "Sister Repentia/Light Cruiser: For each [B], [S], and [M] rolled while resolving the general abilities of this card, gain 1 (B), 1 (S), or 1 [D], respectively."
+            "unit": "Sister Repentia/Light Cruiser: For each [B], [S], and [M] rolled while resolving the general abilities of this card, gain 1 (B), 1 (S), or 1 [D], respectively.",
+            "icons": ""
         },
         {
             "title": "ZEALOT'S PASSION",
             "general": "Gain 1 (B). *newpara* Force your opponent to lose 1 [M].",
-            "unit": "Battle Sister/Light Cruiser: During this execution round, your opponent cannot rally his units or place reinforcement tokens in this area. *newline* If you are defending, rally 1 of your units."
+            "unit": "Battle Sister/Light Cruiser: During this execution round, your opponent cannot rally his units or place reinforcement tokens in this area. *newline* If you are defending, rally 1 of your units.",
+            "icons": "BSM"
         },
         {
             "title": "MARTYRDOM",
             "general": "Convert up to 2 of your [B] into [M].",
-            "unit": "Battle Sister/Light Cruiser: When 1 of your units is destroyed during the assess damage step of this execution round, gain 1 [S]. Damage in excess of that unit's health value is lost."
+            "unit": "Battle Sister/Light Cruiser: When 1 of your units is destroyed during the assess damage step of this execution round, gain 1 [S]. Damage in excess of that unit's health value is lost.",
+            "icons": "SM"
         },
         {
             "title": "SPIRITUAL FORTITUDE",
             "general": "Force your oppononent to lose either 1 [B] or 1 [M]. *newpara* If you are defending, your opponent loses 2 (B).",
-            "unit": "Battle Sister/Light Cruiser: Gain 2 [D]."
+            "unit": "Battle Sister/Light Cruiser: Gain 2 [D].",
+            "icons": "S"
         },
         {
             "title": "ANGELIC DESCENT",
             "general": "Gain 1 (S) for each of your unrouted units, to a maximum of 3.",
-            "unit": "Battle Sister/Light Cruiser:  Gain 2 (B). *newpara* During the assess damage step of this execution round, your opponent assigns damage 1 at a time."
+            "unit": "Battle Sister/Light Cruiser:  Gain 2 (B). *newpara* During the assess damage step of this execution round, your opponent assigns damage 1 at a time.",
+            "icons": "BM"
         },
         {
             "title": "MARTYR'S IMMOLATION",
             "general": "Gain 3 (S) unless your opponent spends 1 die of his choice. If he does, gain 1 [M].",
-            "unit": "Resolve one of the following: *newline* Battle Sister/Light Cruiser: Spend 1 [S] to gain 2 (B). *newline* Exorcist/Grand Cruiser: Gain 3 (B). During the assess damage step of this execution round, assign damage to a command level 2 unit first if able. If that unit is destroyed, do not discard your (B) at the end of this execution round."
+            "unit": "Resolve one of the following: *newline* Battle Sister/Light Cruiser: Spend 1 [S] to gain 2 (B). *newline* Exorcist/Grand Cruiser: Gain 3 (B). During the assess damage step of this execution round, assign damage to a command level 2 unit first if able. If that unit is destroyed, do not discard your (B) at the end of this execution round.",
+            "icons": "BBM"
         },
         {
             "title": "ARMOURED IN FAITH",
             "general": "Gain 1 [M] and 1 (S).",
-            "unit": "Resolve one of the following: *newline* Battle Sister/Light Cruiser: Rally 1 of your units. *newpara* Exorcist/Grand Cruiser: If you have more [M] than your opponent, your opponent chooses and routs 1 of his units."
+            "unit": "Resolve one of the following: *newline* Battle Sister/Light Cruiser: Rally 1 of your units. *newpara* Exorcist/Grand Cruiser: If you have more [M] than your opponent, your opponent chooses and routs 1 of his units.",
+            "icons": "BSS"
         },
         {
             "title": "DEVASTATING REFRAIN",
             "general": "Gain 1 (B) for each of your opponent's units.",
-            "unit": "Resolve one of the following: *newline* Bastion: Gain 1 (S) for each [M] you have. *newline* Sister Repentia/Battle Sister/Light Cruiser: Gain 1 [D]."
+            "unit": "Resolve one of the following: *newline* Bastion: Gain 1 (S) for each [M] you have. *newline* Sister Repentia/Battle Sister/Light Cruiser: Gain 1 [D].",
+            "icons": "BSM"
         },
         {
             "title": "DIVINE BLESSING",
             "general": "Spend any number of [S] or [M]. For each [S] or [M] you spend, force your opponent to lose 1 [B].",
-            "unit": "Living Saint/Grand Cruiser: Gain 4 [D]."
+            "unit": "Living Saint/Grand Cruiser: Gain 4 [D].",
+            "icons": "BSMM"
         },
         {
             "title": "DIVINE SMITING",
             "general": "Either gain 1 [M] or convert up to 2 of your dice into [M].",
-            "unit": "Living Saint/Grand Cruiser: Gain 1 (B) for each [M] you have. *newline* During this execution round, none of the [B] are added to offence values."
+            "unit": "Living Saint/Grand Cruiser: Gain 1 (B) for each [M] you have. *newline* During this execution round, none of the [B] are added to offence values.",
+            "icons": "BSSM"
         }
     ]
 }

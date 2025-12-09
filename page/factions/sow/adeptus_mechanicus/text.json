@@ -67,72 +67,86 @@
         {
             "title": "SKITARII RANGERS",
             "general": "Either gain 1 [D] or resolve the general abilities of your faceup combat card played in the previous execution round.",
-            "unit": "Skitarii/Light Cruiser: Gain 1 (S)."
+            "unit": "Skitarii/Light Cruiser: Gain 1 (S).",
+            "icons": "S"
         },
         {
             "title": "TECH-PRIEST ENGINEER",
             "general": "Either rally 1 of your units or gain 1 (B) and 1 (S).",
-            "unit": "Skitarii/Light Cruiser: Gain 1 [D]."
+            "unit": "Skitarii/Light Cruiser: Gain 1 [D].",
+            "icons": "M"
         },
         {
             "title": "SKITARII VANGUARD",
             "general": "Gain 2 (S).",
-            "unit": "Skitarii/Light Cruiser: During the assess damage step of this execution round, you may assign damage to your routed units."
+            "unit": "Skitarii/Light Cruiser: During the assess damage step of this execution round, you may assign damage to your routed units.",
+            "icons": "S"
         },
         {
             "title": "SICARIAN INFILTRATORS",
             "general": "If you are attacking, look at your opponent's facedown combat card. *newpara* Gain either 1 [B] or 1 [S].",
-            "unit": "Skitarii/Light Cruiser: Gain 1 [M], 2 (B), or 2 (S)."
+            "unit": "Skitarii/Light Cruiser: Gain 1 [M], 2 (B), or 2 (S).",
+            "icons": ""
         },
         {
             "title": "SICARIAN RUSTSTALKERS",
             "general": "Gain 1 [B].",
-            "unit": "Skitarii/Light Cruiser: Either gain 1 [M] or choose 1 of your unrouted units to gain (B) equal to the chosen unit's command level. "
+            "unit": "Skitarii/Light Cruiser: Either gain 1 [M] or choose 1 of your unrouted units to gain (B) equal to the chosen unit's command level.",
+            "icons": "B"
         },
         {
             "title": "TRANSCENDENT COGITATION",
             "general": "",
-            "unit": "Skitarii/Light Cruiser: Force your opponent to lose 1 [B], 1 [S], or 1 [M]. Then gain 1 [B], 1 [S], or 1 [M], whichever your opponent lost."
+            "unit": "Skitarii/Light Cruiser: Force your opponent to lose 1 [B], 1 [S], or 1 [M]. Then gain 1 [B], 1 [S], or 1 [M], whichever your opponent lost.",
+            "icons": "SM"
         },
         {
             "title": "ENHANCED BIONICS",
             "general": "Gain either 1 [B] or 1 (B).",
-            "unit": "Kataphron/Light Cruiser: Gain 2 (S) unless your opponent spends 1 [S]."
+            "unit": "Kataphron/Light Cruiser: Gain 2 (S) unless your opponent spends 1 [S].",
+            "icons": "SS"
         },
         {
             "title": "AGGRESSION OVERRIDE",
             "general": "Gain either 1 [S] or 1 (S).",
-            "unit": "Kataphron/Light Cruiser: Gain 2 (B) unless your opponent spends 1 [B]."
+            "unit": "Kataphron/Light Cruiser: Gain 2 (B) unless your opponent spends 1 [B].",
+            "icons": "BB"
         },
         {
             "title": "SIPHONED VIGOUR",
             "general": "Convert 1 of your dice into [M]. *newpara* Either gain 1 [D] or resolve the unit abilities of your faceup combat card played in the previous execution round.",
-            "unit": ""
+            "unit": "",
+            "icons": "BS"
         },
         {
             "title": "MACHINE SUPERIORITY",
             "general": "Gain 1 [D], 2 (B), or 2 (S). *newpara* Spend 1 [M] to rally 1 of your units.",
-            "unit": "Onager/Ark Mechanicus: Choose [B], [S] or [M]. Force your opponent to convert up to 2 of the chosen dice to a different icon of your choice."
+            "unit": "Onager/Ark Mechanicus: Choose [B], [S] or [M]. Force your opponent to convert up to 2 of the chosen dice to a different icon of your choice.",
+            "icons": "BSM"
         },
         {
             "title": "MANOEUVRABLE CRAFT",
             "general": "Convert up to 2 of your [B] into [M]. *newpara* Spend 1 [M] to gain 3 (S).",
-            "unit": "Onager/Ark Mechanicus: Do not discard your (S) at the end of this execution round."
+            "unit": "Onager/Ark Mechanicus: Do not discard your (S) at the end of this execution round.",
+            "icons": "BSM"
         },
         {
             "title": "ELIMINATION VOLLEY",
             "general": "Gain 1 (B).",
-            "unit": "Skitarii/Kataphron/Onager: Rout 1 of your opponent's units. This unit's command level cannot exceed the command level of your unrouted unit with the highest command level."
+            "unit": "Skitarii/Kataphron/Onager: Rout 1 of your opponent's units. This unit's command level cannot exceed the command level of your unrouted unit with the highest command level.",
+            "icons": "BB"
         },
         {
             "title": "MACHINE SPIRIT'S REVENGE",
             "general": "Gain either 1 [S] or 1 (S). *newline* Convert up to 2 of your [B] into [S].",
-            "unit": "Titan/Ark Mechanicus: If your units or bastions suffer no damage during this execution round, rout 1 of your opponent's units. *newpara* Spend 2 of your dice to destroy either 1 command level 0 unit or 1 structure in the contested area."
+            "unit": "Titan/Ark Mechanicus: If your units or bastions suffer no damage during this execution round, rout 1 of your opponent's units. *newpara* Spend 2 of your dice to destroy either 1 command level 0 unit or 1 structure in the contested area.",
+            "icons": "SSMM"
         },
         {
             "title": "RAGE OF THE MACHINE",
             "general": "Gain 3 (B).",
-            "unit": "Titan/Ark Mechanicus: Do not discard your (B) at the end of this execution round."
+            "unit": "Titan/Ark Mechanicus: Do not discard your (B) at the end of this execution round.",
+            "icons": "BBSM"
         }
     ]
 }

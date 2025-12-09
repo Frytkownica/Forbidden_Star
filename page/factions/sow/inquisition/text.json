@@ -67,72 +67,86 @@
         {
             "title": "BLINDING SALVO",
             "general": "If you are attacking, your opponent cannot resolve the general abilities of his next revealed combat card. *newpara* If you are defending, gain 1 [D].",
-            "unit": ""
+            "unit": "",
+            "icons": "BS"
         },
         {
             "title": "SHADOW ASSIGNMENT",
             "general": "Gain 1 [M]. *newpara* Rally 1 of your units.",
-            "unit": "Stormtrooper/Rogue Trader: If you have more [M] than your opponent, force your opponent to either choose and rout 1 of his units or to spend a die of your choice."
+            "unit": "Stormtrooper/Rogue Trader: If you have more [M] than your opponent, force your opponent to either choose and rout 1 of his units or to spend a die of your choice.",
+            "icons": ""
         },
         {
             "title": "PSYKER SHIELD",
             "general": "Gain 2 (S).",
-            "unit": "Deathwatch/Rogue Trader: Spend 2 (S) to place 1 free reinforcement token in this area."
+            "unit": "Deathwatch/Rogue Trader: Spend 2 (S) to place 1 free reinforcement token in this area.",
+            "icons": "S"
         },
         {
             "title": "UNQUESTIONABLE WISDOM",
             "general": "Gain either 1 [B] or 1 [S].",
-            "unit": "Stormtrooper/Rogue Trader: Discard 1 combat card from your hand. Gain that card's combat icons until the end of this execution round."
+            "unit": "Stormtrooper/Rogue Trader: Discard 1 combat card from your hand. Gain that card's combat icons until the end of this execution round.",
+            "icons": "M"
         },
         {
             "title": "FRENZON IMPLANTS",
             "general": "Gain 2 (B).",
-            "unit": "Stormtrooper/Rogue Trader: Spend 2 (B) to convert all of your [M] into [B]."
+            "unit": "Stormtrooper/Rogue Trader: Spend 2 (B) to convert all of your [M] into [B].",
+            "icons": "B"
         },
         {
             "title": "SANCTIONED PSYKER",
             "general": "Your opponent may spend 1 [B] to gain 1 (B). If he does not, force your opponent to lose 1 [S].",
-            "unit": "Stormtrooper/Rogue Trader: Your opponent rerolls 2 dice of his choice. For each [B] rolled, gain 1 (B) and 1 (S). For each [S] rolled, gain 1 (S)."
+            "unit": "Stormtrooper/Rogue Trader: Your opponent rerolls 2 dice of his choice. For each [B] rolled, gain 1 (B) and 1 (S). For each [S] rolled, gain 1 (S).",
+            "icons": "BS"
         },
         {
             "title": "UNFLINCHING CRUSADERS",
             "general": "Gain 2 (B).",
-            "unit": "Deathwatch/Rogue Trader: If you are defending, rally 1 of your units. *newpara* Force your opponent to lose either 1 [S] or 2 (B)."
+            "unit": "Deathwatch/Rogue Trader: If you are defending, rally 1 of your units. *newpara* Force your opponent to lose either 1 [S] or 2 (B).",
+            "icons": "SS"
         },
         {
             "title": "RELENTLESS ASSAULT",
             "general": "Gain 2 (S).",
-            "unit": "Deathwatch/Rogue Trader: If you are attacking, rally 1 of your units. *newpara* Spend 1 [S] to gain 2 (B)."
+            "unit": "Deathwatch/Rogue Trader: If you are attacking, rally 1 of your units. *newpara* Spend 1 [S] to gain 2 (B).",
+            "icons": "BB"
         },
         {
             "title": "FAITH GUIDANCE",
             "general": "If you are attacking, your opponent cannot resolve the unit abilities of his next revealed combat card. *newpara* If you are defending, either gain 1 | or retreat 1 of your units.",
-            "unit": ""
+            "unit": "",
+            "icons": "MMM"
         },
         {
             "title": "LIDLESS STARE",
             "general": "Gain 1 [D].",
-            "unit": "Deathwatch/Black Ship: Your opponent loses 3 dice of his choice. Then you spend 3 of your dice."
+            "unit": "Deathwatch/Black Ship: Your opponent loses 3 dice of his choice. Then you spend 3 of your dice.",
+            "icons": "BBM"
         },
         {
             "title": "STORM ENVOY",
             "general": "Reroll either 1 [B] or 1 [M] to force your opponent to lose 1 [B].",
-            "unit": "Valkyrie: Take 1 Stormtrooper from any world and place it on this world. *newpara* Black Ship: Take 1 Stormtrooper from any world and place it on a friendly or uncontrolled world in this system."
+            "unit": "Valkyrie: Take 1 Stormtrooper from any world and place it on this world. *newpara* Black Ship: Take 1 Stormtrooper from any world and place it on a friendly or uncontrolled world in this system.",
+            "icons": "BSS"
         },
         {
             "title": "HELLSTRIKE MISSILES",
             "general": "Reroll either 1 [S] or 1 [M] to force your opponent to lose 1 [S].",
-            "unit": "Valkyrie/Black Ship: Destroy 1 of your opponent's routed units."
+            "unit": "Valkyrie/Black Ship: Destroy 1 of your opponent's routed units.",
+            "icons": "BBS"
         },
         {
             "title": "TRUESILVER ARMOUR",
             "general": "Gain either 1 [S] or 2 (S).",
-            "unit": "Grey Knight/Black Ship: During this combat, the health value of your units is increased by 1."
+            "unit": "Grey Knight/Black Ship: During this combat, the health value of your units is increased by 1.",
+            "icons": "SSMM"
         },
         {
             "title": "DEEP STRIKE",
             "general": "Either gain 1 (B) or convert up to 3 of your dice into [B].",
-            "unit": "Grey Knight: When an enemy unit suffers damage during this execution round, it is destroyed. *newpara* Black Ship: Rout 1 of your opponent's units."
+            "unit": "Grey Knight: When an enemy unit suffers damage during this execution round, it is destroyed. *newpara* Black Ship: Rout 1 of your opponent's units.",
+            "icons": "BBBM"
         }
     ]
 }

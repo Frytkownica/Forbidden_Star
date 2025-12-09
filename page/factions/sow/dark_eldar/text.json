@@ -67,72 +67,86 @@
         {
             "title": "PREY ON THE WEAK",
             "general": "Either gain 1 [B] or spend 1 of your dice to rally 1 of your units. ",
-            "unit": "Kabalite Warrior/Frigate: Gain 1 [D]."
+            "unit": "Kabalite Warrior/Frigate: Gain 1 [D].",
+            "icons": "B"
         },
         {
             "title": "AGENTS OF VECT",
             "general": "Gain 1 [S]. *newpara* If you have at least 1 unrouted ship in the active system, gain 1 reinforcement token and force your opponent to discard 1 of his reinforcement tokens.",
-            "unit": "Kabalite Warrior: Spend 1 of your reinforcement tokents to place 1 free reinforcement token in this area."
+            "unit": "Kabalite Warrior: Spend 1 of your reinforcement tokents to place 1 free reinforcement token in this area.",
+            "icons": "S"
         },
         {
             "title": "HUNT FROM THE SHADOWS",
             "general": "",
-            "unit": "Kabalite Warrior/Frigate: Your opponent may retreat 1 of his units. If he does not, gain 1 (B) for each unrouted Kabalite Warrior or Frigate. *newpara* Discard this card to retreat 1 of your units."
+            "unit": "Kabalite Warrior/Frigate: Your opponent may retreat 1 of his units. If he does not, gain 1 (B) for each unrouted Kabalite Warrior or Frigate. *newpara* Discard this card to retreat 1 of your units.",
+            "icons": "B"
         },
         {
             "title": "FUELLED BY HATRED",
             "general": "Gain 1 (B). *newpara* Convert 1 of your [M] into [B].",
-            "unit": "Kabalite Warrior/Wych/Frigate: Gain 1 (S). *newpara* Your opponent rerolls 1 die of your choice."
+            "unit": "Kabalite Warrior/Wych/Frigate: Gain 1 (S). *newpara* Your opponent rerolls 1 die of your choice.",
+            "icons": "B"
         },
         {
             "title": "WINGED STRIKE",
             "general": "Either gain 1 (B) or draw 1 combat card.",
-            "unit": "Wych/Frigate: Either gain 2 (S) or play 1 combat card from your hand. Do not resolve its abilities, but gain its combat icons during this combat."
+            "unit": "Wych/Frigate: Either gain 2 (S) or play 1 combat card from your hand. Do not resolve its abilities, but gain its combat icons during this combat.",
+            "icons": "M"
         },
         {
             "title": "ECSTATIC CARNAGE",
             "general": "Gain 2 (B) unless your opponent spends 1 [S].",
-            "unit": "Wych/Frigate: Spend 1 of your dice to gain either 1 [B] and 1 (S) or 1 [S] and 1 (B)."
+            "unit": "Wych/Frigate: Spend 1 of your dice to gain either 1 [B] and 1 (S) or 1 [S] and 1 (B).",
+            "icons": "BB"
         },
         {
             "title": "RAIDER TACTICS",
             "general": "If you are attacking, gain 2 (B). When your unit is destroyed during this execution round, you may retreat that unit instead. *newpara* If you are defending, gain 2 (S). When an enemy unit is routed during this execution round, it is destroyed unless your opponent spends 1 [M].",
-            "unit": ""
+            "unit": "",
+            "icons": "BS"
         },
         {
             "title": "FIRE AND FADE",
             "general": "Gain either 1 [B] or 1 [S].",
-            "unit": "Kabalite Warrior/Frigate: Your opponent may retreat 1 of his units. Then you may move 1 of your units to an adjacent friendly or uncontrolled area. If you do, gain either 1 [M] or 2 (B)."
+            "unit": "Kabalite Warrior/Frigate: Your opponent may retreat 1 of his units. Then you may move 1 of your units to an adjacent friendly or uncontrolled area. If you do, gain either 1 [M] or 2 (B).",
+            "icons": "BM"
         },
         {
             "title": "NEVER STATIONARY",
             "general": "If you are attacking, your opponent cannot gain (B) during this execution round. *newpara* If you are defending, gain 1 [S] and your opponent loses 2 (B).",
-            "unit": "Wych/Frigate: Spend 1 [M] to place 1 free reinforcement token in this area."
+            "unit": "Wych/Frigate: Spend 1 [M] to place 1 free reinforcement token in this area.",
+            "icons": "SS"
         },
         {
             "title": "CRUCIBLE OF MALEDICTION",
             "general": "Force your opponent to lose 1 [M]. *newpara* During this combat, your opponent cannot gain or spend [M].",
-            "unit": ""
+            "unit": "",
+            "icons": "BBS"
         },
         {
             "title": "HARROWING EMBRACE",
             "general": "Your opponent may retreat 1 of his units. If he does not, force your opponent to lose either 1 [B] or 1 [M].",
-            "unit": "Ravager/Dying Sun: If you have fewer [M] than your opponent, your opponent loses 1 [M]. Otherwise, gain 2 (B) and 1 (S)."
+            "unit": "Ravager/Dying Sun: If you have fewer [M] than your opponent, your opponent loses 1 [M]. Otherwise, gain 2 (B) and 1 (S).",
+            "icons": "SSM"
         },
         {
             "title": "PICK THEM APART",
             "general": "Your opponent may retreat 1 of his units. If he does not, force your opponent to lose either 1 [S] or 1 [M].",
-            "unit": "Ravager/Dying Sun: Gain 1 (B) and 2 (S) unless your opponent chooses and destroys 1 of his units."
+            "unit": "Ravager/Dying Sun: Gain 1 (B) and 2 (S) unless your opponent chooses and destroys 1 of his units.",
+            "icons": "BBM"
         },
         {
             "title": "RAIN OF CRUELTY",
             "general": "Move either 1 Ravager or 1 of your ships from an area in either the active system or an adjacent system to this area. If you do, gain 2 [D].",
-            "unit": "Ravager: Place 1 free reinforcement token in this area. *newline* Force your opponent to lose 1 [S]. *newpara* Dying Sun: Gain 2 (B)."
+            "unit": "Ravager: Place 1 free reinforcement token in this area. *newline* Force your opponent to lose 1 [S]. *newpara* Dying Sun: Gain 2 (B).",
+            "icons": "BBSM"
         },
         {
             "title": "MALICIOUS FRENZY",
             "general": "Gain 2 (B), 2 (S), or spend 1 of your dice to gain 2 (B) and 2 (S).",
-            "unit": "Ravager/Dying Sun: Force your opponent to lose 1 [B], 1 [S], and 1 [M]. "
+            "unit": "Ravager/Dying Sun: Force your opponent to lose 1 [B], 1 [S], and 1 [M]. ",
+            "icons": "BSM"
         }
     ]
 }
