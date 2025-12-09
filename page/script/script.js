@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-	document.getElementById('loading-spinner').style.display = 'block';
 	const expansionTabsContainer = document.getElementById('expansion-tabs');
 	const factionTabsContainer = document.getElementById('faction-tabs');
 	const cardsContentsContainer = document.getElementById('cards-tabs');
@@ -100,7 +99,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 				// Function to load cards based on selected faction
 				function loadCardsMenu(expansionSet, factionSet) {
-					document.getElementById('loading-spinner').style.display = 'block';
 					cardsContentsContainer.innerHTML = '';
 					Object.keys(cards).forEach((cardType, cardIndex) => {
 						// Create faction tab header
@@ -156,7 +154,6 @@ document.addEventListener('DOMContentLoaded', function () {
 							})
 							.catch(error => console.error(`Error loading text data for ${faction} in ${expansionFolder}:`, error));
 					}
-					document.getElementById('loading-spinner').style.display = 'none';
 				};
 			};
 		})
@@ -187,19 +184,37 @@ document.addEventListener('DOMContentLoaded', function () {
 			const sectionContainer = document.createElement('div');
 			sectionContainer.classList.add('grid', 'combat', section);
 			sections[section].forEach((file, idx) => {
+				// Create placeholder with spinner
+				const placeholder = document.createElement('div');
+				placeholder.classList.add('card-placeholder');
+				const spinner = document.createElement('div');
+				spinner.classList.add('card-spinner');
+				placeholder.appendChild(spinner);
+				sectionContainer.appendChild(placeholder);
+
+				// Prepare card data
 				const jsonData = {};
 				jsonData["picture"] = `factions/${expansionFolder}/${factionfolder}/combat/${file}`;
 				jsonData["title"] = combatText[section][idx].title || "";
 				jsonData["background"] = combatText[section][idx].general || "";
 				jsonData["foreground"] = combatText[section][idx].unit || "";
 				jsonData["icons"] = combatText[section][idx].icons || "";
+
+				// Create canvas for this card
 				const canvas = document.createElement('canvas');
 				canvas.width = maxWidth;
 				canvas.height = maxHeight;
 				const context = canvas.getContext('2d');
-				sectionContainer.appendChild(canvas);
-				drawCombatCard(jsonData, context);
+
+				// Draw the card asynchronously and replace placeholder when done
+				drawCombatCard(jsonData, context).then(() => {
+					placeholder.replaceWith(canvas);
+				}).catch(err => {
+					console.error('Error drawing combat card:', err);
+					placeholder.innerHTML = '<span style="color:red;">Error loading card</span>';
+				});
 			});
+
 			container.appendChild(sectionContainer);
 		});
 	}
@@ -207,25 +222,51 @@ document.addEventListener('DOMContentLoaded', function () {
 	function createOrdersContent(container, expansionFolder, factionfolder, files, textData) {
 		const categoryContainer = document.createElement('div');
 		categoryContainer.classList.add('grid', 'orders');
+
 		files.forEach((file, idx) => {
+			// Create placeholder with spinner
+			const placeholder = document.createElement('div');
+			placeholder.classList.add('card-placeholder');
+			const spinner = document.createElement('div');
+			spinner.classList.add('card-spinner');
+			placeholder.appendChild(spinner);
+			categoryContainer.appendChild(placeholder);
+
 			const jsonData = {};
 			jsonData["picture"] = `factions/${expansionFolder}/${factionfolder}/orders/${file}`;
 			jsonData["title"] = `${textData[idx].title}`;
 			jsonData["general"] = `${textData[idx].general}`;
+
 			const canvas = document.createElement('canvas');
 			canvas.width = maxWidth;
 			canvas.height = maxHeight;
 			const context = canvas.getContext('2d');
-			categoryContainer.appendChild(canvas);
-			drawOrderCard(jsonData, context);
+
+			// Draw card and replace placeholder when done
+			drawOrderCard(jsonData, context).then(() => {
+				placeholder.replaceWith(canvas);
+			}).catch(err => {
+				console.error('Error drawing order card:', err);
+				placeholder.innerHTML = '<span style="color:red;">Error loading card</span>';
+			});
 		});
+
 		container.appendChild(categoryContainer);
 	}
 
 	function createEventContent(container, expansionFolder, factionfolder, files, textData) {
 		const categoryContainer = document.createElement('div');
 		categoryContainer.classList.add('grid', 'events');
+
 		files.forEach((file, idx) => {
+			// Create placeholder with spinner
+			const placeholder = document.createElement('div');
+			placeholder.classList.add('card-placeholder');
+			const spinner = document.createElement('div');
+			spinner.classList.add('card-spinner');
+			placeholder.appendChild(spinner);
+			categoryContainer.appendChild(placeholder);
+
 			const jsonData = {};
 			jsonData["picture"] = `factions/${expansionFolder}/${factionfolder}/events/${file}`;
 			jsonData["title"] = `${textData[idx].title}`;
@@ -236,33 +277,72 @@ document.addEventListener('DOMContentLoaded', function () {
 			canvas.width = maxWidth;
 			canvas.height = maxHeight;
 			const context = canvas.getContext('2d');
-			categoryContainer.appendChild(canvas);
-			drawEventCard(jsonData, context);
+
+			// Draw card and replace placeholder when done
+			drawEventCard(jsonData, context).then(() => {
+				placeholder.replaceWith(canvas);
+			}).catch(err => {
+				console.error('Error drawing event card:', err);
+				placeholder.innerHTML = '<span style="color:red;">Error loading card</span>';
+			});
 		});
+
 		container.appendChild(categoryContainer);
 	}
 
 	function createFactioncardContent(container, expansionFolder, factionfolder, files) {
 		const categoryContainer = document.createElement('div');
 		categoryContainer.classList.add('factionCard');
+
 		files.forEach((file, _) => {
+			// Create placeholder with spinner
+			const placeholder = document.createElement('div');
+			placeholder.classList.add('card-placeholder');
+			const spinner = document.createElement('div');
+			spinner.classList.add('card-spinner');
+			placeholder.appendChild(spinner);
+			categoryContainer.appendChild(placeholder);
+
 			const img = document.createElement('img');
 			img.src = `factions/${expansionFolder}/${factionfolder}/faction_card/${file}`;
-			categoryContainer.appendChild(img);
+
+			img.onload = () => {
+				placeholder.replaceWith(img);
+			};
+			img.onerror = () => {
+				placeholder.innerHTML = '<span style="color:red;">Error loading image</span>';
+			};
 		});
+
 		container.appendChild(categoryContainer);
 	}
 
 	function backCardContent(container, expansionFolder, factionfolder, files) {
 		const categoryContainer = document.createElement('div');
 		categoryContainer.classList.add('grid', 'cardBack');
+
 		files.forEach((file, _) => {
+			// Create placeholder with spinner
+			const placeholder = document.createElement('div');
+			placeholder.classList.add('card-placeholder');
+			const spinner = document.createElement('div');
+			spinner.classList.add('card-spinner');
+			placeholder.appendChild(spinner);
+			categoryContainer.appendChild(placeholder);
+
 			const img = document.createElement('img');
 			img.src = `factions/${expansionFolder}/${factionfolder}/backs/${file}`;
 			img.width = maxWidth;
 			img.height = maxHeight;
-			categoryContainer.appendChild(img);
+
+			img.onload = () => {
+				placeholder.replaceWith(img);
+			};
+			img.onerror = () => {
+				placeholder.innerHTML = '<span style="color:red;">Error loading image</span>';
+			};
 		});
+
 		container.appendChild(categoryContainer);
 	}
 
@@ -439,157 +519,171 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	function drawOrderCard(data, ctx) {
-		const maxFieldsHeight = maxHeight * 0.455;
-		const textPosition = maxHeight * 0.54;
-		const marginOrderWidth = maxHeight * 0.1;
+		return new Promise((resolve, reject) => {
+			const maxFieldsHeight = maxHeight * 0.455;
+			const textPosition = maxHeight * 0.54;
+			const marginOrderWidth = maxHeight * 0.1;
 
-		let interline = maxHeight * 0.0077;
-		let fontSize = maxHeight * 0.03;
+			let interline = maxHeight * 0.0077;
+			let fontSize = maxHeight * 0.03;
 
-		// Load images from paths
-		const picture = new Image();
-		picture.src = data.picture;
+			// Load images from paths
+			const picture = new Image();
+			picture.src = data.picture;
 
-		// Initial settings for margin and font size
-		let generalTextHeight = 0;
+			// Initial settings for margin and font size
+			let generalTextHeight = 0;
 
-		const generalTextWithFbElements = replaceForbiddenStarsElements(data.general)
+			const generalTextWithFbElements = replaceForbiddenStarsElements(data.general)
 
-		const recalculateTextHeight = () => {
-			generalTextHeight = calculateTextHeight(ctx, generalTextWithFbElements, 0, marginOrderWidth, interline, fontSize);
-		};
+			const recalculateTextHeight = () => {
+				generalTextHeight = calculateTextHeight(ctx, generalTextWithFbElements, 0, marginOrderWidth, interline, fontSize);
+			};
 
-		const resizeAllShit = () => {
-			fontSize *= 0.95;
-			interline *= 0.97;
-			recalculateTextHeight();
-		};
+			const resizeAllShit = () => {
+				fontSize *= 0.95;
+				interline *= 0.97;
+				recalculateTextHeight();
+			};
 
-		recalculateTextHeight()
-		while (generalTextHeight > maxFieldsHeight) {
-			resizeAllShit();
-		};
+			recalculateTextHeight()
+			while (generalTextHeight > maxFieldsHeight) {
+				resizeAllShit();
+			};
 
-		const drawText = (text, yPosition) => {
-			ctx.font = `${fontSize}px ForbiddenStars`;
-			const words = text.split(' ');
-			let line = '';
-			let lineHeight = parseInt(ctx.font.match(/\d+/), 10);
-			yPosition += lineHeight;
-			for (let n = 0; n < words.length; n++) {
-				if (words[n] === "*newline*") {
-					ctx.fillText(line, maxWidth * 0.5, yPosition);
-					yPosition += lineHeight + interline;
-					line = '';
-				}
-				else if (words[n] === "*newpara*") {
-					returnHeight += 2 * lineHeight;
-					line = '';
-				}
-				else {
-					const testLine = line + words[n] + ' ';
-					const metrics = ctx.measureText(testLine);
-					if (metrics.width > maxWidth - 2 * marginOrderWidth && n > 0) {
+			const drawText = (text, yPosition) => {
+				ctx.font = `${fontSize}px ForbiddenStars`;
+				const words = text.split(' ');
+				let line = '';
+				let lineHeight = parseInt(ctx.font.match(/\d+/), 10);
+				yPosition += lineHeight;
+				for (let n = 0; n < words.length; n++) {
+					if (words[n] === "*newline*") {
 						ctx.fillText(line, maxWidth * 0.5, yPosition);
 						yPosition += lineHeight + interline;
-						line = words[n] + ' ';
-					} else {
-						line = testLine;
+						line = '';
+					}
+					else if (words[n] === "*newpara*") {
+						yPosition += 2 * lineHeight;
+						line = '';
+					}
+					else {
+						const testLine = line + words[n] + ' ';
+						const metrics = ctx.measureText(testLine);
+						if (metrics.width > maxWidth - 2 * marginOrderWidth && n > 0) {
+							ctx.fillText(line, maxWidth * 0.5, yPosition);
+							yPosition += lineHeight + interline;
+							line = words[n] + ' ';
+						} else {
+							line = testLine;
+						};
 					};
 				};
+				ctx.fillText(line, maxWidth * 0.5, yPosition);
 			};
-			ctx.fillText(line, maxWidth * 0.5, yPosition);
-		};
 
-		// Draw the main picture resized
-		picture.onload = function () {
-			ctx.drawImage(picture, 0, 0, maxWidth, maxHeight);
+			// Draw the main picture resized
+			picture.onload = function () {
+				ctx.drawImage(picture, 0, 0, maxWidth, maxHeight);
 
-			// Draw the Title
-			ctx.font = `${titleFontSize}px HeadlinerNo45`;
-			ctx.textAlign = "center";
-			ctx.fillText(data.title, maxWidth * 0.5, maxHeight * 0.2325);
+				// Draw the Title
+				ctx.font = `${titleFontSize}px HeadlinerNo45`;
+				ctx.textAlign = "center";
+				ctx.fillText(data.title, maxWidth * 0.5, maxHeight * 0.2325);
 
-			drawText(generalTextWithFbElements, textPosition);
-		};
+				drawText(generalTextWithFbElements, textPosition);
+				resolve();
+			};
+
+			picture.onerror = function () {
+				reject(new Error('Failed to load order card image'));
+			};
+		});
 	}
 
 	function drawEventCard(data, ctx) {
-		const maxFieldsHeight = maxHeight * 0.278;
-		const textPosition = maxHeight * 0.685;
+		return new Promise((resolve, reject) => {
+			const maxFieldsHeight = maxHeight * 0.278;
+			const textPosition = maxHeight * 0.685;
 
-		let interline = maxHeight * 0.0077;
-		let fontSize = maxHeight * 0.03;
+			let interline = maxHeight * 0.0077;
+			let fontSize = maxHeight * 0.03;
 
-		// Load images from paths
-		const picture = new Image();
-		picture.src = data.picture;
+			// Load images from paths
+			const picture = new Image();
+			picture.src = data.picture;
 
-		// Initial settings for margin and font size
-		let generalTextHeight = 0;
+			// Initial settings for margin and font size
+			let generalTextHeight = 0;
 
-		const generalTextWithFbElements = replaceForbiddenStarsElements(data.general);
+			const generalTextWithFbElements = replaceForbiddenStarsElements(data.general);
 
-		const recalculateTextHeight = () => {
-			generalTextHeight = calculateTextHeight(ctx, generalTextWithFbElements, 20, 0, interline, fontSize);
-		};
+			const recalculateTextHeight = () => {
+				generalTextHeight = calculateTextHeight(ctx, generalTextWithFbElements, 20, 0, interline, fontSize);
+			};
 
-		const resizeAllShit = () => {
-			fontSize *= 0.95;
-			interline *= 0.97;
+			const resizeAllShit = () => {
+				fontSize *= 0.95;
+				interline *= 0.97;
+				recalculateTextHeight()
+			};
+
 			recalculateTextHeight()
-		};
+			while (generalTextHeight > maxFieldsHeight) {
+				resizeAllShit();
+			};
 
-		recalculateTextHeight()
-		while (generalTextHeight > maxFieldsHeight) {
-			resizeAllShit();
-		};
-
-		const drawText = (text, yPosition) => {
-			ctx.font = `${fontSize}px ForbiddenStars`;
-			const words = text.split(' ');
-			let line = '';
-			let lineHeight = parseInt(ctx.font.match(/\d+/), 10);
-			yPosition += lineHeight;
-			for (let n = 0; n < words.length; n++) {
-				if (words[n] === "*newline*") {
-					ctx.fillText(line, marginWidth, yPosition);
-					yPosition += lineHeight + interline;
-					line = '';
-				}
-				else if (words[n] === "*newpara*") {
-					ctx.fillText(line, marginWidth, yPosition);
-					yPosition += 2 * lineHeight;
-					line = '';
-				}
-				else {
-					const testLine = line + words[n] + ' ';
-					const metrics = ctx.measureText(testLine);
-					if (metrics.width > maxWidth - 2 * marginWidth && n > 0) {
+			const drawText = (text, yPosition) => {
+				ctx.font = `${fontSize}px ForbiddenStars`;
+				const words = text.split(' ');
+				let line = '';
+				let lineHeight = parseInt(ctx.font.match(/\d+/), 10);
+				yPosition += lineHeight;
+				for (let n = 0; n < words.length; n++) {
+					if (words[n] === "*newline*") {
 						ctx.fillText(line, marginWidth, yPosition);
 						yPosition += lineHeight + interline;
-						line = words[n] + ' ';
-					} else {
-						line = testLine;
+						line = '';
+					}
+					else if (words[n] === "*newpara*") {
+						ctx.fillText(line, marginWidth, yPosition);
+						yPosition += 2 * lineHeight;
+						line = '';
+					}
+					else {
+						const testLine = line + words[n] + ' ';
+						const metrics = ctx.measureText(testLine);
+						if (metrics.width > maxWidth - 2 * marginWidth && n > 0) {
+							ctx.fillText(line, marginWidth, yPosition);
+							yPosition += lineHeight + interline;
+							line = words[n] + ' ';
+						} else {
+							line = testLine;
+						};
 					};
 				};
+				ctx.fillText(line, marginWidth, yPosition);
 			};
-			ctx.fillText(line, marginWidth, yPosition);
-		};
-		// Draw the main picture resized
-		picture.onload = function () {
-			ctx.drawImage(picture, 0, 0, maxWidth, maxHeight);
 
-			// Draw the Title
-			ctx.font = `${titleFontSize * 0.8}px FrizQuadrataStd`;
-			ctx.textAlign = "center";
-			ctx.fillText(data.type, maxWidth * 0.5, maxHeight * 0.573);
-			ctx.font = `${titleFontSize}px HeadlinerNo45`;
-			ctx.textAlign = "left";
-			ctx.fillText(data.title, maxWidth * 0.05, maxHeight * 0.0735);
+			// Draw the main picture resized
+			picture.onload = function () {
+				ctx.drawImage(picture, 0, 0, maxWidth, maxHeight);
 
-			drawText(generalTextWithFbElements, textPosition);
-		};
+				// Draw the Title
+				ctx.font = `${titleFontSize * 0.8}px FrizQuadrataStd`;
+				ctx.textAlign = "center";
+				ctx.fillText(data.type, maxWidth * 0.5, maxHeight * 0.573);
+				ctx.font = `${titleFontSize}px HeadlinerNo45`;
+				ctx.textAlign = "left";
+				ctx.fillText(data.title, maxWidth * 0.05, maxHeight * 0.0735);
+
+				drawText(generalTextWithFbElements, textPosition);
+				resolve();
+			};
+
+			picture.onerror = function () {
+				reject(new Error('Failed to load event card image'));
+			};
+		});
 	};
-	document.getElementById('loading-spinner').style.display = 'none';
 });
