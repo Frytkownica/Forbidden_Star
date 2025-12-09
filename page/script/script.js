@@ -18,10 +18,10 @@ document.addEventListener('DOMContentLoaded', function () {
 	const maxTextWidth = maxWidth - 2 * marginWidth;
 
 	// Icons positioning predefinitions.
-	const iconSize = maxWidth * 0.08;
-	const iconSpacing = maxWidth * 0.01;
-	const iconY = maxHeight * 0.91;
-	const startX = maxWidth * 0.05;
+	const iconSize = maxWidth * 0.097;
+	const iconSpacing = maxWidth * 0.011;
+	const iconX = maxWidth * 0.0632;
+	const startY = maxHeight * 0.242;
 
 	const iconMap = {
 		'B': 'pictures/bolter.png',
@@ -505,13 +505,13 @@ document.addEventListener('DOMContentLoaded', function () {
 			drawText(foregroundWithFbElements, foregroundY, extraForegroundTriangle);
 		}
 		if (data.icons && data.icons.length > 0) {
-			let currentX = startX;
+			let currentY = startY;
 			for (let letterPosition = 0; letterPosition < data.icons.length; letterPosition++) {
 				const iconChar = data.icons[letterPosition].toUpperCase();
 				if (iconMap[iconChar]) {
 					const iconImg = await loadImage(iconMap[iconChar]);
-					ctx.drawImage(iconImg, currentX, iconY, iconSize, iconSize);
-					currentX += iconSize + iconSpacing;
+					ctx.drawImage(iconImg, iconX, currentY, iconSize, iconSize);
+					currentY += iconSize + iconSpacing;
 				}
 			}
 		}
