@@ -6,7 +6,7 @@
         },
         {
             "title": "PURGING BANNERS",
-            "general": "When you reveal this order token, rally all of your units in the active system. *newline* LIMIT ONCE PER ROUND."
+            "general": "After purchasing units while resolving this order, you may move 1 of those units to a friendly or uncontrolled area in an adjacent system. *newline* LIMIT ONCE PER ROUND."
         },
         {
             "title": "SIGILS OF REVELATION",
@@ -121,7 +121,7 @@
         {
             "title": "LIDLESS STARE",
             "general": "Gain 1 [D].",
-            "unit": "Deathwatch/Black Ship: Your opponent loses 3 dice of his choice. Then you spend 3 of your dice.",
+            "unit": "Deathwatch/Black Ship: Your opponent loses 3 dice of his choice. Then you lose 3 of your dice. Gain 1 [D]. ",
             "icons": "BBM"
         },
         {
