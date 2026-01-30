@@ -2,7 +2,7 @@
     "ordersText": [
         {
             "title": "CYBERNETIC AFFINITY",
-            "general": "After you resolve this order, you may either replace 1 Skitarii in the active system with 1 free Kataphron or destroy 1 of your unitsin the active system to purchase 1 additional upgrade card, reducing its materiel cost by the materiel cost of the destroyed unit. *newline* LIMIT ONCE PER ROUND."
+            "general": "After you resolve this order, you may either replace 1 Skitarii in the active system with 1 free Kataphron or destroy 1 of your units in the active system to purchase 1 additional upgrade card, reducing its materiel cost by the materiel cost of the destroyed unit. *newline* LIMIT ONCE PER ROUND."
         },
         {
             "title": "MASTER OF THE MACHINES",
@@ -48,8 +48,8 @@
             "type": "TACTIC"
         },
         {
-            "title": "THE CRIMSON GUARD",
-            "general": "Either spend 2 materiel to place 2 free Skitarii on a friendly world containing a factory or place 1 free Skitarii on any friendly world.",
+            "title": "SACRAMENT OF COMMITMENT",
+            "general": "Choose a friendly world with a maximum of 1 asset icon. Place an asset token from the supply on that world's banner. That world gains that asset icon. ",
             "type": "TACTIC"
         },
         {
