@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAQ Manuscript</title>
+  <style>
+    @font-face {
+      font-family: 'FontA';
+      src: url('./fonts/headlinerno45.ttf') format('truetype');
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'FontB';
+      src: url('./fonts/forbiddenstars.ttf') format('truetype');
+      font-display: swap;
+    }
+
+    :root {
+      --text: #251505;
+      --line: rgba(20, 20, 5, 0.35);
+      --panel: rgba(255, 179, 0, 0.8);
+      --panel-strong: rgba(31, 21, 0, 0.9);
+      --shadow: rgba(0, 0, 0, 0.18);
+      --max-width: 1000px;
+      --content-width: 900px;
+      --bg-scroll-speed: 80s;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      color: var(--text);
+      background: #251c06;
+    }
+
+    body {
+      position: relative;
+      overflow-x: hidden;
+      font-family: 'FontB', serif;
+    }
+
+    .content {
+      position: relative;
+      max-width: var(--content-width);
+      margin: 0 auto;
+      padding: 50px 30px 200px 15px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.5);
+      box-shadow: 0 12px 32px var(--shadow);
+      overflow: hidden;
+    }
+
+    .content::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .content > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .page-shell {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      padding: 32px 20px 80px;
+    }
+
+    .header-panel {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      max-width: var(--max-width);
+      margin: 0 auto 24px;
+      padding: 14px;
+      border: 1px solid rgba(100, 75, 40, 0.25);
+      border-radius: 18px;
+      background: rgba(245, 240, 220, 0.8);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 8px 24px var(--shadow);
+    }
+
+    .search-wrap {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      flex: 1 1 340px;
+      min-width: 260px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: 1px solid rgba(100, 75, 40, 0.25);
+      background:  rgba(245, 240, 220, 0.8);
+      color: var(--text);
+      font-size: 16px;
+      font-family: 'FontB', serif;
+      outline: none;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .search-box:focus {
+      border-color: rgba(106, 74, 43, 0.6);
+      box-shadow: 0 0 0 3px rgba(100, 75, 40, 0.25);
+    }
+
+    .search-meta {
+      font-size: 14px;
+      opacity: 0.82;
+      font-family: 'FontB', serif;
+    }
+
+
+    .empty-state {
+      padding: 24px 0;
+      font-size: 18px;
+      text-align: center;
+      opacity: 0.8;
+    }
+
+    .level-block {
+      margin: 0 0 28px;
+    }
+
+    .level-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(180px, 280px);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .level-row.no-picture {
+      grid-template-columns: 1fr;
+    }
+
+    .level-image {
+      width: 100%;
+      max-width: 280px;
+      border-radius: 14px;
+      border: 1px solid rgba(106, 74, 43, 0.22);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      display: block;
+      justify-self: end;
+      background: rgba(255,255,255,0.4);
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      line-height: 1.15;
+    }
+
+    h1, h2, h3 {
+      font-family: 'FontA', serif;
+      letter-spacing: 0.02em;
+    }
+
+   .phrase-title, .main-text {
+      font-family: 'FontB', serif;
+    }
+
+    h1 {
+      font-size: clamp(30px, 4vw, 44px);
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: clamp(24px, 3vw, 34px);
+      margin-bottom: 8px;
+    }
+
+    h3 {
+      font-size: clamp(22px, 2.8vw, 30px);
+      margin-bottom: 8px;
+    }
+
+    .separator {
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(to right, transparent, var(--line), transparent);
+      margin: 0 0 16px;
+    }
+
+    .category-block {
+      margin-bottom: 42px;
+    }
+
+    .subcategory-block {
+      margin: 22px 0 28px;
+      padding-left: 10px;
+      border-left: 2px solid rgba(97, 70, 43, 0.12);
+    }
+
+    .faction-block {
+      margin: 18px 0 24px;
+      padding-left: 12px;
+    }
+
+    .phrase-block {
+      margin: 14px 0 16px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(255, 251, 239, 0.38);
+      border: 1px solid rgba(106, 74, 43, 0.12);
+    }
+
+    .phrase-title {
+      display: block;
+      font-weight: 700;
+      font-size: 18px;
+      margin-bottom: 8px;
+      color: #3d2b1b;
+    }
+
+    .main-text {
+      font-size: 17px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    mark {
+      background: rgba(173, 192, 0, 0.42);
+      color: inherit;
+      padding: 0 0.1em;
+      border-radius: 0.15em;
+    }
+
+    @keyframes scrollBackground {
+      from { background-position: center 0; }
+      to { background-position: center 1200px; }
+    }
+
+  </style>
+</head>
+<body>
+  
+
+  <div class="page-shell">
+    <div class="header-panel">
+      <div class="search-wrap">
+        <input id="searchInput" class="search-box" type="text" placeholder="Search the FAQ..." />
+        <div id="searchMeta" class="search-meta">Showing full FAQ</div>
+      </div>
+    </div>
+
+    <main id="content" class="content" aria-live="polite"></main>
+  </div>
+
+  <script>
+    const FAQ_JSON_PATH = './page/data/faq.json';
+
+    let originalData = [];
+
+    const contentEl = document.getElementById('content');
+    const searchInput = document.getElementById('searchInput');
+    const searchMeta = document.getElementById('searchMeta');
+
+    const normalize = (value) => String(value ?? '').toLowerCase();
+
+    const matches = (value, query) => normalize(value).includes(query);
+
+    const escapeHtml = (str) => String(str ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/\"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+
+    function normalizeMainText(value) {
+      return String(value ?? '')
+        .replace(/\\r\\n/g, '\n')
+        .replace(/\\n/g, '\n');
+    }
+
+    function highlightText(text, query) {
+      const raw = String(text ?? '');
+      if (!query) return escapeHtml(raw);
+
+      const escaped = escapeHtml(raw);
+      const safeQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = new RegExp(`(${safeQuery})`, 'ig');
+      return escaped.replace(regex, '<mark>$1</mark>');
+    }
+
+    function withArray(value) {
+      return Array.isArray(value) ? value : [];
+    }
+
+    function getPicture(node) {
+      return node && typeof node === 'object' ? node.picture || '' : '';
+    }
+
+    function createLevelRow(textHtml, picture) {
+      const row = document.createElement('div');
+      row.className = `level-row ${picture ? '' : 'no-picture'}`;
+
+      const textWrap = document.createElement('div');
+      textWrap.innerHTML = textHtml;
+      row.appendChild(textWrap);
+
+      if (picture) {
+        const img = document.createElement('img');
+        img.className = 'level-image';
+        img.src = picture;
+        img.alt = '';
+        img.loading = 'lazy';
+        row.appendChild(img);
+      }
+
+      return row;
+    }
+
+    function renderPhraseBlock(phraseObj, query) {
+      const phraseBlock = document.createElement('section');
+      phraseBlock.className = 'phrase-block level-block';
+
+      const phraseText = phraseObj.Phrase ?? '';
+      const mainText = normalizeMainText(phraseObj.Main ?? '');
+      const picture = getPicture(phraseObj);
+
+      const textHtml = `
+        <div class="phrase-title"><strong>${highlightText(phraseText, query)}</strong></div>
+        <div class="main-text">${highlightText(mainText, query)}</div>
+      `;
+
+      phraseBlock.appendChild(createLevelRow(textHtml, picture));
+      return phraseBlock;
+    }
+
+    function renderFactionBlock(factionObj, query) {
+      const block = document.createElement('section');
+      block.className = 'faction-block level-block';
+
+      const title = factionObj.Faction ?? '';
+      const picture = getPicture(factionObj);
+
+      const headerHtml = `
+        <h3>${highlightText(title, query)}</h3>
+        <div class="separator"></div>
+      `;
+
+      block.appendChild(createLevelRow(headerHtml, picture));
+
+      withArray(factionObj.items).forEach((phraseObj) => {
+        block.appendChild(renderPhraseBlock(phraseObj, query));
+      });
+
+      return block;
+    }
+
+    function renderSubCategoryBlock(subObj, query) {
+      const block = document.createElement('section');
+      block.className = 'subcategory-block level-block';
+
+      const title = subObj.SubCategory ?? '';
+      const picture = getPicture(subObj);
+
+      const headerHtml = `
+        <h2>${highlightText(title, query)}</h2>
+        <div class="separator"></div>
+      `;
+
+      block.appendChild(createLevelRow(headerHtml, picture));
+
+      withArray(subObj.items).forEach((factionObj) => {
+        block.appendChild(renderFactionBlock(factionObj, query));
+      });
+
+      return block;
+    }
+
+    function renderCategoryBlock(categoryObj, query) {
+      const block = document.createElement('section');
+      block.className = 'category-block level-block';
+
+      const title = categoryObj.Category ?? '';
+      const picture = getPicture(categoryObj);
+
+      const headerHtml = `
+        <h1>${highlightText(title, query)}</h1>
+        <div class="separator"></div>
+      `;
+
+      block.appendChild(createLevelRow(headerHtml, picture));
+
+      withArray(categoryObj.items).forEach((subObj) => {
+        block.appendChild(renderSubCategoryBlock(subObj, query));
+      });
+
+      return block;
+    }
+
+    function render(data, query = '') {
+      contentEl.innerHTML = '';
+
+      if (!data.length) {
+        const empty = document.createElement('div');
+        empty.className = 'empty-state';
+        empty.textContent = query ? 'No results found.' : 'No FAQ entries available.';
+        contentEl.appendChild(empty);
+        return;
+      }
+
+      data.forEach((categoryObj) => {
+        contentEl.appendChild(renderCategoryBlock(categoryObj, query));
+      });
+    }
+
+    function filterData(data, rawQuery) {
+      const query = normalize(rawQuery).trim();
+      if (!query) return data;
+
+      return withArray(data).flatMap((categoryObj) => {
+        const filteredSubCategories = withArray(categoryObj.items).flatMap((subObj) => {
+          if (matches(subObj.SubCategory, query)) {
+            return [subObj];
+          }
+
+          const filteredFactions = withArray(subObj.items).flatMap((factionObj) => {
+            if (matches(factionObj.Faction, query)) {
+              return [factionObj];
+            }
+
+            const filteredPhrases = withArray(factionObj.items).filter((phraseObj) => {
+              return matches(phraseObj.Phrase, query) || matches(phraseObj.Main, query);
+            });
+
+            if (filteredPhrases.length) {
+              return [{
+                ...factionObj,
+                items: filteredPhrases
+              }];
+            }
+
+            return [];
+          });
+
+          if (filteredFactions.length) {
+            return [{
+              ...subObj,
+              items: filteredFactions
+            }];
+          }
+
+          return [];
+        });
+
+        if (filteredSubCategories.length) {
+          return [{
+            ...categoryObj,
+            items: filteredSubCategories
+          }];
+        }
+
+        return [];
+      });
+    }
+
+    async function loadFaq() {
+      try {
+        const response = await fetch(FAQ_JSON_PATH, { cache: 'no-store' });
+        if (!response.ok) {
+          throw new Error(`Failed to load FAQ JSON: ${response.status}`);
+        }
+
+        const data = await response.json();
+        originalData = Array.isArray(data) ? data : [];
+        render(originalData);
+      } catch (error) {
+        console.error(error);
+        contentEl.innerHTML = '<div class="empty-state">Failed to load FAQ data.</div>';
+      }
+    }
+
+    searchInput.addEventListener('input', (event) => {
+      const query = event.target.value;
+      const filtered = filterData(originalData, query);
+      render(filtered, query.trim());
+      searchMeta.textContent = query.trim()
+        ? `Search: “${query.trim()}”` 
+        : 'Showing full FAQ';
+    });
+
+    loadFaq();
+  </script>
+</body>
+</html>

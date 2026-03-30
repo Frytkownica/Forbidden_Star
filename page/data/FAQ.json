@@ -1,0 +1,791 @@
+[
+  {
+    "Category": "Base Game",
+    "items": [
+      {
+        "SubCategory": "General",
+        "items": [
+          {
+            "Faction": "Rules Clarification",
+            "items": [
+              {
+                "Phrase": "If all units from both players are destroyed before the end of combat, who wins?",
+                "Main": "In the case of both sides losing all their units and bastions in combat, combat immediately ends as there is no one left to fight the battle. If this happens before assign damage step do not resolve the rest of the resolution round, nor any other steps of combat. If the defender has a structure in that Area, then he keeps control of the structure and the planet."
+              },
+              {
+                "Phrase": "Many scheme cards read: 'Instead of revealing an order during the Operations Phase...' (ex. Mob Up!) - Can a player use such scheme card when he has no order tokens on the game board or if he does not have an order token that is on top of a stack?",
+                "Main": "A player must have the option to reveal an order (having one on the board and it being at the top of a stack) to use any “Instead of revealing an order during the Operations phase…” ability."
+              },
+              {
+                "Phrase": "Are reinforcement tokens limited to 3 even in combat?",
+                "Main": "The intent is that each player can only have 3 of each type of token in their play Area at a time. If a player has 3 tokens in their play Area, they can still play a card that adds a token to the battle from the supply. If there are no tokens in the supply though, then the effect of the card is wasted as no more tokens can be gained."
+              },
+              {
+                "Phrase": "Do Reinforcement Tokens count as a specific unit for Battle Card Effect?",
+                "Main": "Yes. They are level 0 units and are treated the same as a plastic mini for all effect purposes during the Execution step of the combat. They stay until the end of combat, provide morale in Resolution step of combat and are returned to supply in the cleanup phase."
+              },
+              {
+                "Phrase": "Can I destroy a routed unit to execute a card effect?",
+                "Main": "If a card effect doesn't specify routed or unrouted units, then yes you can choose that unit."
+              },
+              {
+                "Phrase": "When I gain/move a unit due to a Battle Card effect, do I roll any dice?",
+                "Main": "No, unless the card specifically states so."
+              },
+              {
+                "Phrase": "Are there differences between vertical and horizontal warp storms?",
+                "Main": "No. There is no difference between warp storms. Rotate the event card and move the warp storm appropriately."
+              },
+              {
+                "Phrase": "If you draw multiple Event cards, do you have to show all of them?",
+                "Main": "No. Just reveal the one you will play."
+              },
+              {
+                "Phrase": "Can I use multiple order upgrades on the same order?",
+                "Main": "Yes. Multiple order upgrades can be used during the same order."
+              },
+              {
+                "Phrase": "Are Areas in different system, but sharing a gold border, still considered Adjacent?",
+                "Main": "Yes. But be careful, since some card effects also specify 'Active System'."
+              },
+              {
+                "Phrase": "Can I place an order I can't resolve (e.g. Strategize in a system without my units) just to block?",
+                "Main": "Yes. But order other placement restrictions still apply (like friendly Areas in an adjacent system)."
+              },
+              {
+                "Phrase": "Do I have to use Upgraded Orders if I resolve an order?",
+                "Main": "No. An Upgraded Order can be used once per round, and you would have to declare in appropriate moment (stated on the Upgrade Order) that this order would be and Enhanced one."
+              },
+              {
+                "Phrase": "If I choose not to resolve the order – do I have to show it?",
+                "Main": "Yes. You always have to reveal the order before you choose to resolve it or not."
+              }
+            ]
+          },
+          {
+            "Faction": "Advance Order",
+            "items": [
+              {
+                "Phrase": "Can I attack with more units than the Areas capacity?",
+                "Main": "Yes. Unit capacity limits are checked at the end of the Order.  Advance order only restricts you to  a maximum of 5 units per movement restrictions to a single Area, and to 8 dice per combat."
+              },
+              {
+                "Phrase": "Does a player get eliminated the moment his last Friendly Area is",
+                "Main": ""
+              },
+              {
+                "Phrase": "Contested?",
+                "Main": "No. Battle finishes, and then you determine if the player is eliminated."
+              },
+              {
+                "Phrase": "Can I move the same units twice with two Advance orders?",
+                "Main": "Yes, as long as those units are not routed. Unit can participate in more than one battle per round."
+              },
+              {
+                "Phrase": "Do ships in adjacent voids contribute to ground combat?",
+                "Main": "No. An advance action can create only one contested Area, and combat (void or ground) is fought between the units in that single Area. Orbital strikes allow ships to attack ground units in adjacent Areas, provided no other contested Area was formed by the Advance order."
+              },
+              {
+                "Phrase": "Can units move 'through' an Uncontrolled world in a single advance action, provided a different unit stays there to make it friendly?",
+                "Main": "No. Ground movement requires tracing a legal path at the BEGINNING of the ground movement stage. That means you must stop at Uncontrolled Worlds if you can't skip past them via a friendly Area."
+              },
+              {
+                "Phrase": "Can I trace a path for a Unit to move through more than 2 systems via legal path (to g around Warp or to avoid combat)?",
+                "Main": "No. You can only trace a path through the unit's current system, and the Active System. So maximum 2 systems."
+              },
+              {
+                "Phrase": "Can I move ground units from system to system without a ship?",
+                "Main": "Yes. When planets are adjacent, you can move between them regardless of what System they are in."
+              },
+              {
+                "Phrase": "When I want to move my units, and I choose to move to an adjacent system, do *all* units that move have to move to that system, or can I move units inside the adjacent system (so they will come “closer” to the Active System)?",
+                "Main": "No. Partial moves are not allowed. All movement must end up in the Activated System."
+              },
+              {
+                "Phrase": "Can I move a ship into battle, but then move ground units through the same ship onto Friendly / Uncontrolled Worlds?",
+                "Main": "No. Your ship has created a contested Area, and thus your ground units cannot trace a legal path through a Friendly Areas before resolving the combat."
+              },
+              {
+                "Phrase": "How many units can I move in an Advance Order?",
+                "Main": "You can move unlimited units, but only 5 can end up on each world. They all have to have a legal path at the beginning, and you can only create 1 contested Area."
+              },
+              {
+                "Phrase": "When moving ships into the System, do they all go into one Void?",
+                "Main": "No. Each ship chooses their own void as long as that doesn't create more than 1 contested Area."
+              }
+            ]
+          },
+          {
+            "Faction": "Deploy Order",
+            "items": [
+              {
+                "Phrase": "Can I voluntarily destroy units in order to deploy them again?",
+                "Main": "In a way. You cannot remove existing figures. However, you may destroy them at the end of a Deploy Order if you exceed unit capacity in their Area. Keep in mind new units have to be placed to achieve that.\nAn Advance Order could achieve the same result if you move enough units to the same Area and exceed unit capacity."
+              },
+              {
+                "Phrase": "Can I deploy units to an area already at unit capacity?",
+                "Main": "Yes. However, you need to destroy units that exceed unit capacity in that area."
+              },
+              {
+                "Phrase": "Can I voluntarily remove Structures so I can build a different structure on that world?",
+                "Main": "No. Someone else may destroy them though effects, but unless you have card with effect that say otherwise, once you build yourself a structure, that world can't be built on again."
+              },
+              {
+                "Phrase": "Can I voluntarily destroy structures on a Friendly World?",
+                "Main": "No. Someone else may destroy them though effects, but unless you have card with effect that say otherwise, once you build yourself a structure, that world can't be built on again."
+              },
+              {
+                "Phrase": "Can I deploy ships into an Enemy Void and start a combat?",
+                "Main": "No. You may only deploy to Uncontrolled or Friendly Areas in the Active System.\nThis is a problem for non-Eldar factions as they only have one void in their home tile. An enemy can prevent you from building ships by taking that void assuming that you have only 1 factory in the home tile."
+              },
+              {
+                "Phrase": "Can I use multiple forge tokens for a unit purchase?",
+                "Main": "More than 1 forge token can be used in a scenario:\n- First is used to lower the unit's Command Level requirement by 1\n- Second is used to meet the forge token requirement (e.g. Titan requirement)"
+              },
+              {
+                "Phrase": "Can you use a cache token to reduce the cost of a purchase to 0?",
+                "Main": "Yes. Keeping in mind that only one cache token can be used per deployed unit."
+              },
+              {
+                "Phrase": "If I have two factories in a system, is the max units I can purchase based on",
+                "Main": ""
+              },
+              {
+                "Phrase": "the factory with the highest unit capacity?",
+                "Main": "No. The deploy limit is the combined unit capacity from all Friendly Worlds with a Factory in the Active System."
+              }
+            ]
+          },
+          {
+            "Faction": "Dominate Order",
+            "items": [
+              {
+                "Phrase": "Do I still get to resolve my Dominate Faction bonus if I choose to put the Order Token on top of the Event Deck instead of resolving normally?",
+                "Main": "No. By placing the Order Token on top of your Event deck, you chose not to resolve Dominate."
+              },
+              {
+                "Phrase": "Do I still get assets from friendly worlds if I choose to put the Order Token on top of the Event Deck instead of resolving normally?",
+                "Main": "No. By placing the Order Token on top of your Event deck, you chose not to resolve Dominate."
+              }
+            ]
+          },
+          {
+            "Faction": "Strategize Order",
+            "items": [
+              {
+                "Phrase": "Are the results of Strategize public information?",
+                "Main": "Yes. You show face up what cards were purchased, and what were removed."
+              }
+            ]
+          },
+          {
+            "Faction": "Orbital Strike",
+            "items": [
+              {
+                "Phrase": "Do planets have to be adjacent to my ships in order to orbital strike?",
+                "Main": "Yes. And in the same (active) system.  That means the corner planet in a 3 world system cannot be normally targeted by Orbital Strike."
+              },
+              {
+                "Phrase": "Does damage during Orbital Strike apply against each unit, or against all units?",
+                "Main": "All units. If you rolled 4 }, the opponent takes 4 damage. Your opponent has to assign that damage the same way as in combat, and destroy units appropriately. If the damage was not equal or greater than units HP that unit is not routed."
+              },
+              {
+                "Phrase": "Are Orbital Strikes limited to 8 dice?",
+                "Main": "Yes"
+              },
+              {
+                "Phrase": "Can I use Orbital Strike a planet with just a structure?",
+                "Main": "Yes. You can always choose to use Orbital Strike on any Enemy World, and use any Order Upgrades you want to. If the structure is a City/Factory, since they have no HP, they cannot be destroyed."
+              },
+              {
+                "Phrase": "Can I take over planets by destroying all ground units using Orbital Strikes?",
+                "Main": "No. Buildings retain their affiliation even if all ground units are destroyed by the orbital strike."
+              }
+            ]
+          },
+          {
+            "Faction": "Structures",
+            "items": [
+              {
+                "Phrase": "What happens when a Bastion is assigned damage?",
+                "Main": "Bastions take damage like a unit, but cannot be routed like one. That means they are always available to assign damage. If you assign 3 or more damage, they will be destroyed though. This implies that they can soak up to 2 damage each round. Since you must assign all damage to a single target, before moving to the next one, you will frequently be assigning damage to the Bastion last so that it will remain. Watch out for enemy morale though since it is an easy way to give away your structure to the opponent."
+              },
+              {
+                "Phrase": "Can a person with a Bastion rout it for any card effects (e.g. Lure of Chaos)?",
+                "Main": "No. Bastions cannot be routed by any effect."
+              },
+              {
+                "Phrase": "Can I capture a Bastion?",
+                "Main": "If you win a combat by Morale, then you take over the Bastion."
+              },
+              {
+                "Phrase": "Do Bastions can fight in combat without any other units?",
+                "Main": "Yes, but you cannot use reinforcement tokens since Bastions are not units."
+              },
+              {
+                "Phrase": "Do Bastions when they are with only routed units on the same world?",
+                "Main": "Yes. This causes routed units not to retreat, but they still do not provide any dice."
+              },
+              {
+                "Phrase": "Does a bastion count as a unit for reinforcement token placement purposes?",
+                "Main": "No. You are allowed to use 1 token per unit, and Bastions are not units."
+              }
+            ]
+          },
+          {
+            "Faction": "Battle and Retreats",
+            "items": [
+              {
+                "Phrase": "Can I retreat if I moved via Combat Card or Order Upgrade Effects?",
+                "Main": "If none of the units in the battle moved to the contested Area as part of the Advance order (meaning they moved to that Area as part of the movement granted by the Advance order), then they cannot retreat after or mid-battle. That also means they cannot retreat using retreat ability from players nor opponents combat cards. Only “move” cards allow to get the unit out of the combat. This means that in the case of units that start combat with cards like Wave Serpent, Orc Rocks, Drop Pods, Mycetic Spores, or Revel in Bloodshed cannot retreat if they loose combat, and therefore are destroyed."
+              },
+              {
+                "Phrase": "As an attacker, do I have to retreat back to where my units came from?",
+                "Main": "If any units moved into the contested Area via an Advance Order, all attacking units must move to a single Area that at least one unit moved from to start the combat. If all units were placed in the contested Area by any effect other than an Advance Order, all attacking units cannot retreat and are destroyed. Note that it is irrelevant if an Area is Friendly or Uncontrolled at the time of the attacker's retreat."
+              },
+              {
+                "Phrase": "When defending, can I choose to retreat to an Uncontrolled Area if there is a legal path to a Friendly Area?",
+                "Main": "The defending player always have to retreat to the friendly Area if a legal path exists, and then destroy units down to the units capacity of that Area. If there is no legal path to a Friendly Area, but a legal path exists to an Uncontrolled Area, then retreating units move to the Uncontrolled Area."
+              },
+              {
+                "Phrase": "When defending, can I choose to retreat to an Uncontrolled Area if there is a Friendly Area in legal path, but it is at maximum unit capacity?",
+                "Main": "The defending player always have to retreat to the friendly Area if a legal path exists, and then destroy units down to the units capacity of that Area. If there is no legal path to a Friendly Area, but a legal path exists to an Uncontrolled Area, then retreating units move to the Uncontrolled Area."
+              }
+            ]
+          },
+          {
+            "Faction": "Routed Units",
+            "items": [
+              {
+                "Phrase": "Can you move a routed unit via Order or Card Effect?",
+                "Main": "No. The rules explicitly prevent Move and Place for a routed unit. Routed units can only retreat. Only exception to that rule is Farsight due to unique phrase “all units”."
+              },
+              {
+                "Phrase": "Do routed units automatically retreat when attacked?",
+                "Main": "If you attack a planet with ONLY routed defenders and no structures, they all will automatically retreat if they can meet the rules for retreat, else they are destroyed. No battle occurs."
+              },
+              {
+                "Phrase": "If I only have routed units, and it takes some additional damage, does it get destroyed?",
+                "Main": "Not necessarily. Routed units must still take damage equal or greater than HP in order to be destroyed."
+              },
+              {
+                "Phrase": "Can Ground Units move through Routed Ships?",
+                "Main": "Yes. Routed ships still create a Friendly Area."
+              },
+              {
+                "Phrase": "Can routed units collect objectives?",
+                "Main": "Yes. Routed or not, it is irrelevant for the purpose of objective collection."
+              },
+              {
+                "Phrase": "If I win combat with routed units, do my units rally immediately?",
+                "Main": "No. Wait until the end of the round."
+              },
+              {
+                "Phrase": "Can unit with 1 hit point become routed?",
+                "Main": "Yes. Even if they only have 1 damage, they can be routed through card effects or retreats."
+              }
+            ]
+          },
+          {
+            "Faction": "Setup",
+            "items": [
+              {
+                "Phrase": "Does in a 2 player game the 3rd tile placed by each player has 0 objectives on it?",
+                "Main": "Yes. You must fill objective spots with unique objectives when you place a tile, and since there's only 1 unique opponent's objective per tile and you only have 2 objectives to place in a 2p game, your last tile will be empty of objectives."
+              },
+              {
+                "Phrase": "Does in a 3 player game the 3rd tile placed by each player has 0 objectives on it?",
+                "Main": "Yes. You must fill all objective spots when you place a tile, and since there's 2 per tile and you only have 4 objectives to place in a 3p game, your last tile will be empty of objectives."
+              },
+              {
+                "Phrase": "Do I control Areas in my Faction Tile without units / structures on them?",
+                "Main": "No. There is nothing special about Faction Tiles, other than it's an ensured setup option with lots of unit capacity and assets. You always need a unit / building to make an Area Friendly."
+              },
+              {
+                "Phrase": "Do I have to place my Faction tile first?",
+                "Main": "No. You can choose any other tile as first."
+              },
+              {
+                "Phrase": "Can my opponents lock me in a corner with their warp storm placements?",
+                "Main": "Yes. The only limitation is that two warp storms cannot be stacked."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "SubCategory": "Combat Cards",
+        "items": [
+          {
+            "Faction": "Space Marines",
+            "items": [
+              {
+                "Phrase": "Armoured Advance",
+                "Main": "Q: Does damage from both 'asset damage steps' stack?\nA: No. Damage does not stack, it is two separate instances of damage.\n\nQ: If there is a unit with 3 hit points in combat and enemy is dealing it 2 damage. What happens when A: Armoured Advance's ability is resolved? Is the unit destroyed?\nThe unit would take 2 instances of 2 damage. If unrouted, the first instance of damage would rout it. The second instance of damage would do nothing since it's not equal or greater than that units HP.\n\nQ: Does the resolve additional assess damage step count for both sides or just for your opponent?\nA: Both sides resolve assess damage step twice. Keep in mind the effects without 'must' are optional.\n\nQ: Does combat tokens are used in both assess damage steps?\nA: Yes. They are not discarded until the end of the second assess damage step."
+              },
+              {
+                "Phrase": "Break the Line",
+                "Main": "Q: Can I target the chosen card in the defender's hand?\nA: No. Break the Line only applies to face up cards. Playing this card as an attacker for your first card would 'waste' the effect since no face up cards are present at that moment.\n\nQ: Can this cancel battle-long effects?\nA: Yes. Break the Line may cancel on-going effects, but there are very few of these. Most effects are resolved immediately and cannot be undone afterwards."
+              },
+              {
+                "Phrase": "Drop Pod Assault",
+                "Main": "Q: Do you get to roll dice when you move the Marine as a result of this card's battle effect?\nA: No. Dice provided by Units are only rolled at Preparation step of combat, before Execution rounds."
+              },
+              {
+                "Phrase": "Glory and Death",
+                "Main": "Q: Who chooses which die to lose?\nA: Unless explicitly specified, the owner of the combat card makes the choice."
+              },
+              {
+                "Phrase": "Reconnaissance",
+                "Main": "Q: If I'm Defending, do I still get attack/defense tokens?\nA: Yes. Each paragraph is treated separate, so you can pick your two tokens."
+              }
+            ]
+          },
+          {
+            "Faction": "Chaos",
+            "items": [
+              {
+                "Phrase": "Chaos United",
+                "Main": "That response is based on the FGG stance, with mindset “rules as written”\nQ: Can my opponent choose to rout a routed unit?\nA: No. The rules state you cannot rout a unit that is already routed.\n\nQ: If the opponent has no units to rout, do I gain a die?\nA: Yes.\n\nQ: If the opponent only has a bastion, do I gain a die?\nA: Yes.\n\nQ: Do I have to say what die I would choose before my opponent chooses if he wants to rout a unit?\nA: No. The opponent must choose whether or not to rout one of his units before the Chaos player chooses which die he gains from this card’s general ability."
+              },
+              {
+                "Phrase": "Khorne's Rage",
+                "Main": "Q: Can my opponent choose to rout a routed unit?\nA: No. However, if all of his units are already routed, then there is no further effect."
+              },
+              {
+                "Phrase": "Lure of Chaos",
+                "Main": "Those responses are based on the FGG stance, with mindset “rules as written”\nQ: Can my opponent choose to rout a routed unit to gain the die?\nA: No. The rules state you cannot rout a unit that is already routed.\n\nQ: If the opponent has no units to rout, do I gain free Cultist/Iconoclast?\nA: Yes.\n\nQ: If the opponent only has a bastion, do I gain free Cultist/Iconoclast?\nA: Yes.\n\nQ: Does the cultist get added to battle or is just placed on the world?\nA: The new cultist enters combat, but it does not roll additional dice.\n\nQ: If my opponent already has 8 dice, can he still rout a unit to prevent me from gaining a free unit?\nA: Yes. The “does not” refers only to the “choose and rout 1 of his units”.\n\nMark of Nurgle\nThat response is based on the FGG stance, with mindset “rules as written”\nQ: What happens if my opponnet has no routed unit to destroy? \nA: Chaos automatically gains 2 @."
+              },
+              {
+                "Phrase": "Mark of Tzeentch",
+                "Main": "Q: Can I replace a routed cultist with a Chaos Space Marine?\nA: Yes. Also the newly placed Chaos Space Marine is placed as unrouted.\n\nQ: Can I replace a reinforcement token with a Chaos Space Marine?\nA: Yes. During combat reinforcement tokens are treated as Command Level 0 units for all purposes."
+              }
+            ]
+          },
+          {
+            "Faction": "Orks",
+            "items": [
+              {
+                "Phrase": "Mek Boyz",
+                "Main": "Q: Do I get a card from the opponent's hand?\nA: No, you get a card from the remaining cards from the combat deck."
+              },
+              {
+                "Phrase": "Weirdboyz",
+                "Main": "Q: If play them two of them, do I get 2x the tokens?\nA: Yes. Those are two on-going effects that stack."
+              }
+            ]
+          },
+          {
+            "Faction": "Eldar",
+            "items": [
+              {
+                "Phrase": "Corsair Raid",
+                "Main": "Q: Can I orbital strike twice using this upgrade?\nA: No. An orbital strike is not a combat, so the enhanced order cannot be used."
+              },
+              {
+                "Phrase": "Hit & Run",
+                "Main": "Q: Can I retreat to a planet diagonally?\nA: No. It states Adjacent Area, which means they must share a border.\n\nQ: If I retreat my last unit, do I still do damage?\nA: Yes, the assess damage phase still occurs, after which you would jump to the Resolution Phase.\n\nQ: If I retreat my last unit, does that unit still get attacked in the execution round?\nA: No. The unit is no longer in the battle, so even though the execution round finishes and assess damage step is performed, the retreated unit is not targetable for damage."
+              },
+              {
+                "Phrase": "Psychic Lance",
+                "Main": "Q: Can opponent choose to allow you to discard face up card if he has none(Psychic Lance played 1st round as attacker trigger that case)?\nA: Yes. Due to this Eldar would not gaing 4 #."
+              },
+              {
+                "Phrase": "Spiritseer's Guidance",
+                "Main": "Q: Does this apply just to the Eldar units?\nA: ALL units, including your opponent's units, are immune to damage.\n\nWill a Bastion also be prevented from suffering damage?\nNo. Bastions are not a unit for the purposes of resolving battle effects. They only 'act' like a unit."
+              },
+              {
+                "Phrase": "Wave Serpent",
+                "Main": "Q: Can I move any Command Level 0 and 1 units anywhere on the board?\nA: No, just to an adjacent area to the combat area. Since this is a move, this cannot include moving routed units, but can start combat as specified on the card.\n\nQ: Can I use Wave Serpent a second time and create a second contested area?\nA: No. The Eldar player can only move units into one contested area, regardless of how many Wave Serpent cards he plays during the combat.\n\nQ: Can I use Wave Serpent a second time and move to a different location than the first one?\nA: Yes."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "SubCategory": "Event Cards",
+        "items": [
+          {
+            "Faction": "Space Marines",
+            "items": [
+              {
+                "Phrase": "Emperor Protects Event",
+                "Main": "Q: Does this mean I can have more than 1 building per planet?\nA: Yes. If you pay 2 material, you can add a Bastion to a world with a City or Factory."
+              }
+            ]
+          },
+          {
+            "Faction": "Chaos",
+            "items": [
+              {
+                "Phrase": "Prayer to the Dark Gods",
+                "Main": "Q: Do I have to wait until the next Turn to use this Chaos Event?\nA: No. Schemes are available from the point you gain them. If you are 1st player during Events and Warp Storms step of Refresh Phase, you can interrupt the warp storm move of every other player."
+              },
+              {
+                "Phrase": "Seduced by Chaos",
+                "Main": "Q: Since this is an Event, who gets to choose which unit is routed?\nA: Unless explicitly specified, the owner of the event card makes the choice.\n\nQ: Can I use it in other players combat?\nA: No. Unless explicitly specified, Cards can only be used during your own combats."
+              },
+              {
+                "Phrase": "Through The Warp",
+                "Main": "Q: Does the Chaos player gains morale when he does not move through Warp Storm?\nA: Yes.\n\nQ: Can I get a combat upgrade with this?\nA: Yes. When it says Upgrade, it means Order or Combat."
+              },
+              {
+                "Phrase": "Incantation of Tzeentch",
+                "Main": "Q: If I had more events cards to choose from and I picked to play Incantation of Tzeentch, do I have to shuffle back remaining event cards before resolving Incantation?\nA: No. Draw the 3 additional cards from Incantation of Tzeentch, resolve 1, and then shuffle all cards back (both, those from order tokens, and those from Tzeentch).\n\nQ: Can I resolve warp movement from the drawn card?\nA: No. Warp movements are prior to resolving the Event cards."
+              }
+            ]
+          },
+          {
+            "Faction": "Orks",
+            "items": [
+              {
+                "Phrase": "Gitz Dem!",
+                "Main": "Q: Does the Ork player has to participate in combat to use this card?\nA: Yes. Unless explicitly stated you can only use abilities within your own combat."
+              },
+              {
+                "Phrase": "Teer It Down!",
+                "Main": "Q: Can I use it in other players combat?\nA: No. Unless explicitly specified, Cards can only be used during your own combats."
+              }
+            ]
+          },
+          {
+            "Faction": "Eldar",
+            "items": [
+              {
+                "Phrase": "Warp Gate",
+                "Main": "Q: Can I start a combat with this?\nA: No, a player cannot start combat with this card. Correct way to phrase the card is “…take any of your units from 1 area and place them on any 1 friendly or uncontrolled area.”"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "SubCategory": "Orders",
+        "items": [
+          {
+            "Faction": "Space Marines",
+            "items": [
+              {
+                "Phrase": "Crusade",
+                "Main": "Q: Do I get it to keep the reinforcement token or do I have to use it in the combat?\nA: You gain the token into your play area, and therefore you don't have to use it immediately."
+              },
+              {
+                "Phrase": "Drop Pods",
+                "Main": "Q: Can you bombard an Uncontrolled World in hope to gain a free Space Marine?\nA: No. You can only orbital strike an enemy world.\n\nQ: Can I orbital strike an enemy world with only a structure to gain a free marine?\nA: Yes. You can orbital strike any enemy world. Keep in mind that city and factory has no HP and cannot be destroyed, but they will be taken over by the Space Marine. If used on a Bastion this will create a contested Area and normal combat will commence if remaining dice from the Orbital Strike did not destroy it.\n\nQ: Is there a limit to the number of marines I get from an Orbital Strike?\nA: No. You are allowed to spend exactly 2 { to place 1 Space Marine."
+              },
+              {
+                "Phrase": "For the Emperor (Dominate)",
+                "Main": "Q: Do I need to meet command level requirement to upgrade my Scout/Marine?\nA: No. This is a replace, not a purchase. Only purchases need to meet the command requirements\nQ: Can I use a cache token to upgrade my Scout/Marine?\nA: No. This is a replace, not a purchase. You can only use cache tokens for purchases."
+              },
+              {
+                "Phrase": "Reinforcement Worlds",
+                "Main": "Q: Do you need at least 1 factory to make this work?\nA: No. All bastions in the Active System acts like a factory during that Deploy Order."
+              }
+            ]
+          },
+          {
+            "Faction": "Chaos",
+            "items": [
+              {
+                "Phrase": "Complete Destruction",
+                "Main": "Q: Who chooses what is destroyed?\nA: The opponent is forced to choose what unit or structure is destroyed."
+              },
+              {
+                "Phrase": "Taint of Chaos (Dominate)",
+                "Main": "Q: Do Warp Storms prevent them from being placed in an adjacent system?\nA: No. Warp storms only prohibit movement of units and do not remove adjacency."
+              },
+              {
+                "Phrase": "Dread Ritual",
+                "Main": "Q: Do I need a factory in the active system?\nA: No. The unit is purchased outside Deploy Order restrictions since it's resolved after that order. You just need a friendly area to place the unit to.\n\nQ: Do I need a friendly unit or structure in the active system?\nA: Yes – at least 1 friendly area is required.\n\nQ: Do I need to meet the command requirement?\nA: Yes. Unit purchases always have to respect command level limit and materialexpenditure (in this case, discounted by the number of cultists)\n\nQ: Can I purchase a ship?\nA: Yes, but it has to go into a friendly void.\n\nQ: Can I purchase Reaver Titan by using a forge token to reduce it's command requirement to 2?\nA: No. Forge tokens are spent to reduce a units command requirement when purchasing, but they do not actually reduce the command level of the unit. For this reason you cannot use Forge tokens with Dread\nRitual to purchase command level 3 unit. A forge token can still be used to buy Hellbrute/Repulsive Grand Cruisers when currently on command Level 1."
+              },
+              {
+                "Phrase": "Favor of the Dark Gods",
+                "Main": "Q: When purchasing this Order Upgrade, does it apply to the current Strategize order?\nA: No, since the Strategize Order token is already revealed. It can only apply to a subsequent Strategize\nOrders."
+              },
+              {
+                "Phrase": "From the Warp",
+                "Main": "Q: Can I move ground units?\nA: No. It is explicitly stated that this apply only to ships."
+              }
+            ]
+          },
+          {
+            "Faction": "Orks",
+            "items": [
+              {
+                "Phrase": "Green Tide",
+                "Main": "Q: Do I still get my event if I decide the Strategize order token is something else?\nA: No. Use of Green Tide means that order token is treated as something else, and only Strategize order tokens go on top of your Event deck after being resolved."
+              },
+              {
+                "Phrase": "Ork Roks",
+                "Main": "Q: Can I bridge an empty void to another ship, and then a planet?\nA: Yes.\n\nQ: Can they be used to retreat?\nA: In a way. As a defender Ork Rocks cannot be used, since your advance order is not being resolved, and as an attacker you have to retreat to place you came from. Ork rocks can be only used once per turn, and if they were used to attack, then it cannot be used if the attack failed. If they were not used to attack, they are not useful to retreat, since attacker has special rules for retreating."
+              },
+              {
+                "Phrase": "Ork Spores (Dominate)",
+                "Main": "Q: Can you use cache/forge tokens?\nA: Yes. Even ones you just got from the Dominate action.\n\nQ: Do you need a factory to build?\nA: No. Factory is only required when purchasing units during Deploy Order.\n\nQ: Do you need to meet command level requirement?\nA: Yes. Unit purchase always requires command level limit and material expenditure.\n\nQ: Can I build a spaceship?\nA: No. It explicitly says on planet, so ground units only."
+              }
+            ]
+          },
+          {
+            "Faction": "Eldar",
+            "items": [
+              {
+                "Phrase": "Farseers",
+                "Main": "Q: Can I purchase combat upgrade with this?\nA: Yes. Wording on the card is off, since all orders can be “resolved”, but without any effect. The intent here is that you can fully resolve the order without unit requirement.\n\nStrafing Run\nQ: If I had 1 ship and decided to move it to an adjecent system – do I resolve remaining dice?\nA: Yes. The Eldar player resolves the effects of all dice rolled, even if he moves ships out of the system."
+              },
+              {
+                "Phrase": "Wraithbone Singers",
+                "Main": "Q: an I have two of the same building?\nA: No. Second building has to be of a different type, than the one already on the world.\n\nQ: If someone else conquers my planet with two structures, do they keep both?\nA: Yes. Attackers gain control of all enemy structures on the world."
+              },
+              {
+                "Phrase": "Webway Portal (Dominate)",
+                "Main": "Q: Do I need a path to trigger this?\nA: No. Place action does not need a legal path. Take a unit in the active system and place on a friendly world."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "Category": "Galaxy in Flames",
+    "items": [
+      {
+        "SubCategory": "Combat Cards",
+        "items": [
+          {
+            "Faction": "Tyranid",
+            "items": [
+              {
+                "Phrase": "Winged Horror",
+                "Main": "Q: Can my opponent still choose to not allow me to gain 2 (S), if the unit ability is resolved in the last execution round of a combat?\nA: Yes. The opponent's choice is not limited in that case and he can choose either option. But not allowing you to gain 2 @ will not result of adding 2 to your defense value, since that was last round."
+              }
+            ]
+          },
+          {
+            "Faction": "Imperial Guard",
+            "items": [
+              {
+                "Phrase": "Combined Arms",
+                "Main": "Q: Is one unit type enough to gain 1/2 combat tokens? \nA: Yes, it's per unit of different command level."
+              },
+              {
+                "Phrase": "Fire support",
+                "Main": "Q: Can I reroll my opponent's { with the secondary ability?\nA: No. Unless explicitly specified, the owner can only use the ability on yourself."
+              },
+              {
+                "Phrase": "Hammer of the Emperor",
+                "Main": "Q: Is one unit type enough to gain 2/3 combat tokens? \nA: Yes, it's per unit of different command level."
+              },
+              {
+                "Phrase": "Iron Discipline",
+                "Main": "Q: Is one unit type enough to gain 1 |​? \nA: Yes, it's per unit of different command level."
+              },
+              {
+                "Phrase": "Mechanised Combat Group",
+                "Main": "Q: When I resolve this card's ability, do I immediately decide which tokens my opponent loses?\nA: No, you decide that at the start of the assess damage step."
+              },
+              {
+                "Phrase": "Titan Support",
+                "Main": "Q: Is one unit type enough for your opponent to reroll 1 }? \nA: Yes, it's per unit of different command level."
+              }
+            ]
+          },
+          {
+            "Faction": "Tau",
+            "items": [
+              {
+                "Phrase": "Feigned Retreat",
+                "Main": "Q: When resolving the general ability, if I have fewer than 2 {, can I choose to reroll 2 { or am I forced to retreat a unit?\nA: By the general ability you are forced to choose. The choice is to to either reroll 2 { or to retreat 1 of your units. You are obliged to resolve the general ability always when playing this card (because of the term must), but you can always choose either of the two options, even if you do not fulfill everything that is required. In case you have no {, do not reroll any dice; if you have 1 {, reroll just that one.\n\nQ: What if my units cannot legally retreat for whatever reason?\nA: If you still choose to retreat – the unit is destroyed."
+              },
+              {
+                "Phrase": "Fire and Movement",
+                "Main": "Q: Is only 1 of all destroyed units can be retreated?\nA: Yes."
+              },
+              {
+                "Phrase": "Mont'ka",
+                "Main": "Q: Does the damage in 2nd assess damage step, if Remorseless Advance/Armoured Advance was used, gets lost? \nA: Yes. Even though tokens are not discarded, if first assess damage step didn’t destroy it, second will also not destroy it. If it did destroy it, a new unit cannot be chosen and the excess damage is lost."
+              },
+              {
+                "Phrase": "Regroup",
+                "Main": "Q: Can I spend a dice if I have no unit to rally (for example to lose guns if I want to win battle with bastion on morale)?\nA: Yes. You are allowed to spend any number of dice. Rally is a benefit of that spending, but it’s not obligatory."
+              },
+              {
+                "Phrase": "Stealth Teams",
+                "Main": "That response is based on the FGG stance, with mindset “rules as written”\nQ: Can my opponent choose to rout a routed unit?\nA: No. The rules state you cannot rout a unit that is already routed.\n\nQ: If the opponent has no units to rout, do he lose a die?\nA: Yes.\n\nQ: If the opponent only has a bastion, do he lose a die?\nA: Yes."
+              },
+              {
+                "Phrase": "Evasion",
+                "Main": "That response is based on the FGG stance, with mindset “rules as written”\nQ: Can my opponent choose to rout a routed unit?\nA: Yes. During combat reinforcement tokens are treated as Command Level 0 units for all purposes."
+              }
+            ]
+          },
+          {
+            "Faction": "Necron",
+            "items": [
+              {
+                "Phrase": "Monolith Phalanx",
+                "Main": "Q: Does second ability interfere anyhow with first ability? \nA: No, taking damage and routing are different. You can take damage and not rout."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "SubCategory": "Event Cards",
+        "items": [
+          {
+            "Faction": "Tyranid",
+            "items": [
+              {
+                "Phrase": "Shadow in The Warp",
+                "Main": "Q: Can I only use this card when I am the attacker?\nA: Yes.\n\nQ: When can I play the cards to use it?\nA: Before you roll dice or draw cards. It’s explicitly states “start of combat”.\n\nQ: Does Shadow in The Warp prevent my opponent from placing a reinforcement token in the contested area from the supply?\nA: Yes. Only exception to this is Lead the Rightous, since the token is already used prior to the combat."
+              }
+            ]
+          },
+          {
+            "Faction": "Imperial Guard",
+            "items": [
+              {
+                "Phrase": "Tactical Genius",
+                "Main": "Q: When resolving this event, if I choose to play a combat card from my upgrade deck, what happens to that card at the end of the combat?\nA: A card that was played from the upgrade deck while resolving Tactical Genius is returned to the upgrade deck at the end of the combat.\n\nQ: When exactly this card has to be played? Do opponent see what card I play before he plays his card?\nA: Combat cards should be placed simultaneously, so before either side places cards you need to declare you are going to use the scheme. But because cards are placed simultaneously your opponent cannot react to the card you will choose by picking a different card instead, but there is a catch. If you chosen a card from your combat deck, place that card secretly face down. But because the cards that can be bought is public information, then if you choose a card you haven’t bought yet, then place that card face up even if you are defending."
+              },
+              {
+                "Phrase": "Deathstrike missile",
+                "Main": "Q: Can I use the scheme in other players' combats?\nA: No. Unless explicitly specified, Cards can only be used during your own combats."
+              }
+            ]
+          },
+          {
+            "Faction": "Tau",
+            "items": [
+              {
+                "Phrase": "Critical strike",
+                "Main": "Q: Can I use the scheme when units are routed from other effects than damage?\nA: No. It is explicitly specified the unit has to suffer damage. Orbital strike doesn't count either since it’s explicitly specified it has to be during combat."
+              },
+              {
+                "Phrase": "Denial of Supplies",
+                "Main": "Q: Does Denial of Supplies prevent my opponent from placing a reinforcement token in the contested area from the supply?\nA: No. Denial of Supplies specifies it only applies to reinforcement tokens placed from a player's play area."
+              },
+              {
+                "Phrase": "Philosophy of War",
+                "Main": "Q: Are the basic combat cards considered to have a command level of 0 for the purpose of this event?\nA: No. Basic combat cards have no command level. When resolving Philosophy of War, treat your basic combat cards as having a command level lower than any combat upgrade cards.\nSee reference rulebook entries “Command Level” (2nd bullet point) and “Combat cards and combat upgrade cards” (5th bullet point) for further information.\n\nQ: Does the opponent know what cards I'm replacing?\nA: Yes. Content of your combat deck is always public information."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "SubCategory": "Order Upgrades",
+        "items": [
+          {
+            "Faction": "Tyranid",
+            "items": [
+              {
+                "Phrase": "Mycetic Spores",
+                "Main": "Q: Can I directly buy Mycetic Spores? \nA: Yes, but to use the Mycetic Spores order upgrade the Tyranid player first has to purchase the Breeding Chambers order upgrade."
+              },
+              {
+                "Phrase": "Without Number",
+                "Main": "Q: Does the free reinforcement token count against the normal limit to the number of reinforcement tokens I can use in the combat?\nA: No, despite being placed in the area at the start of the reinforce step. See reference rulebook entry “Reinforcement Tokens” (last bullet point) for further information."
+              }
+            ]
+          },
+          {
+            "Faction": "Imperial Guard",
+            "items": [
+              {
+                "Phrase": "Departmento Munitorum",
+                "Main": "Q: When resolving Departmento Munitorum’s limited Advance Order, can I resolve an orbital strike?\nA: Yes. Departmento Munitorum’s ability text states all of the applicable limitations of the limited orders. In case of the limited Advance Order you are only allowed to move units from 1 area, which is the only difference between Departmento Munitorum’s limited and a regular Advance order.\n\nQ: Can order upgrades can be used when resolving the limited order?\nA: Yes."
+              },
+              {
+                "Phrase": "Forced Recruitment",
+                "Main": "Q: Does the passive ability works even if Forced Recruitment was used?\nA: Yes. The bottom ability is a permanent one.\n\nQ: Can I use this order upgrade when resolving Mass Production (Domination)? \nA: Yes. It can be used together with his faction ability."
+              },
+              {
+                "Phrase": "Mass Production (Domination)",
+                "Main": "Q: Can I use the part of the faction ability that allows to reduce the cost of 2 Guardsmen by 1 each by spending a cache token always or just when resolving a dominate order and using the faction ability?\nA: You can do this only when resolving your faction ability as part of a dominate order.\n\nQ: Can I purchase structures when using the faction ability?\nA: No, you are only allowed to purchase units."
+              }
+            ]
+          },
+          {
+            "Faction": "Tau",
+            "items": [
+              {
+                "Phrase": "Mobilised Hunter Cadres",
+                "Main": "Q: Can I resolve an orbital strike when resolving the first Advance Order and then start a combat with the second Advance Order?\nA: Yes.\n\nQ: When resolving the first Advance Order, the ability says that if combat occurs, only 1 execution round is resolved. What happens if both sides have units and/or bastions remaining in the area at the end of that execution round?\nA: In that case the player with the highest morale value wins the combat, as per regular combat resolution rules.\n\nQ: Can I use reinforcement as Tau in battle that lasts 1 round?\nA: Yes. It is considered a normal combat, that only lasts 1 execution round instead of typical 3."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "Category": "Symphony of War",
+    "items": [
+      {
+        "SubCategory": "Combat Cards",
+        "items": [
+          {
+            "Faction": "Dark Eldar",
+            "items": []
+          },
+          {
+            "Faction": "Sisters of Battle",
+            "items": []
+          },
+          {
+            "Faction": "Adeptus Mechanicus",
+            "items": []
+          },
+          {
+            "Faction": "Inquisition",
+            "items": []
+          }
+        ]
+      },
+      {
+        "SubCategory": "Event Cards",
+        "items": [
+          {
+            "Faction": "Dark Eldar",
+            "items": []
+          },
+          {
+            "Faction": "Sisters of Battle",
+            "items": []
+          },
+          {
+            "Faction": "Adeptus Mechanicus",
+            "items": []
+          },
+          {
+            "Faction": "Inquisition",
+            "items": []
+          }
+        ]
+      },
+      {
+        "SubCategory": "Order Upgrades",
+        "items": [
+          {
+            "Faction": "Dark Eldar",
+            "items": []
+          },
+          {
+            "Faction": "Sisters of Battle",
+            "items": []
+          },
+          {
+            "Faction": "Adeptus Mechanicus",
+            "items": []
+          },
+          {
+            "Faction": "Inquisition",
+            "items": []
+          }
+        ]
+      }
+    ]
+  }
+]
