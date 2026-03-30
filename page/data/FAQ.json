@@ -29,7 +29,7 @@
                 "Main": "If a card effect doesn't specify routed or unrouted units, then yes you can choose that unit."
               },
               {
-                "Phrase": "When I gain/move a unit due to a Battle Card effect, do I roll any dice?",
+                "Phrase": "When I gain/move a unit (in combat) due to a Battle Card effect, do I gain/lose it's dice?",
                 "Main": "No, unless the card specifically states so."
               },
               {
@@ -102,7 +102,7 @@
                 "Main": "No. Partial moves are not allowed. All movement must end up in the Activated System."
               },
               {
-                "Phrase": "Can I move a ship into battle, but then move ground units through the same ship onto Friendly / Uncontrolled Worlds?",
+                "Phrase": "Can I move a ship into battle, but then move ground units through the same ship onto Friendly or Uncontrolled Worlds?",
                 "Main": "No. Your ship has created a contested Area, and thus your ground units cannot trace a legal path through a Friendly Areas before resolving the combat."
               },
               {
@@ -187,7 +187,7 @@
               },
               {
                 "Phrase": "Does damage during Orbital Strike apply against each unit, or against all units?",
-                "Main": "All units. If you rolled 4 }, the opponent takes 4 damage. Your opponent has to assign that damage the same way as in combat, and destroy units appropriately. If the damage was not equal or greater than units HP that unit is not routed."
+                "Main": "All units. If you rolled 4 }, your opponent takes 4 damage. Your opponent has to assign that damage the same way as in combat, and destroy units appropriately. If the damage was not equal or greater than units HP that unit is not routed."
               },
               {
                 "Phrase": "Are Orbital Strikes limited to 8 dice?",
@@ -208,7 +208,7 @@
             "items": [
               {
                 "Phrase": "What happens when a Bastion is assigned damage?",
-                "Main": "Bastions take damage like a unit, but cannot be routed like one. That means they are always available to assign damage. If you assign 3 or more damage, they will be destroyed though. This implies that they can soak up to 2 damage each round. Since you must assign all damage to a single target, before moving to the next one, you will frequently be assigning damage to the Bastion last so that it will remain. Watch out for enemy morale though since it is an easy way to give away your structure to the opponent."
+                "Main": "Bastions take damage like a unit, but cannot be routed like one. That means they are always available to assign damage. If you assign 3 or more damage, they will be destroyed though. This implies that they can soak up to 2 damage each round. Since you must assign all damage to a single target, before moving to the next one, you will frequently be assigning damage to the Bastion last so that it will remain. Watch out for enemy morale though since it is an easy way to give away your structure to your opponent."
               },
               {
                 "Phrase": "Can a person with a Bastion rout it for any card effects (e.g. Lure of Chaos)?",
@@ -298,8 +298,8 @@
                 "Main": "Yes. You must fill all objective spots when you place a tile, and since there's 2 per tile and you only have 4 objectives to place in a 3p game, your last tile will be empty of objectives."
               },
               {
-                "Phrase": "Do I control Areas in my Faction Tile without units / structures on them?",
-                "Main": "No. There is nothing special about Faction Tiles, other than it's an ensured setup option with lots of unit capacity and assets. You always need a unit / building to make an Area Friendly."
+                "Phrase": "Do I control Areas in my Faction Tile without units/structures on them?",
+                "Main": "No. There is nothing special about Faction Tiles, other than it's an ensured setup option with lots of unit capacity and assets. You always need a unit/building to make an Area Friendly."
               },
               {
                 "Phrase": "Do I have to place my Faction tile first?",
@@ -321,7 +321,7 @@
             "items": [
               {
                 "Phrase": "Armoured Advance",
-                "Main": "Q: Does damage from both 'asset damage steps' stack?\nA: No. Damage does not stack, it is two separate instances of damage.\n\nQ: If there is a unit with 3 hit points in combat and enemy is dealing it 2 damage. What happens when A: Armoured Advance's ability is resolved? Is the unit destroyed?\nThe unit would take 2 instances of 2 damage. If unrouted, the first instance of damage would rout it. The second instance of damage would do nothing since it's not equal or greater than that units HP.\n\nQ: Does the resolve additional assess damage step count for both sides or just for your opponent?\nA: Both sides resolve assess damage step twice. Keep in mind the effects without 'must' are optional.\n\nQ: Does combat tokens are used in both assess damage steps?\nA: Yes. They are not discarded until the end of the second assess damage step."
+                "Main": "Q: Does damage from both 'asset damage steps' stack?\nA: No. Damage does not stack, it is two separate instances of damage.\n\nQ: If there is a unit with 3 hit points in combat and enemy is dealing it 2 damage. What happens when Armoured Advance's ability is resolved? Is the unit destroyed?\nA: The unit would take 2 instances of 2 damage. If unrouted, the first instance of damage would rout it. The second instance of damage would do nothing since it's not equal or greater than that units HP.\n\nQ: Does the resolve additional assess damage step count for both sides or just for your opponent?\nA: Both sides resolve assess damage step twice. Keep in mind the effects without 'must' are optional.\n\nQ: Does combat tokens are used in both assess damage steps?\nA: Yes. They are not discarded until the end of the second assess damage step."
               },
               {
                 "Phrase": "Break the Line",
@@ -346,7 +346,7 @@
             "items": [
               {
                 "Phrase": "Chaos United",
-                "Main": "That response is based on the FGG stance, with mindset “rules as written”\nQ: Can my opponent choose to rout a routed unit?\nA: No. The rules state you cannot rout a unit that is already routed.\n\nQ: If the opponent has no units to rout, do I gain a die?\nA: Yes.\n\nQ: If the opponent only has a bastion, do I gain a die?\nA: Yes.\n\nQ: Do I have to say what die I would choose before my opponent chooses if he wants to rout a unit?\nA: No. The opponent must choose whether or not to rout one of his units before the Chaos player chooses which die he gains from this card’s general ability."
+                "Main": "That response is based on the FGG stance, with mindset “rules as written”\nQ: Can my opponent choose to rout a routed unit?\nA: No. The rules state you cannot rout a unit that is already routed.\n\nQ: If my opponent has no units to rout, do I gain a die?\nA: Yes.\n\nQ: If my opponent only has a bastion, do I gain a die?\nA: Yes.\n\nQ: Do I have to say what die I would choose before my opponent chooses if he wants to rout a unit?\nA: No. Your opponent must choose whether or not to rout one of his units before the Chaos player chooses which die he gains from this card's general ability."
               },
               {
                 "Phrase": "Khorne's Rage",
@@ -354,7 +354,11 @@
               },
               {
                 "Phrase": "Lure of Chaos",
-                "Main": "Those responses are based on the FGG stance, with mindset “rules as written”\nQ: Can my opponent choose to rout a routed unit to gain the die?\nA: No. The rules state you cannot rout a unit that is already routed.\n\nQ: If the opponent has no units to rout, do I gain free Cultist/Iconoclast?\nA: Yes.\n\nQ: If the opponent only has a bastion, do I gain free Cultist/Iconoclast?\nA: Yes.\n\nQ: Does the cultist get added to battle or is just placed on the world?\nA: The new cultist enters combat, but it does not roll additional dice.\n\nQ: If my opponent already has 8 dice, can he still rout a unit to prevent me from gaining a free unit?\nA: Yes. The “does not” refers only to the “choose and rout 1 of his units”.\n\nMark of Nurgle\nThat response is based on the FGG stance, with mindset “rules as written”\nQ: What happens if my opponnet has no routed unit to destroy? \nA: Chaos automatically gains 2 @."
+                "Main": "Those responses are based on the FGG stance, with mindset “rules as written”\nQ: Can my opponent choose to rout a routed unit to gain the die?\nA: No. The rules state you cannot rout a unit that is already routed.\n\nQ: If my opponent has no units to rout, do I gain free Cultist/Iconoclast?\nA: Yes.\n\nQ: If my opponent only has a bastion, do I gain free Cultist/Iconoclast?\nA: Yes.\n\nQ: Does the cultist get added to battle or is just placed on the world?\nA: The new cultist enters combat, but it does not roll additional dice.\n\nQ: If my opponent already has 8 dice, can he still rout a unit to prevent me from gaining a free unit?\nA: Yes. The “does not” refers only to the “choose and rout 1 of his units”."
+              },
+			                {
+                "Phrase": "Mark of Nurgle",
+                "Main": "That response is based on the FGG stance, with mindset “rules as written”\nQ: What happens if my opponnet has no routed unit to destroy? \nA: Chaos automatically gains 2 @."
               },
               {
                 "Phrase": "Mark of Tzeentch",
@@ -367,7 +371,7 @@
             "items": [
               {
                 "Phrase": "Mek Boyz",
-                "Main": "Q: Do I get a card from the opponent's hand?\nA: No, you get a card from the remaining cards from the combat deck."
+                "Main": "Q: Do I get a card from my opponent's hand?\nA: No, you get a card from the remaining cards from the combat deck."
               },
               {
                 "Phrase": "Weirdboyz",
@@ -388,11 +392,11 @@
               },
               {
                 "Phrase": "Psychic Lance",
-                "Main": "Q: Can opponent choose to allow you to discard face up card if he has none(Psychic Lance played 1st round as attacker trigger that case)?\nA: Yes. Due to this Eldar would not gaing 4 #."
+                "Main": "Q: Can my opponent choose to allow you to discard face up card if he has none(Psychic Lance played 1st round as attacker trigger that case)?\nA: Yes. Due to this Eldar would not gaing 4 #."
               },
               {
                 "Phrase": "Spiritseer's Guidance",
-                "Main": "Q: Does this apply just to the Eldar units?\nA: ALL units, including your opponent's units, are immune to damage.\n\nWill a Bastion also be prevented from suffering damage?\nNo. Bastions are not a unit for the purposes of resolving battle effects. They only 'act' like a unit."
+                "Main": "Q: Does this apply just to the Eldar units?\nA: ALL units, including your opponent's units, are immune to damage.\n\nQ:Will a Bastion also be prevented from suffering damage?\nA:No. Bastions are not a unit for the purposes of resolving battle effects. They only 'act' like a unit."
               },
               {
                 "Phrase": "Wave Serpent",
@@ -409,7 +413,7 @@
             "Faction": "Space Marines",
             "items": [
               {
-                "Phrase": "Emperor Protects Event",
+                "Phrase": "Emperor Protects",
                 "Main": "Q: Does this mean I can have more than 1 building per planet?\nA: Yes. If you pay 2 material, you can add a Bastion to a world with a City or Factory."
               }
             ]
@@ -488,7 +492,7 @@
             "items": [
               {
                 "Phrase": "Complete Destruction",
-                "Main": "Q: Who chooses what is destroyed?\nA: The opponent is forced to choose what unit or structure is destroyed."
+                "Main": "Q: Who chooses what is destroyed?\nA: Your opponent is forced to choose what unit or structure is destroyed."
               },
               {
                 "Phrase": "Taint of Chaos (Dominate)",
@@ -496,11 +500,11 @@
               },
               {
                 "Phrase": "Dread Ritual",
-                "Main": "Q: Do I need a factory in the active system?\nA: No. The unit is purchased outside Deploy Order restrictions since it's resolved after that order. You just need a friendly area to place the unit to.\n\nQ: Do I need a friendly unit or structure in the active system?\nA: Yes – at least 1 friendly area is required.\n\nQ: Do I need to meet the command requirement?\nA: Yes. Unit purchases always have to respect command level limit and materialexpenditure (in this case, discounted by the number of cultists)\n\nQ: Can I purchase a ship?\nA: Yes, but it has to go into a friendly void.\n\nQ: Can I purchase Reaver Titan by using a forge token to reduce it's command requirement to 2?\nA: No. Forge tokens are spent to reduce a units command requirement when purchasing, but they do not actually reduce the command level of the unit. For this reason you cannot use Forge tokens with Dread\nRitual to purchase command level 3 unit. A forge token can still be used to buy Hellbrute/Repulsive Grand Cruisers when currently on command Level 1."
+                "Main": "Q: Do I need a factory in the active system?\nA: No. The unit is purchased outside Deploy Order restrictions since it's resolved after that order. You just need a friendly area to place the unit to.\n\nQ: Do I need a friendly unit or structure in the active system?\nA: Yes. At least 1 friendly area is required.\n\nQ: Do I need to meet the command requirement?\nA: Yes. Unit purchases always have to respect command level limit and materialexpenditure (in this case, discounted by the number of cultists)\n\nQ: Can I purchase a ship?\nA: Yes, but it has to go into a friendly void.\n\nQ: Can I purchase Reaver Titan by using a forge token to reduce it's command requirement to 2?\nA: No. Forge tokens are spent to reduce a units command requirement when purchasing, but they do not actually reduce the command level of the unit. For this reason you cannot use Forge tokens with Dread Ritual to purchase command level 3 unit. A forge token can still be used to buy Hellbrute/Repulsive Grand Cruisers when currently on command Level 1."
               },
               {
                 "Phrase": "Favor of the Dark Gods",
-                "Main": "Q: When purchasing this Order Upgrade, does it apply to the current Strategize order?\nA: No, since the Strategize Order token is already revealed. It can only apply to a subsequent Strategize\nOrders."
+                "Main": "Q: When purchasing this Order Upgrade, does it apply to the current Strategize order?\nA: No, since the Strategize Order token is already revealed. It can only apply to a subsequent Strategize Orders."
               },
               {
                 "Phrase": "From the Warp",
@@ -530,7 +534,11 @@
             "items": [
               {
                 "Phrase": "Farseers",
-                "Main": "Q: Can I purchase combat upgrade with this?\nA: Yes. Wording on the card is off, since all orders can be “resolved”, but without any effect. The intent here is that you can fully resolve the order without unit requirement.\n\nStrafing Run\nQ: If I had 1 ship and decided to move it to an adjecent system – do I resolve remaining dice?\nA: Yes. The Eldar player resolves the effects of all dice rolled, even if he moves ships out of the system."
+                "Main": "Q: Can I purchase combat upgrade with this?\nA: Yes. Wording on the card is off, since all orders can be “resolved”, but without any effect. The intent here is that you can fully resolve the order without unit requirement."
+              },
+			  {
+                "Phrase": "Strafing Run",
+                "Main": "Q: If I had 1 ship and decided to move it to an adjecent system – do I resolve remaining dice?\nA: Yes. The Eldar player resolves the effects of all dice rolled, even if he moves ships out of the system."
               },
               {
                 "Phrase": "Wraithbone Singers",
@@ -557,7 +565,7 @@
             "items": [
               {
                 "Phrase": "Winged Horror",
-                "Main": "Q: Can my opponent still choose to not allow me to gain 2 (S), if the unit ability is resolved in the last execution round of a combat?\nA: Yes. The opponent's choice is not limited in that case and he can choose either option. But not allowing you to gain 2 @ will not result of adding 2 to your defense value, since that was last round."
+                "Main": "Q: Can my opponent still choose to not allow me to gain 2 (S), if the unit ability is resolved in the last execution round of a combat?\nA: Yes. Your opponent's choice is not limited in that case and he can choose either option. But not allowing you to gain 2 @ will not result of adding 2 to your defense value, since that was last round."
               }
             ]
           },
@@ -603,15 +611,15 @@
               },
               {
                 "Phrase": "Mont'ka",
-                "Main": "Q: Does the damage in 2nd assess damage step, if Remorseless Advance/Armoured Advance was used, gets lost? \nA: Yes. Even though tokens are not discarded, if first assess damage step didn’t destroy it, second will also not destroy it. If it did destroy it, a new unit cannot be chosen and the excess damage is lost."
+                "Main": "Q: Does the damage in 2nd assess damage step, if Remorseless Advance/Armoured Advance was used, gets lost? \nA: Yes. Even though tokens are not discarded, if first assess damage step didn't destroy it, second will also not destroy it. If it did destroy it, a new unit cannot be chosen and the excess damage is lost."
               },
               {
                 "Phrase": "Regroup",
-                "Main": "Q: Can I spend a dice if I have no unit to rally (for example to lose guns if I want to win battle with bastion on morale)?\nA: Yes. You are allowed to spend any number of dice. Rally is a benefit of that spending, but it’s not obligatory."
+                "Main": "Q: Can I spend a dice if I have no unit to rally (for example to lose guns if I want to win battle with bastion on morale)?\nA: Yes. You are allowed to spend any number of dice. Rally is a benefit of that spending, but it's not obligatory."
               },
               {
                 "Phrase": "Stealth Teams",
-                "Main": "That response is based on the FGG stance, with mindset “rules as written”\nQ: Can my opponent choose to rout a routed unit?\nA: No. The rules state you cannot rout a unit that is already routed.\n\nQ: If the opponent has no units to rout, do he lose a die?\nA: Yes.\n\nQ: If the opponent only has a bastion, do he lose a die?\nA: Yes."
+                "Main": "That response is based on the FGG stance, with mindset “rules as written”\nQ: Can my opponent choose to rout a routed unit?\nA: No. The rules state you cannot rout a unit that is already routed.\n\nQ: If your opponent has no units to rout, do he lose a die?\nA: Yes.\n\nQ: If my opponent only has a bastion, do he lose a die?\nA: Yes."
               },
               {
                 "Phrase": "Evasion",
@@ -638,7 +646,7 @@
             "items": [
               {
                 "Phrase": "Shadow in The Warp",
-                "Main": "Q: Can I only use this card when I am the attacker?\nA: Yes.\n\nQ: When can I play the cards to use it?\nA: Before you roll dice or draw cards. It’s explicitly states “start of combat”.\n\nQ: Does Shadow in The Warp prevent my opponent from placing a reinforcement token in the contested area from the supply?\nA: Yes. Only exception to this is Lead the Rightous, since the token is already used prior to the combat."
+                "Main": "Q: Can I only use this card when I am the attacker?\nA: Yes.\n\nQ: When can I play the cards to use it?\nA: Before you roll dice or draw cards. It's explicitly states “start of combat”.\n\nQ: Does Shadow in The Warp prevent my opponent from placing a reinforcement token in the contested area from the supply?\nA: Yes. Only exception to this is Lead the Rightous, since the token is already used prior to the combat."
               }
             ]
           },
@@ -647,7 +655,7 @@
             "items": [
               {
                 "Phrase": "Tactical Genius",
-                "Main": "Q: When resolving this event, if I choose to play a combat card from my upgrade deck, what happens to that card at the end of the combat?\nA: A card that was played from the upgrade deck while resolving Tactical Genius is returned to the upgrade deck at the end of the combat.\n\nQ: When exactly this card has to be played? Do opponent see what card I play before he plays his card?\nA: Combat cards should be placed simultaneously, so before either side places cards you need to declare you are going to use the scheme. But because cards are placed simultaneously your opponent cannot react to the card you will choose by picking a different card instead, but there is a catch. If you chosen a card from your combat deck, place that card secretly face down. But because the cards that can be bought is public information, then if you choose a card you haven’t bought yet, then place that card face up even if you are defending."
+                "Main": "Q: When resolving this event, if I choose to play a combat card from my upgrade deck, what happens to that card at the end of the combat?\nA: A card that was played from the upgrade deck while resolving Tactical Genius is returned to the upgrade deck at the end of the combat.\n\nQ: When exactly this card has to be played? Do my opponent see what card I play before he plays his card?\nA: Combat cards should be placed simultaneously, so before either side places cards you need to declare you are going to use the scheme. But because cards are placed simultaneously your opponent cannot react to the card you will choose by picking a different card instead, but there is a catch. If you chosen a card from your combat deck, place that card secretly face down. But because the cards that can be bought is public information, then if you choose a card you haven't bought yet, then place that card face up even if you are defending."
               },
               {
                 "Phrase": "Deathstrike missile",
@@ -660,7 +668,7 @@
             "items": [
               {
                 "Phrase": "Critical strike",
-                "Main": "Q: Can I use the scheme when units are routed from other effects than damage?\nA: No. It is explicitly specified the unit has to suffer damage. Orbital strike doesn't count either since it’s explicitly specified it has to be during combat."
+                "Main": "Q: Can I use the scheme when units are routed from other effects than damage?\nA: No. It is explicitly specified the unit has to suffer damage. Orbital strike doesn't count either since it's explicitly specified it has to be during combat."
               },
               {
                 "Phrase": "Denial of Supplies",
@@ -668,7 +676,7 @@
               },
               {
                 "Phrase": "Philosophy of War",
-                "Main": "Q: Are the basic combat cards considered to have a command level of 0 for the purpose of this event?\nA: No. Basic combat cards have no command level. When resolving Philosophy of War, treat your basic combat cards as having a command level lower than any combat upgrade cards.\nSee reference rulebook entries “Command Level” (2nd bullet point) and “Combat cards and combat upgrade cards” (5th bullet point) for further information.\n\nQ: Does the opponent know what cards I'm replacing?\nA: Yes. Content of your combat deck is always public information."
+                "Main": "Q: Are the basic combat cards considered to have a command level of 0 for the purpose of this event?\nA: No. Basic combat cards have no command level. When resolving Philosophy of War, treat your basic combat cards as having a command level lower than any combat upgrade cards.\nSee reference rulebook entries “Command Level” (2nd bullet point) and “Combat cards and combat upgrade cards” (5th bullet point) for further information.\n\nQ: Does my opponent know what cards I'm replacing?\nA: Yes. Content of your combat deck is always public information."
               }
             ]
           }
@@ -695,7 +703,7 @@
             "items": [
               {
                 "Phrase": "Departmento Munitorum",
-                "Main": "Q: When resolving Departmento Munitorum’s limited Advance Order, can I resolve an orbital strike?\nA: Yes. Departmento Munitorum’s ability text states all of the applicable limitations of the limited orders. In case of the limited Advance Order you are only allowed to move units from 1 area, which is the only difference between Departmento Munitorum’s limited and a regular Advance order.\n\nQ: Can order upgrades can be used when resolving the limited order?\nA: Yes."
+                "Main": "Q: When resolving Departmento Munitorum's limited Advance Order, can I resolve an orbital strike?\nA: Yes. Departmento Munitorum's ability text states all of the applicable limitations of the limited orders. In case of the limited Advance Order you are only allowed to move units from 1 area, which is the only difference between Departmento Munitorum's limited and a regular Advance order.\n\nQ: Can order upgrades can be used when resolving the limited order?\nA: Yes."
               },
               {
                 "Phrase": "Forced Recruitment",
