@@ -186,8 +186,8 @@
                 "Main": "Yes. And in the same (active) system.  That means the corner planet in a 3 world system cannot be normally targeted by Orbital Strike."
               },
               {
-                "Phrase": "Does damage during Orbital Strike apply against each unit, or against all units?",
-                "Main": "All units. If you rolled 4 }, your opponent takes 4 damage. Your opponent has to assign that damage the same way as in combat, and destroy units appropriately. If the damage was not equal or greater than units HP that unit is not routed."
+                "Phrase": "Does damage during Orbital Strike apply against all units?",
+                "Main": "No. Damage is applied the same as in combat. If you rolled 4 }, your opponent takes 4 damage. Your opponent has to assign that damage, and destroy units appropriately. If the damage was not equal or greater than units HP that unit is not routed."
               },
               {
                 "Phrase": "Are Orbital Strikes limited to 8 dice?",
@@ -229,6 +229,10 @@
               {
                 "Phrase": "Does a bastion count as a unit for reinforcement token placement purposes?",
                 "Main": "No. You are allowed to use 1 token per unit, and Bastions are not units."
+              },
+              {
+                "Phrase": "Can I add reinforcement tokens if in combat there is a Bastion with just routed units?",
+                "Main": "Yes. Rules do not require for the units to be unrouted to count to the maximum tokens that can be placed into the combat."
               }
             ]
           },
@@ -627,11 +631,11 @@
               },
               {
                 "Phrase": "Stealth Teams",
-                "Main": "That response is based on the FGG stance, with mindset “rules as written”\nQ: Can my opponent choose to rout a routed unit?\nA: No. The rules state you cannot rout a unit that is already routed.\n\nQ: If your opponent has no units to rout, do he lose a die?\nA: Yes.\n\nQ: If my opponent only has a bastion, do he lose a die?\nA: Yes."
+                "Main": "That response is based on the FGG stance, with mindset “rules as written”\nQ: Can my opponent choose to rout a routed unit?\nA: No. The rules state you cannot rout a unit that is already routed.\n\nQ: If your opponent has no units to rout, does he lose a die?\nA: Yes.\n\nQ: If my opponent only has a bastion, do he lose a die?\nA: Yes."
               },
               {
                 "Phrase": "Evasion",
-                "Main": "That response is based on the FGG stance, with mindset “rules as written”\nQ: Can my opponent choose to rout a routed unit?\nA: Yes. During combat reinforcement tokens are treated as Command Level 0 units for all purposes."
+                "Main": "Q: Can i use this ability on my reinforcement tokens?\nA: Yes. During combat reinforcement tokens are treated as Command Level 0 units for all purposes."
               }
             ]
           },
