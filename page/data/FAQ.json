@@ -136,7 +136,7 @@
               },
               {
                 "Phrase": "Can I deploy ships into an Enemy Void and start a combat?",
-                "Main": "No. You may only deploy to Uncontrolled or Friendly Areas in the Active System.\nThis is a problem for non-Eldar factions as they only have one void in their home tile. An enemy can prevent you from building ships by taking that void assuming that you have only 1 factory in the home tile."
+                "Main": "No. You may only deploy to Uncontrolled or Friendly Areas in the Active System.\nThis is a problem for non-Eldar factions as they only have one void in their home tile. An enemy can prevent you from purchasing ships by taking that void assuming that you have only 1 factory in the home tile."
               },
               {
                 "Phrase": "Can I use multiple forge tokens for a unit purchase?",
@@ -195,7 +195,7 @@
               },
               {
                 "Phrase": "Can I take over planets by destroying all ground units using Orbital Strikes?",
-                "Main": "No. Buildings retain their affiliation even if all ground units are destroyed by the orbital strike."
+                "Main": "No. Structures retain their affiliation even if all ground units are destroyed by the orbital strike."
               }
             ]
           },
@@ -299,7 +299,7 @@
               },
               {
                 "Phrase": "Do I control Areas in my Faction Tile without units/structures on them?",
-                "Main": "No. There is nothing special about Faction Tiles, other than it's an ensured setup option with lots of unit capacity and assets. You always need a unit/building to make an Area Friendly."
+                "Main": "No. There is nothing special about Faction Tiles, other than it's an ensured setup option with lots of unit capacity and assets. You always need an unit or a structure to make an Area Friendly."
               },
               {
                 "Phrase": "Do I have to place my Faction tile first?",
@@ -414,7 +414,7 @@
             "items": [
               {
                 "Phrase": "Emperor Protects",
-                "Main": "Q: Does this mean I can have more than 1 building per planet?\nA: Yes. If you pay 2 material, you can add a Bastion to a world with a City or Factory."
+                "Main": "Q: Does this mean I can have more than 1 structure per planet?\nA: Yes. If you pay 2 material, you can add a Bastion to a world with a City or Factory."
               }
             ]
           },
