@@ -22,7 +22,7 @@
               },
               {
                 "Phrase": "Do Reinforcement Tokens count as a specific unit for Battle Card Effect?",
-                "Main": "Yes. They are level 0 units and are treated the same as a plastic mini for all effect purposes during the Execution step of the combat. They stay until the end of combat, provide morale in Resolution step of combat and are returned to supply in the cleanup phase."
+                "Main": "Yes. They are level 0 units and are treated the same as a plastic mini for all effect purposes during the Execution step of the combat. They can be retreated or stay until the end of combat, provide morale in Resolution step of combat and are returned to supply in the cleanup phase."
               },
               {
                 "Phrase": "Can I destroy a routed unit to execute a card effect?",
@@ -70,11 +70,7 @@
                 "Main": "Yes. Unit capacity limits are checked at the end of the Order.  Advance order only restricts you to  a maximum of 5 units per movement restrictions to a single Area, and to 8 dice per combat."
               },
               {
-                "Phrase": "Does a player get eliminated the moment his last Friendly Area is",
-                "Main": ""
-              },
-              {
-                "Phrase": "Contested?",
+                "Phrase": "Does a player get eliminated the moment his last Friendly Area is contested?",
                 "Main": "No. Battle finishes, and then you determine if the player is eliminated."
               },
               {
@@ -90,8 +86,12 @@
                 "Main": "No. Ground movement requires tracing a legal path at the BEGINNING of the ground movement stage. That means you must stop at Uncontrolled Worlds if you can't skip past them via a friendly Area."
               },
               {
-                "Phrase": "Can I trace a path for a Unit to move through more than 2 systems via legal path (to g around Warp or to avoid combat)?",
+                "Phrase": "Can I trace a path for a Unit to move through more than 2 systems via legal path (to go around Warp or to avoid combat)?",
                 "Main": "No. You can only trace a path through the unit's current system, and the Active System. So maximum 2 systems."
+              },
+              {
+                "Phrase": "Can I trace a path for a Unit to retreat through more than 2 systems via legal path (to go around Warp)?",
+                "Main": "No. Retreat is a type of move and can be performed either in the active system or to an adjecent system with a legalt path to it, that was not the system the attacker came from."
               },
               {
                 "Phrase": "Can I move ground units from system to system without a ship?",
@@ -147,11 +147,7 @@
                 "Main": "Yes. Keeping in mind that only one cache token can be used per deployed unit."
               },
               {
-                "Phrase": "If I have two factories in a system, is the max units I can purchase based on",
-                "Main": ""
-              },
-              {
-                "Phrase": "the factory with the highest unit capacity?",
+                "Phrase": "If I have two factories in a system, is the max units I can purchase based on the factory with the highest unit capacity?",
                 "Main": "No. The deploy limit is the combined unit capacity from all Friendly Worlds with a Factory in the Active System."
               }
             ]
@@ -244,9 +240,9 @@
                 "Main": "If none of the units in the battle moved to the contested Area as part of the Advance order (meaning they moved to that Area as part of the movement granted by the Advance order), then they cannot retreat after or mid-battle. That also means they cannot retreat using retreat ability from players nor opponents combat cards. Only “move” cards allow to get the unit out of the combat. This means that in the case of units that start combat with cards like Wave Serpent, Orc Rocks, Drop Pods, Mycetic Spores, or Revel in Bloodshed cannot retreat if they loose combat, and therefore are destroyed."
               },
               {
-                "Phrase": "As an attacker, do I have to retreat back to where my units came from?",
+                "Phrase": "As an attacker, do I have to always retreat back to where my units came from?",
                 "Main": "If any units moved into the contested Area via an Advance Order, all attacking units must move to a single Area that at least one unit moved from to start the combat. If all units were placed in the contested Area by any effect other than an Advance Order, all attacking units cannot retreat and are destroyed. Note that it is irrelevant if an Area is Friendly or Uncontrolled at the time of the attacker's retreat."
-              },
+              }, 
               {
                 "Phrase": "When defending, can I choose to retreat to an Uncontrolled Area if there is a legal path to a Friendly Area?",
                 "Main": "The defending player always have to retreat to the friendly Area if a legal path exists, and then destroy units down to the units capacity of that Area. If there is no legal path to a Friendly Area, but a legal path exists to an Uncontrolled Area, then retreating units move to the Uncontrolled Area."
@@ -329,7 +325,7 @@
               },
               {
                 "Phrase": "Break the Line",
-                "Main": "Q: Can I target the chosen card in the defender's hand?\nA: No. Break the Line only applies to face up cards. Playing this card as an attacker for your first card would 'waste' the effect since no face up cards are present at that moment.\n\nQ: Can this cancel battle-long effects?\nA: Yes. Break the Line may cancel on-going effects, but there are very few of these. Most effects are resolved immediately and cannot be undone afterwards."
+                "Main": "Q: Can I target the chosen card in the defender's hand?\nA: No. Break the Line only applies to face up cards. Playing this card as an attacker for your first card would 'waste' the effect since no face up cards are present at that moment.\n\nQ: Can this cancel battle-long effects?\nA: Yes. Break the Line may cancel on-going effects, like ex. Weird Boyz. Most effects are resolved immediately and cannot be undone afterwards."
               },
               {
                 "Phrase": "Drop Pod Assault",
@@ -350,7 +346,7 @@
             "items": [
               {
                 "Phrase": "Chaos United",
-                "Main": "That response is based on the FGG stance, with mindset “rules as written”\nQ: Can my opponent choose to rout a routed unit?\nA: No. The rules state you cannot rout a unit that is already routed.\n\nQ: If my opponent has no units to rout, do I gain a die?\nA: Yes.\n\nQ: If my opponent only has a bastion, do I gain a die?\nA: Yes.\n\nQ: Do I have to say what die I would choose before my opponent chooses if he wants to rout a unit?\nA: No. Your opponent must choose whether or not to rout one of his units before the Chaos player chooses which die he gains from this card's general ability."
+                "Main": "That response is based on the FGG stance, with mindset “rules as written”\n\nQ: Can my opponent choose to rout a routed unit?\nA: No. The rules state you cannot rout a unit that is already routed.\n\nQ: If my opponent has no units to rout, do I gain a die?\nA: Yes.\n\nQ: If my opponent only has a bastion, do I gain a die?\nA: Yes.\n\nQ: Do I have to say what die I would choose before my opponent chooses if he wants to rout a unit?\nA: No. Your opponent must choose whether or not to rout one of his units before the Chaos player chooses which die he gains from this card's general ability."
               },
               {
                 "Phrase": "Khorne's Rage",
@@ -358,11 +354,11 @@
               },
               {
                 "Phrase": "Lure of Chaos",
-                "Main": "Those responses are based on the FGG stance, with mindset “rules as written”\nQ: Can my opponent choose to rout a routed unit to gain the die?\nA: No. The rules state you cannot rout a unit that is already routed.\n\nQ: If my opponent has no units to rout, do I gain free Cultist/Iconoclast?\nA: Yes.\n\nQ: If my opponent only has a bastion, do I gain free Cultist/Iconoclast?\nA: Yes.\n\nQ: Does the cultist get added to battle or is just placed on the world?\nA: The new cultist enters combat, but it does not roll additional dice.\n\nQ: If my opponent already has 8 dice, can he still rout a unit to prevent me from gaining a free unit?\nA: Yes. The “does not” refers only to the “choose and rout 1 of his units”."
+                "Main": "Those responses are based on the FGG stance, with mindset “rules as written”\n\nQ: Can my opponent choose to rout a routed unit to gain the die?\nA: No. The rules state you cannot rout a unit that is already routed.\n\nQ: If my opponent has no units to rout, do I gain free Cultist/Iconoclast?\nA: Yes.\n\nQ: If my opponent only has a bastion, do I gain free Cultist/Iconoclast?\nA: Yes.\n\nQ: Does the cultist get added to battle or is just placed on the world?\nA: The new cultist enters combat, but it does not roll additional dice.\n\nQ: If my opponent already has 8 dice, can he still rout a unit to prevent me from gaining a free unit?\nA: Yes. The “does not” refers only to the “choose and rout 1 of his units”."
               },
               {
                 "Phrase": "Mark of Nurgle",
-                "Main": "That response is based on the FGG stance, with mindset “rules as written”\nQ: What happens if my opponnet has no routed unit to destroy? \nA: Chaos automatically gains 2 @."
+                "Main": "That response is based on last page of the manual\n\nQ: What happens if my opponnet has no routed unit to destroy? \nA: Chaos automatically gains 2 @."
               },
               {
                 "Phrase": "Mark of Tzeentch",
@@ -392,7 +388,7 @@
               },
               {
                 "Phrase": "Hit & Run",
-                "Main": "Q: Can I retreat to a planet diagonally?\nA: No. It states Adjacent Area, which means they must share a border.\n\nQ: If I retreat my last unit, do I still do damage?\nA: Yes, the assess damage phase still occurs, after which you would jump to the Resolution Phase.\n\nQ: If I retreat my last unit, does that unit still get attacked in the execution round?\nA: No. The unit is no longer in the battle, so even though the execution round finishes and assess damage step is performed, the retreated unit is not targetable for damage."
+                "Main": "Q: Can I move to a planet diagonally?\nA: No. It states Adjacent Area, which means they must share a border.\n\nQ: If I move my last unit, do I still do damage?\nA: Yes, the assess damage phase still occurs, after which you would jump to the Resolution Phase.\n\nQ: If I move my last unit, does that unit still get attacked in the execution round?\nA: No. The unit is no longer in the battle, so even though the execution round finishes and assess damage step is performed, the retreated unit is not targetable for damage."
               },
               {
                 "Phrase": "Psychic Lance",
@@ -400,7 +396,7 @@
               },
               {
                 "Phrase": "Spiritseer's Guidance",
-                "Main": "Q: Does this apply just to the Eldar units?\nA: ALL units, including your opponent's units, are immune to damage.\n\nQ:Will a Bastion also be prevented from suffering damage?\nA:No. Bastions are not a unit for the purposes of resolving battle effects. They only 'act' like a unit."
+                "Main": "Q: Does this apply just to the Eldar units?\nA: ALL units, including your opponent's units, are immune to damage.\n\nQ: Will a Bastion also be prevented from suffering damage?\nA: No. Bastions are not a unit for the purposes of resolving battle effects."
               },
               {
                 "Phrase": "Wave Serpent",
@@ -435,7 +431,11 @@
               },
               {
                 "Phrase": "Through The Warp",
-                "Main": "Q: Does the Chaos player gains morale when he does not move through Warp Storm?\nA: Yes.\n\nQ: Can I get a combat upgrade with this?\nA: Yes. When it says Upgrade, it means Order or Combat."
+                "Main": "Q: Does the Chaos player gains morale when he does not move through Warp Storm?\nA: Yes."
+              },
+              {
+                "Phrase": "Touched by the warp",
+                "Main": "Q: Can I get a combat upgrade with this?\nA: Yes. When it says Upgrade, it means Order or Combat."
               },
               {
                 "Phrase": "Incantation of Tzeentch",
@@ -452,7 +452,7 @@
               },
               {
                 "Phrase": "Teer It Down!",
-                "Main": "Q: Can I use it in other players combat?\nA: No. Unless explicitly specified, Cards can only be used during your own combats."
+                "Main": "Q: Can I use it in other players combat?\nA: No. Unless explicitly specified, cards can only be used during combats you participate in (as the attacker or the defender)."
               }
             ]
           },
@@ -483,7 +483,7 @@
               },
               {
                 "Phrase": "For the Emperor (Dominate)",
-                "Main": "Q: Do I need to meet command level requirement to upgrade my Scout/Marine?\nA: No. This is a replace, not a purchase. Only purchases need to meet the command requirements\nQ: Can I use a cache token to upgrade my Scout/Marine?\nA: No. This is a replace, not a purchase. You can only use cache tokens for purchases."
+                "Main": "Q: Do I need to meet command level requirement to upgrade my Scout/Marine?\nA: No. This is a replace, not a purchase. Only purchases need to meet the command requirements\n\nQ: Can I use a cache token to upgrade my Scout/Marine?\nA: No. This is a replace, not a purchase. You can only use cache tokens for purchases."
               },
               {
                 "Phrase": "Reinforcement Worlds",
@@ -546,7 +546,7 @@
               },
               {
                 "Phrase": "Wraithbone Singers",
-                "Main": "Q: an I have two of the same building?\nA: No. Second building has to be of a different type, than the one already on the world.\n\nQ: If someone else conquers my planet with two structures, do they keep both?\nA: Yes. Attackers gain control of all enemy structures on the world."
+                "Main": "Q: Can I have a second structure of the same type?\nA: No. Second structure has to be of a different type, than the one already on the world.\n\nQ: If someone else conquers my planet with two structures, do they keep both?\nA: Yes. Attackers gain control of all enemy structures on the world."
               },
               {
                 "Phrase": "Webway Portal (Dominate)",
@@ -578,19 +578,20 @@
             "items": [
               {
                 "Phrase": "Bullgryn Bulwark",
-                "Main": "Q: Do I have to reroll 2 } or 2 <? \nA: No. You can mix types.\nQ: If I rerolled 1 }, do I still have to reroll 1 <?\nA: Yes. The idea is you have 2 dice if you have any more available to reroll."
+                "Main": "Q: Do I have to reroll 2 } or 2 <? \nA: No. You can mix types.\n\nQ: If I rerolled my only }, do I still have to reroll a <?\nA: Yes. If you have dice available to reroll, you must perform 2 rerolls."
               },
               {
                 "Phrase": "Combined Arms",
-                "Main": "Q: Is one unit type enough to gain 1/2 combat tokens? \nA: Yes, it's per unit of different command level."
+                "Main": "Q: Is one ground unit type enough to gain 1 combat token? \nA: Yes, it's per unit of different command level.\n\nQ: Is one ship type enough to gain 2 combat token? \nA: Yes, it's per unit of different command level."
               },
+              
               {
                 "Phrase": "Fire support",
                 "Main": "Q: Can I reroll my opponent's { with the secondary ability?\nA: No. Unless explicitly specified, the owner can only use the ability on yourself."
               },
               {
                 "Phrase": "Hammer of the Emperor",
-                "Main": "Q: Is one unit type enough to gain 2/3 combat tokens? \nA: Yes, it's per unit of different command level."
+                "Main": "Q: Is one ground unit type enough to gain 2 combat token? \nA: Yes, it's per unit of different command level.\n\nQ: Is one ship type enough to gain 3 combat token? \nA: Yes, it's per unit of different command level."
               },
               {
                 "Phrase": "Iron Discipline",
@@ -602,9 +603,8 @@
               },
               {
                 "Phrase": "Ogryn Shock Troops",
-                "Main": "Q: Do I have to reroll 2 { or 2 <? \nA: No. You can mix types.\nQ: If I rerolled 1 {, do I still have to reroll 1 <?\nA: Yes. The idea is you have 2 dice if you have any more available to reroll."
-              },
-              {
+                "Main": "Q: Do I have to reroll 2 { or 2 <? \nA: No. You can mix types.\n\nQ: If I rerolled 1 {, do I still have to reroll 1 <?\nA: Yes. If you have dice available to reroll, you must perform 2 rerolls."
+              },              {
                 "Phrase": "Titan Support",
                 "Main": "Q: Is one unit type enough for your opponent to reroll 1 }? \nA: Yes, it's per unit of different command level."
               }
@@ -631,7 +631,7 @@
               },
               {
                 "Phrase": "Stealth Teams",
-                "Main": "That response is based on the FGG stance, with mindset “rules as written”\nQ: Can my opponent choose to rout a routed unit?\nA: No. The rules state you cannot rout a unit that is already routed.\n\nQ: If your opponent has no units to rout, does he lose a die?\nA: Yes.\n\nQ: If my opponent only has a bastion, do he lose a die?\nA: Yes."
+                "Main": "That response is based on the FGG stance, with mindset “rules as written”\n\nQ: Can my opponent choose to rout a routed unit?\nA: No. The rules state you cannot rout a unit that is already routed.\n\nQ: If your opponent has no units to rout, does he lose a die?\nA: Yes.\n\nQ: If my opponent only has a bastion, do he lose a die?\nA: Yes."
               },
               {
                 "Phrase": "Evasion",
@@ -680,7 +680,7 @@
             "items": [
               {
                 "Phrase": "Critical strike",
-                "Main": "Q: Can I use the scheme when units are routed from other effects than damage?\nA: No. It is explicitly specified the unit has to suffer damage. Orbital strike doesn't count either since it's explicitly specified it has to be during combat."
+                "Main": "Q: Can it destroy a Bastion that had damage assigned to it?\nA: No. Schem reads \"unit\".\n\nQ: If the unit is unroutable, but it had damage assigned to it, can the scheme be used to destroy it?\nA: Yes.\n\nQ: Can I use the scheme when units are routed from other effects than damage?\nA: No. It is explicitly specified the unit has to suffer damage. Orbital strike doesn't count either since it's explicitly specified it has to be during combat."
               },
               {
                 "Phrase": "Denial of Supplies",
@@ -764,7 +764,7 @@
             "items": [
               {
                 "Phrase": "Becon of Faith",
-                "Main": "Q: Can I replace routed Sisters Repentia?\nA: Yes. As long as there is a unroute Sisters Repentia you can replace the routed one.\nQ: Can I replace a reinforcement token?\nA: Yes. During combat reinforcement tokens are treated as Command Level 0 units for all purposes."
+                "Main": "Q: Can I replace routed Sisters Repentia?\nA: Yes. As long as there is a unroute Sisters Repentia you can replace the routed one.\n\nQ: Can I replace a reinforcement token?\nA: Yes. During combat reinforcement tokens are treated as Command Level 0 units for all purposes."
               },
               {
                 "Phrase": "Divine Blessing",
@@ -777,7 +777,7 @@
             "items": [
               {
                 "Phrase": "Truesilver Armour",
-                "Main": "Q: Does the effect stack?\nA: Yes. If two cards were played, the health value of your units is increased by 2.\nQ: Does the effect persist if the card was discarded?\nA: No. The game has no memory, and therfore if the card was discarded the effect stopped."
+                "Main": "Q: Does the effect stack?\nA: Yes. If two cards were played, the health value of your units is increased by 2.\n\nQ: Does the effect persist if the card was discarded?\nA: No. The game has no memory, and therfore if the card was discarded the effect stopped."
               }
             ]
           }
@@ -809,7 +809,7 @@
             "items": [
               {
                 "Phrase": "Theosophamy",
-                "Main": "Q: What is this ability of this event card?\nA: This card allows moving the warp storm in any direction and does not have additional ability.\nQ: Can I use this card if I didn’t strategize this turn?\nA: Yes."
+                "Main": "Q: What is this ability of this event card?\nA: This card allows moving the warp storm in any direction and does not have additional ability.\n\nQ: Can I use this card if I didn’t strategize this turn?\nA: Yes."
               }
             ]
           }
@@ -823,11 +823,11 @@
             "items": [
               {
                 "Phrase": "War Hymns",
-                "Main": "Q: Is combined morale sum of all unrouted units morale value?\nA: Partially. The defender also adds morale value of bastions he owns on that world.\nQ: Do I add morale value of all of my ships in area of the Strike?\nA: No. Just the sum of all unrouted ships."
+                "Main": "Q: Is combined morale sum of all unrouted units morale value?\nA: Partially. The defender also adds morale value of bastions he owns on that world.\n\nQ: Do I add morale value of all of my ships in area of the Strike?\nA: No. Just the sum of all unrouted ships."
               },
               {
                 "Phrase": "Lead The Righteous",
-                "Main": "Q: Can I add second reinforcement token to the world with the bastion if there is already one there?\nA: No. It’s explicitly specified it has to be a world without a reinforcement token.\nQ: If I have a bastion with a reinforcement token, can I add a second reinforcement token from my play area (since reinforcement token counts as a unit)?\nA: No. It’s explicitly specified in the rules that maximum number of reinforcement tokens a player can use during a combat is equal to the number of plastic units he has in that combat.\n\nQ: If I have a bastion with a reinforcement token, can I roll dice for the reinforcement token (since reinforcement token counts as a unit during combat)?\nA: Sisters Repentia provide 0 dice. Makes no difference."
+                "Main": "Q: Can I add second reinforcement token to the world with the bastion if there is already one there?\nA: No. It’s explicitly specified it has to be a world without a reinforcement token.\n\nQ: If I have a bastion with a reinforcement token, can I add a second reinforcement token from my play area (since reinforcement token counts as a unit)?\nA: No. It’s explicitly specified in the rules that maximum number of reinforcement tokens a player can use during a combat is equal to the number of plastic units he has in that combat.\n\nQ: If I have a bastion with a reinforcement token, can I roll dice for the reinforcement token (since reinforcement token counts as a unit during combat)?\nA: Sisters Repentia provide 0 dice. Makes no difference."
               }
             ]
           }
