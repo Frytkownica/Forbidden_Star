@@ -29,27 +29,25 @@ document.addEventListener('DOMContentLoaded', function () {
 		'M': 'pictures/moral.png'
 	};
 
-	// MENU SECTION
-	fetch('factions/file_names.json')
+	// MENU SECTION BUILDER
+	fetch('factions/general.json')
 		.then(response => response.json())
-		.then(data => {
-			const { expansion, faction, cards } = data;
+		.then(generalData => {
 			var firstRun = true;
-			// Clear existing content to avoid duplication issues
 			expansionTabsContainer.innerHTML = '';
 
-			// Create expansion tabs
-			expansion.folder.forEach((expansionType, expansionIndex) => {
-				// Create expansion tab header
+			const expansionFolderList = generalData.expansion.folder;
+			const expansionNameList = generalData.expansion.name;
+
+			expansionFolderList.forEach((expansionFolder, expansionFolderIndex) => {
 				const expansionTabHeader = document.createElement('div');
-				expansionTabHeader.textContent = expansion.name[expansionIndex];
+				expansionTabHeader.textContent = expansionNameList[expansionFolderIndex];
 				expansionTabHeader.classList.add('expansion-header');
-				expansionTabHeader.dataset.expansion = expansionType;
-				if (expansionIndex === 0) expansionTabHeader.classList.add('active');
+				expansionTabHeader.dataset.expansion = expansionFolder;
+				if (expansionFolderIndex === 0) expansionTabHeader.classList.add('active');
 				expansionTabsContainer.appendChild(expansionTabHeader);
 			});
 
-			// Add click event listener to expansion tabs
 			expansionTabsContainer.addEventListener('click', function (e) {
 				if (e.target.classList.contains('expansion-header')) {
 					const buttonExp = e.target.dataset.expansion;
@@ -60,125 +58,130 @@ document.addEventListener('DOMContentLoaded', function () {
 			});
 
 			if (firstRun === true) {
-				loadFactions(expansion.folder[0]);
+				loadFactions(expansionFolderList[0]);
 			}
 
-
-			// Function to load factions based on selected expansion
-			function loadFactions(expansionSet) {
+			function loadFactions(expansionFolder_) {
 				factionTabsContainer.innerHTML = '';
+				fetch('factions/' + expansionFolder_ + '/faction.json')
+					.then(response => response.json())
+					.then(expansionData => {
 
-				const factionsInExpansion = faction[expansionSet].folder;
-				const factionNamesInExpansion = faction[expansionSet].name;
+						const factionFolderList = expansionData.folder;
+						const factionNameList = expansionData.name;
 
-				factionsInExpansion.forEach((factionType, factionIndex) => {
-					// Create faction tab header
-					const factionTabHeader = document.createElement('div');
-					factionTabHeader.textContent = factionNamesInExpansion[factionIndex];
-					factionTabHeader.classList.add('faction-header');
-					factionTabHeader.dataset.faction = factionType;
-					factionTabHeader.dataset.expansion = expansionSet;
-					if (factionIndex === 0) factionTabHeader.classList.add('active');
-					factionTabsContainer.appendChild(factionTabHeader);
-				});
+						factionFolderList.forEach((factionFolder, factionFolderIndex) => {
+							const factionTabHeader = document.createElement('div');
+							factionTabHeader.textContent = factionNameList[factionFolderIndex];
+							factionTabHeader.classList.add('faction-header');
+							factionTabHeader.dataset.faction = factionFolder;
+							factionTabHeader.dataset.expansion = expansionFolder_;
+							if (factionFolderIndex === 0) factionTabHeader.classList.add('active');
+							factionTabsContainer.appendChild(factionTabHeader);
+						});
 
-				// Add click event listener to faction tabs
-				factionTabsContainer.addEventListener('click', function (e) {
-					if (e.target.classList.contains('faction-header')) {
-						const buttonExp = e.target.dataset.expansion;
-						const buttonFac = e.target.dataset.faction;
-						document.querySelectorAll('.faction-header').forEach(h => h.classList.remove('active'));
-						e.target.classList.add('active');
-						loadCardsMenu(buttonExp, buttonFac);
-					}
-				});
+						factionTabsContainer.addEventListener('click', function (e) {
+							if (e.target.classList.contains('faction-header')) {
+								const buttonExp = e.target.dataset.expansion;
+								const buttonFac = e.target.dataset.faction;
+								document.querySelectorAll('.faction-header').forEach(h => h.classList.remove('active'));
+								e.target.classList.add('active');
+								loadCardsMenu(buttonExp, buttonFac);
+							}
+						});
 
-				if (firstRun) {
-					loadCardsMenu(expansionSet, factionsInExpansion[0]);
-				}
-
-				// Function to load cards based on selected faction
-				function loadCardsMenu(expansionSet, factionSet) {
-					cardsContentsContainer.innerHTML = '';
-					Object.keys(cards).forEach((cardType, cardIndex) => {
-						// Create faction tab header
-						const cardTabHeader = document.createElement('div');
-						cardTabHeader.textContent = cardType;
-						cardTabHeader.classList.add('card-header');
-						cardTabHeader.dataset.faction = factionSet;
-						cardTabHeader.dataset.expansion = expansionSet;
-						cardTabHeader.dataset.cardType = cardType;
-						if (cardIndex === 0) cardTabHeader.classList.add('active');
-						cardsContentsContainer.appendChild(cardTabHeader);
-					});
-
-					// Add click event listener to faction tabs
-					cardsContentsContainer.addEventListener('click', function (e) {
-						if (e.target.classList.contains('card-header')) {
-							const buttonExp = e.target.dataset.expansion;
-							const buttonFac = e.target.dataset.faction;
-							const buttonCard = e.target.dataset.cardType;
-							document.querySelectorAll('.card-header').forEach(h => h.classList.remove('active'));
-							e.target.classList.add('active');
-							loadCards(buttonExp, buttonFac, buttonCard);
+						if (firstRun) {
+							loadCardsMenu(expansionFolder_, factionFolderList[0]);
 						}
-					});
 
-					if (firstRun) {
-						loadCards(expansionSet, factionSet, Object.keys(cards)[0]);
-					}
+						function loadCardsMenu(expansionFolder__, factionFolder_) {
 
-					function loadCards(expansionFolder, factionFolder, cardType) {
-						cardsContainer.innerHTML = '';
+							const cardsDefaultName = generalData.cardsDefault.name;
+							const cardsDefaultReference = generalData.cardsDefault.reference;
+							cardsContentsContainer.innerHTML = '';
+							cardsDefaultReference.forEach((reference, referenceIndex) => {
+								const cardTabHeader = document.createElement('div');
+								cardTabHeader.textContent = cardsDefaultName[referenceIndex];
+								cardTabHeader.classList.add('card-header');
+								cardTabHeader.dataset.faction = factionFolder_;
+								cardTabHeader.dataset.expansion = expansionFolder__;
+								cardTabHeader.dataset.cardType = reference;
+								if (referenceIndex === 0) cardTabHeader.classList.add('active');
+								cardsContentsContainer.appendChild(cardTabHeader);
+							});
 
-						const subTabContents = document.createElement('div');
-						subTabContents.classList.add('card-contents');
-						subTabContents.id = `cards-${expansionFolder}-${factionFolder}-${cardType}`;
-						cardsContainer.appendChild(subTabContents);
-
-						fetch(`factions/${expansionFolder}/${factionFolder}/text.json`)
-							.then(response => response.json())
-							.then(textData => {
-								console.log(textData)
-								if (cardType === Object.keys(cards)[0]) {
-									createCombatContent(subTabContents, expansionFolder, factionFolder, cards[cardType], textData.combatText);
-								} else if (cardType === Object.keys(cards)[1]) {
-									createOrdersContent(subTabContents, expansionFolder, factionFolder, cards[cardType], textData.ordersText);
-								} else if (cardType === Object.keys(cards)[2]) {
-									createEventContent(subTabContents, expansionFolder, factionFolder, cards[cardType], textData.eventsText);
-								} else if (cardType === Object.keys(cards)[3]) {
-									createFactioncardContent(subTabContents, expansionFolder, factionFolder, cards[cardType]);
-								} else if (cardType === Object.keys(cards)[4]) {
-									backCardContent(subTabContents, expansionFolder, factionFolder, cards[cardType]);
+							cardsContentsContainer.addEventListener('click', function (e) {
+								if (e.target.classList.contains('card-header')) {
+									const buttonExp = e.target.dataset.expansion;
+									const buttonFac = e.target.dataset.faction;
+									const buttonCard = e.target.dataset.cardType;
+									document.querySelectorAll('.card-header').forEach(h => h.classList.remove('active'));
+									e.target.classList.add('active');
+									loadCards(buttonExp, buttonFac, buttonCard);
 								}
-							})
-							.catch(error => console.error(`Error loading text data for ${faction} in ${expansionFolder}:`, error));
-					}
-				};
+							});
+
+							if (firstRun) {
+								loadCards(expansionFolder__, factionFolder_, cardsDefaultReference[0]);
+							}
+
+							function loadCards(expansionFolder___, factionFolder__, cardTypeReference) {
+								cardsContainer.innerHTML = '';
+								const subTabContents = document.createElement('div');
+								subTabContents.classList.add('card-contents');
+								subTabContents.id = `cards-${expansionFolder___}-${factionFolder__}-${cardTypeReference}`;
+								cardsContainer.appendChild(subTabContents);
+
+								const textData = fetch(`factions/${expansionFolder___}/${factionFolder__}/text.json`)
+									.then(response => {
+										if (!response.ok) return "";
+										return response.json();
+									});
+								const cardsFilenameCombatList = textData?.cards ?? generalData.filenames.combat;
+								const cardsFilenameOrderList = textData?.cards ?? generalData.filenames.orders;
+								const cardsFilenameEventList = textData?.cards ?? generalData.filenames.events;
+								const cardsFilenameFactioncardList = textData?.cards ?? generalData.filenames.faction_card;
+								const cardsFilenameBacksList = textData?.cards ?? generalData.filenames.backs;
+								const cardsFilenameMapList = textData?.cards ?? generalData.filenames.map;
+								const cardsOrdersText = textData?.ordersText ?? "";
+								const cardsEventsText = textData?.eventsText ?? "";
+								const cardsCombatText = textData?.combatText ?? "";
+								if (cardTypeReference === "combat") {
+									createCombatContent(subTabContents, expansionFolder___, factionFolder__, cardsFilenameCombatList, cardsCombatText);
+								} else if (cardTypeReference === "orders") {
+									createOrdersContent(subTabContents, expansionFolder___, factionFolder__, cardsFilenameOrderList, cardsOrdersText);
+								} else if (cardTypeReference === "events") {
+									createEventContent(subTabContents, expansionFolder___, factionFolder__, cardsFilenameEventList, cardsEventsText);
+								} else if (cardTypeReference === "faction_card") {
+									createFactioncardContent(subTabContents, expansionFolder___, factionFolder__, cardsFilenameFactioncardList);
+								} else if (cardTypeReference === "backs") {
+									backCardContent(subTabContents, expansionFolder___, factionFolder__, cardsFilenameBacksList);
+								} else if (cardTypeReference === "map") {
+									backCardContent(subTabContents, expansionFolder___, factionFolder__, cardsFilenameMapList);
+								}
+							}
+						};
+					});
 			};
 		})
 		.catch(error => console.error('Error loading file_names.json:', error));
 	firstRun = false;
 
-
-
 	//   CREATING CONTENT FOR CANVAS
 	function createCombatContent(container, expansionFolder, factionfolder, files, textData) {
 		const sections = {
-			's-section': files.slice(0, 5),
-			't1-section': files.slice(5, 9),
-			't2-section': files.slice(9, 12),
-			't3-section': files.slice(12, 14)
+			's-section': files[0],
+			't1-section': files[1],
+			't2-section': files[2],
+			't3-section': files[3]
 		};
-
-		console.log(textData);
-		const combatText = {
-			's-section': textData.slice(0, 5),
-			't1-section': textData.slice(5, 9),
-			't2-section': textData.slice(9, 12),
-			't3-section': textData.slice(12, 14)
-		};
-		console.log(combatText);
+		const combatText = Array.isArray(textData)
+			? {
+				's-section': textData[0],
+				't1-section': textData[1],
+				't2-section': textData[2],
+				't3-section': textData[3]
+			} : "";
 
 		Object.keys(sections).forEach(section => {
 			const sectionContainer = document.createElement('div');
@@ -195,18 +198,21 @@ document.addEventListener('DOMContentLoaded', function () {
 				// Prepare card data
 				const jsonData = {};
 				jsonData["picture"] = `factions/${expansionFolder}/${factionfolder}/combat/${file}`;
-				jsonData["title"] = combatText[section][idx].title || "";
-				jsonData["background"] = combatText[section][idx].general || "";
-				jsonData["foreground"] = combatText[section][idx].unit || "";
-				jsonData["icons"] = combatText[section][idx].icons || "";
+				if (Array.isArray(combatText)) {
+					jsonData["hasText"] = true;
+					jsonData["title"] = combatText[section][idx].title || "";
+					jsonData["background"] = combatText[section][idx].general || "";
+					jsonData["foreground"] = combatText[section][idx].unit || "";
+					jsonData["icons"] = combatText[section][idx].icons || "";
+				} else {
+					jsonData["hasText"] = false;
+				}
 
-				// Create canvas for this card
 				const canvas = document.createElement('canvas');
 				canvas.width = maxWidth;
 				canvas.height = maxHeight;
 				const context = canvas.getContext('2d');
 
-				// Draw the card asynchronously and replace placeholder when done
 				drawCombatCard(jsonData, context).then(() => {
 					placeholder.replaceWith(canvas);
 				}).catch(err => {
@@ -214,7 +220,6 @@ document.addEventListener('DOMContentLoaded', function () {
 					placeholder.innerHTML = '<span style="color:red;">Error loading card</span>';
 				});
 			});
-
 			container.appendChild(sectionContainer);
 		});
 	}
@@ -234,8 +239,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
 			const jsonData = {};
 			jsonData["picture"] = `factions/${expansionFolder}/${factionfolder}/orders/${file}`;
-			jsonData["title"] = `${textData[idx].title}`;
-			jsonData["general"] = `${textData[idx].general}`;
+			if (Array.isArray(textData)) {
+				jsonData["hasText"] = true;
+				jsonData["title"] = `${textData[idx].title}`;
+				jsonData["general"] = `${textData[idx].general}`;
+			} else {
+				jsonData["hasText"] = false;
+			}
 
 			const canvas = document.createElement('canvas');
 			canvas.width = maxWidth;
@@ -269,9 +279,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 			const jsonData = {};
 			jsonData["picture"] = `factions/${expansionFolder}/${factionfolder}/events/${file}`;
-			jsonData["title"] = `${textData[idx].title}`;
-			jsonData["general"] = `${textData[idx].general}`;
-			jsonData["type"] = `${textData[idx].type}`;
+			if (Array.isArray(textData)) {
+				jsonData["hasText"] = true;
+				jsonData["title"] = `${textData[idx].title}`;
+				jsonData["general"] = `${textData[idx].general}`;
+				jsonData["type"] = `${textData[idx].type}`;
+			} else {
+				jsonData["hasText"] = false;
+			}
 
 			const canvas = document.createElement('canvas');
 			canvas.width = maxWidth;
@@ -346,7 +361,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		container.appendChild(categoryContainer);
 	}
 
-
 	// CANVAS TOOLS
 	function replaceForbiddenStarsElements(str) {
 		str = str.replace(/\[B\]/g, "}");
@@ -392,10 +406,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	function loadImage(url) {
 		return new Promise((resolve, reject) => {
 			const img = new Image();
+			img.src = url;
 			img.onload = () => resolve(img);
 			img.onerror = () => reject(new Error('Failed to load image'));
-			// img.src = `${url}?cb=${new Date().getTime()}`;
-			img.src = url;
 		});
 	};
 
@@ -420,102 +433,108 @@ document.addEventListener('DOMContentLoaded', function () {
 		let backgroundTextHeight = 0;
 		let foregroundTextHeight = 0;
 
-		// Replacing all characters ForbiddenStars Related
-		const backgroundWithFbElements = replaceForbiddenStarsElements(data.background)
-		const foregroundWithFbElements = replaceForbiddenStarsElements(data.foreground)
-
-		// Cards text height Declaration
-		const recalculateTextHeight = () => {
-			if (data.background.length > 0) {
-				backgroundTextHeight = calculateTextHeight(ctx, backgroundWithFbElements, extraBackgroundborder, marginHeight, interline, fontSize);
-			}
-			if (data.foreground.length > 0) {
-				foregroundTextHeight = calculateTextHeight(ctx, foregroundWithFbElements, extraForegroundTriangle, marginHeight, interline, fontSize);
-			}
-		};
-		recalculateTextHeight()
-
-		const resizeCardText = () => {
-			marginHeight *= 0.8;
-			fontSize *= 0.99;
-			interline *= 0.95;
-			recalculateTextHeight();
-		};
-
-		if (data.background.length > 0 && data.foreground.length > 0) {
-			while ((backgroundTextHeight + foregroundTextHeight) > maxFieldsHeight) {
-				resizeCardText();
-			};
-		} else {
-			while (Math.max(backgroundTextHeight, foregroundTextHeight) > maxFieldsHeight) {
-				resizeCardText();
-			};
-		};
-
-		const drawText = (text, yPosition, extra) => {
-			ctx.font = `${fontSize}px ForbiddenStars`;
-			const words = text.split(' ');
-			let line = '';
-			let lineHeight = parseInt(ctx.font.match(/\d+/), 10);
-			yPosition += marginHeight + extra + lineHeight;
-			for (let n = 0; n < words.length; n++) {
-				if (words[n] === "*newline*") {
-					ctx.fillText(line, marginWidth, yPosition);
-					yPosition += lineHeight + interline;
-					line = '';
-				}
-				else if (words[n] === "*newpara*") {
-					ctx.fillText(line, marginWidth, yPosition);
-					yPosition += 2 * lineHeight;
-					line = '';
-				}
-				else {
-					const testLine = line + words[n] + ' ';
-					const metrics = ctx.measureText(testLine);
-					if (metrics.width > maxWidth - 2 * marginWidth && n > 0) {
-						ctx.fillText(line, marginWidth, yPosition);
-						yPosition += lineHeight + interline;
-						line = words[n] + ' ';
-					} else {
-						line = testLine;
-					};
-				};
-			};
-			ctx.fillText(line, marginWidth, yPosition);
-		};
-		const drawImageCropped = (img, height) => {
-			ctx.drawImage(img, 0, 0, textBackgroundSize, maxHeight - height, 0, height, maxWidth, maxHeight - height);
-		};
-
 		// Draw the main picture resized
 		ctx.drawImage(picture, 0, 0, maxWidth, maxHeight);
 
-		// Draw the Title
-		ctx.font = `${titleFontSize}px HeadlinerNo45`;
-		ctx.fillText(data.title, maxWidth * 0.27, maxHeight * 0.077);
+		// if (!data.hasText) {
+		// 	// Replacing all characters ForbiddenStars Related
+		// 	const backgroundWithFbElements = replaceForbiddenStarsElements(data.background)
+		// 	const foregroundWithFbElements = replaceForbiddenStarsElements(data.foreground)
 
-		if (data.background.length > 0) {
-			const backgroundY = maxHeight - (backgroundTextHeight + foregroundTextHeight);
-			drawImageCropped(background, backgroundY);
-			drawText(backgroundWithFbElements, backgroundY, extraBackgroundborder);
-		}
-		if (data.foreground.length > 0) {
-			const foregroundY = maxHeight - (foregroundTextHeight + extraForegroundTriangle * 0.35);
-			drawImageCropped(foreground, foregroundY);
-			drawText(foregroundWithFbElements, foregroundY, extraForegroundTriangle);
-		}
-		if (data.icons && data.icons.length > 0) {
-			let currentY = startY;
-			for (let letterPosition = 0; letterPosition < data.icons.length; letterPosition++) {
-				const iconChar = data.icons[letterPosition].toUpperCase();
-				if (iconMap[iconChar]) {
-					const iconImg = await loadImage(iconMap[iconChar]);
-					ctx.drawImage(iconImg, iconX, currentY, iconSize, iconSize);
-					currentY += iconSize + iconSpacing;
-				}
-			}
-		}
-		ctx.drawImage(bottomImage, 0, 0, textBottomBarWidth, textBottomBarHeight, 0, maxHeight - bottomImageheight, maxWidth, bottomImageheight);
+		// 	// Cards text height Declaration
+		// 	const recalculateTextHeight = () => {
+		// 		if (data.background.length > 0) {
+		// 			backgroundTextHeight = calculateTextHeight(ctx, backgroundWithFbElements, extraBackgroundborder, marginHeight, interline, fontSize);
+		// 		}
+		// 		if (data.foreground.length > 0) {
+		// 			foregroundTextHeight = calculateTextHeight(ctx, foregroundWithFbElements, extraForegroundTriangle, marginHeight, interline, fontSize);
+		// 		}
+		// 	};
+		// 	recalculateTextHeight()
+
+		// 	const resizeCardText = () => {
+		// 		marginHeight *= 0.8;
+		// 		fontSize *= 0.99;
+		// 		interline *= 0.95;
+		// 		recalculateTextHeight();
+		// 	};
+
+		// 	if (data.background.length > 0 && data.foreground.length > 0) {
+		// 		while ((backgroundTextHeight + foregroundTextHeight) > maxFieldsHeight) {
+		// 			resizeCardText();
+		// 		};
+		// 	} else {
+		// 		while (Math.max(backgroundTextHeight, foregroundTextHeight) > maxFieldsHeight) {
+		// 			resizeCardText();
+		// 		};
+		// 	};
+
+		// 	const drawText = (text, yPosition, extra) => {
+		// 		ctx.font = `${fontSize}px ForbiddenStars`;
+		// 		const words = text.split(' ');
+		// 		let line = '';
+		// 		let lineHeight = parseInt(ctx.font.match(/\d+/), 10);
+		// 		yPosition += marginHeight + extra + lineHeight;
+		// 		for (let n = 0; n < words.length; n++) {
+		// 			if (words[n] === "*newline*") {
+		// 				ctx.fillText(line, marginWidth, yPosition);
+		// 				yPosition += lineHeight + interline;
+		// 				line = '';
+		// 			}
+		// 			else if (words[n] === "*newpara*") {
+		// 				ctx.fillText(line, marginWidth, yPosition);
+		// 				yPosition += 2 * lineHeight;
+		// 				line = '';
+		// 			}
+		// 			else {
+		// 				const testLine = line + words[n] + ' ';
+		// 				const metrics = ctx.measureText(testLine);
+		// 				if (metrics.width > maxWidth - 2 * marginWidth && n > 0) {
+		// 					ctx.fillText(line, marginWidth, yPosition);
+		// 					yPosition += lineHeight + interline;
+		// 					line = words[n] + ' ';
+		// 				} else {
+		// 					line = testLine;
+		// 				};
+		// 			};
+		// 		};
+		// 		ctx.fillText(line, marginWidth, yPosition);
+		// 	};
+
+		// 	const drawImageCropped = (img, height) => {
+		// 		ctx.drawImage(img, 0, 0, textBackgroundSize, maxHeight - height, 0, height, maxWidth, maxHeight - height);
+		// 	};
+
+		// 	// Draw the Title
+		// 	ctx.font = `${titleFontSize}px HeadlinerNo45`;
+		// 	ctx.fillText(data.title, maxWidth * 0.27, maxHeight * 0.077);
+
+		// 	if (data.background.length > 0) {
+		// 		const backgroundY = maxHeight - (backgroundTextHeight + foregroundTextHeight);
+		// 		drawImageCropped(background, backgroundY);
+		// 		drawText(backgroundWithFbElements, backgroundY, extraBackgroundborder);
+		// 	}
+		// 	if (data.foreground.length > 0) {
+		// 		const foregroundY = maxHeight - (foregroundTextHeight + extraForegroundTriangle * 0.35);
+		// 		drawImageCropped(foreground, foregroundY);
+		// 		drawText(foregroundWithFbElements, foregroundY, extraForegroundTriangle);
+		// 	}
+		// 	if (data.icons && data.icons.length > 0) {
+		// 		let currentY = startY;
+		// 		for (let letterPosition = 0; letterPosition < data.icons.length; letterPosition++) {
+		// 			const iconChar = data.icons[letterPosition].toUpperCase();
+		// 			if (iconMap[iconChar]) {
+		// 				const iconImg = await loadImage(iconMap[iconChar]);
+		// 				ctx.drawImage(iconImg, iconX, currentY, iconSize, iconSize);
+		// 				currentY += iconSize + iconSpacing;
+		// 			}
+		// 		}
+		// 	}
+		// 	ctx.drawImage(bottomImage, 0, 0, textBottomBarWidth, textBottomBarHeight, 0, maxHeight - bottomImageheight, maxWidth, bottomImageheight);
+
+
+		
+		// }
 	}
 
 	function drawOrderCard(data, ctx) {
@@ -531,67 +550,67 @@ document.addEventListener('DOMContentLoaded', function () {
 			const picture = new Image();
 			picture.src = data.picture;
 
-			// Initial settings for margin and font size
-			let generalTextHeight = 0;
+			// // Initial settings for margin and font size
+			// let generalTextHeight = 0;
 
-			const generalTextWithFbElements = replaceForbiddenStarsElements(data.general)
+			// const generalTextWithFbElements = replaceForbiddenStarsElements(data.general)
 
-			const recalculateTextHeight = () => {
-				generalTextHeight = calculateTextHeight(ctx, generalTextWithFbElements, 0, marginOrderWidth, interline, fontSize);
-			};
+			// const recalculateTextHeight = () => {
+			// 	generalTextHeight = calculateTextHeight(ctx, generalTextWithFbElements, 0, marginOrderWidth, interline, fontSize);
+			// };
 
-			const resizeAllShit = () => {
-				fontSize *= 0.95;
-				interline *= 0.97;
-				recalculateTextHeight();
-			};
+			// const resizeAllShit = () => {
+			// 	fontSize *= 0.95;
+			// 	interline *= 0.97;
+			// 	recalculateTextHeight();
+			// };
 
-			recalculateTextHeight()
-			while (generalTextHeight > maxFieldsHeight) {
-				resizeAllShit();
-			};
+			// recalculateTextHeight()
+			// while (generalTextHeight > maxFieldsHeight) {
+			// 	resizeAllShit();
+			// };
 
-			const drawText = (text, yPosition) => {
-				ctx.font = `${fontSize}px ForbiddenStars`;
-				const words = text.split(' ');
-				let line = '';
-				let lineHeight = parseInt(ctx.font.match(/\d+/), 10);
-				yPosition += lineHeight;
-				for (let n = 0; n < words.length; n++) {
-					if (words[n] === "*newline*") {
-						ctx.fillText(line, maxWidth * 0.5, yPosition);
-						yPosition += lineHeight + interline;
-						line = '';
-					}
-					else if (words[n] === "*newpara*") {
-						yPosition += 2 * lineHeight;
-						line = '';
-					}
-					else {
-						const testLine = line + words[n] + ' ';
-						const metrics = ctx.measureText(testLine);
-						if (metrics.width > maxWidth - 2 * marginOrderWidth && n > 0) {
-							ctx.fillText(line, maxWidth * 0.5, yPosition);
-							yPosition += lineHeight + interline;
-							line = words[n] + ' ';
-						} else {
-							line = testLine;
-						};
-					};
-				};
-				ctx.fillText(line, maxWidth * 0.5, yPosition);
-			};
+			// const drawText = (text, yPosition) => {
+			// 	ctx.font = `${fontSize}px ForbiddenStars`;
+			// 	const words = text.split(' ');
+			// 	let line = '';
+			// 	let lineHeight = parseInt(ctx.font.match(/\d+/), 10);
+			// 	yPosition += lineHeight;
+			// 	for (let n = 0; n < words.length; n++) {
+			// 		if (words[n] === "*newline*") {
+			// 			ctx.fillText(line, maxWidth * 0.5, yPosition);
+			// 			yPosition += lineHeight + interline;
+			// 			line = '';
+			// 		}
+			// 		else if (words[n] === "*newpara*") {
+			// 			yPosition += 2 * lineHeight;
+			// 			line = '';
+			// 		}
+			// 		else {
+			// 			const testLine = line + words[n] + ' ';
+			// 			const metrics = ctx.measureText(testLine);
+			// 			if (metrics.width > maxWidth - 2 * marginOrderWidth && n > 0) {
+			// 				ctx.fillText(line, maxWidth * 0.5, yPosition);
+			// 				yPosition += lineHeight + interline;
+			// 				line = words[n] + ' ';
+			// 			} else {
+			// 				line = testLine;
+			// 			};
+			// 		};
+			// 	};
+			// 	ctx.fillText(line, maxWidth * 0.5, yPosition);
+			// };
 
 			// Draw the main picture resized
 			picture.onload = function () {
 				ctx.drawImage(picture, 0, 0, maxWidth, maxHeight);
 
-				// Draw the Title
-				ctx.font = `${titleFontSize}px HeadlinerNo45`;
-				ctx.textAlign = "center";
-				ctx.fillText(data.title, maxWidth * 0.5, maxHeight * 0.2325);
+				// // Draw the Title
+				// ctx.font = `${titleFontSize}px HeadlinerNo45`;
+				// ctx.textAlign = "center";
+				// ctx.fillText(data.title, maxWidth * 0.5, maxHeight * 0.2325);
 
-				drawText(generalTextWithFbElements, textPosition);
+				// drawText(generalTextWithFbElements, textPosition);
 				resolve();
 			};
 
@@ -614,70 +633,70 @@ document.addEventListener('DOMContentLoaded', function () {
 			picture.src = data.picture;
 
 			// Initial settings for margin and font size
-			let generalTextHeight = 0;
+			// let generalTextHeight = 0;
 
-			const generalTextWithFbElements = replaceForbiddenStarsElements(data.general);
+			// const generalTextWithFbElements = replaceForbiddenStarsElements(data.general);
 
-			const recalculateTextHeight = () => {
-				generalTextHeight = calculateTextHeight(ctx, generalTextWithFbElements, 20, 0, interline, fontSize);
-			};
+			// const recalculateTextHeight = () => {
+			// 	generalTextHeight = calculateTextHeight(ctx, generalTextWithFbElements, 20, 0, interline, fontSize);
+			// };
 
-			const resizeAllShit = () => {
-				fontSize *= 0.95;
-				interline *= 0.97;
-				recalculateTextHeight()
-			};
+			// const resizeAllShit = () => {
+			// 	fontSize *= 0.95;
+			// 	interline *= 0.97;
+			// 	recalculateTextHeight()
+			// };
 
-			recalculateTextHeight()
-			while (generalTextHeight > maxFieldsHeight) {
-				resizeAllShit();
-			};
+			// recalculateTextHeight()
+			// while (generalTextHeight > maxFieldsHeight) {
+			// 	resizeAllShit();
+			// };
 
-			const drawText = (text, yPosition) => {
-				ctx.font = `${fontSize}px ForbiddenStars`;
-				const words = text.split(' ');
-				let line = '';
-				let lineHeight = parseInt(ctx.font.match(/\d+/), 10);
-				yPosition += lineHeight;
-				for (let n = 0; n < words.length; n++) {
-					if (words[n] === "*newline*") {
-						ctx.fillText(line, marginWidth, yPosition);
-						yPosition += lineHeight + interline;
-						line = '';
-					}
-					else if (words[n] === "*newpara*") {
-						ctx.fillText(line, marginWidth, yPosition);
-						yPosition += 2 * lineHeight;
-						line = '';
-					}
-					else {
-						const testLine = line + words[n] + ' ';
-						const metrics = ctx.measureText(testLine);
-						if (metrics.width > maxWidth - 2 * marginWidth && n > 0) {
-							ctx.fillText(line, marginWidth, yPosition);
-							yPosition += lineHeight + interline;
-							line = words[n] + ' ';
-						} else {
-							line = testLine;
-						};
-					};
-				};
-				ctx.fillText(line, marginWidth, yPosition);
-			};
+			// const drawText = (text, yPosition) => {
+			// 	ctx.font = `${fontSize}px ForbiddenStars`;
+			// 	const words = text.split(' ');
+			// 	let line = '';
+			// 	let lineHeight = parseInt(ctx.font.match(/\d+/), 10);
+			// 	yPosition += lineHeight;
+			// 	for (let n = 0; n < words.length; n++) {
+			// 		if (words[n] === "*newline*") {
+			// 			ctx.fillText(line, marginWidth, yPosition);
+			// 			yPosition += lineHeight + interline;
+			// 			line = '';
+			// 		}
+			// 		else if (words[n] === "*newpara*") {
+			// 			ctx.fillText(line, marginWidth, yPosition);
+			// 			yPosition += 2 * lineHeight;
+			// 			line = '';
+			// 		}
+			// 		else {
+			// 			const testLine = line + words[n] + ' ';
+			// 			const metrics = ctx.measureText(testLine);
+			// 			if (metrics.width > maxWidth - 2 * marginWidth && n > 0) {
+			// 				ctx.fillText(line, marginWidth, yPosition);
+			// 				yPosition += lineHeight + interline;
+			// 				line = words[n] + ' ';
+			// 			} else {
+			// 				line = testLine;
+			// 			};
+			// 		};
+			// 	};
+			// 	ctx.fillText(line, marginWidth, yPosition);
+			// };
 
 			// Draw the main picture resized
 			picture.onload = function () {
 				ctx.drawImage(picture, 0, 0, maxWidth, maxHeight);
 
-				// Draw the Title
-				ctx.font = `${titleFontSize * 0.8}px FrizQuadrataStd`;
-				ctx.textAlign = "center";
-				ctx.fillText(data.type, maxWidth * 0.5, maxHeight * 0.573);
-				ctx.font = `${titleFontSize}px HeadlinerNo45`;
-				ctx.textAlign = "left";
-				ctx.fillText(data.title, maxWidth * 0.05, maxHeight * 0.0735);
+				// // Draw the Title
+				// ctx.font = `${titleFontSize * 0.8}px FrizQuadrataStd`;
+				// ctx.textAlign = "center";
+				// ctx.fillText(data.type, maxWidth * 0.5, maxHeight * 0.573);
+				// ctx.font = `${titleFontSize}px HeadlinerNo45`;
+				// ctx.textAlign = "left";
+				// ctx.fillText(data.title, maxWidth * 0.05, maxHeight * 0.0735);
 
-				drawText(generalTextWithFbElements, textPosition);
+				// drawText(generalTextWithFbElements, textPosition);
 				resolve();
 			};
 
