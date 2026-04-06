@@ -64,7 +64,7 @@
         }
     ],
     "combatText": [
-        {
+        [{
             "title": "BLINDING SALVO",
             "general": "If you are attacking, your opponent cannot resolve the general abilities of his next revealed combat card. *newpara* If you are defending, gain 1 [D].",
             "unit": "",
@@ -93,8 +93,8 @@
             "general": "Gain 2 (B).",
             "unit": "Stormtrooper/Rogue Trader: Spend 2 (B) to convert all of your [M] into [B].",
             "icons": "B"
-        },
-        {
+        }],
+        [{
             "title": "SANCTIONED PSYKER",
             "general": "Your opponent may spend 1 [B] to gain 1 (B). If he does not, force your opponent to lose 1 [S].",
             "unit": "Stormtrooper/Rogue Trader: Your opponent rerolls 2 dice of his choice. For each [B] rolled, gain 1 (B) and 1 (S). For each [S] rolled, gain 1 (S).",
@@ -117,8 +117,8 @@
             "general": "If you are attacking, your opponent cannot resolve the unit abilities of his next revealed combat card. *newpara* If you are defending, either gain 1 | or retreat 1 of your units.",
             "unit": "",
             "icons": "MMM"
-        },
-        {
+        }],
+        [{
             "title": "LIDLESS STARE",
             "general": "Gain 1 [D].",
             "unit": "Deathwatch/Black Ship: Your opponent loses 3 dice of his choice. Then you lose 3 of your dice. Gain 1 [D]. ",
@@ -135,8 +135,8 @@
             "general": "Reroll either 1 [S] or 1 [M] to force your opponent to lose 1 [S].",
             "unit": "Valkyrie/Black Ship: Destroy 1 of your opponent's routed units.",
             "icons": "BBS"
-        },
-        {
+        }],
+        [{
             "title": "TRUESILVER ARMOUR",
             "general": "Gain either 1 [S] or 2 (S).",
             "unit": "Grey Knight/Black Ship: During this combat, the health value of your units is increased by 1.",
@@ -147,6 +147,6 @@
             "general": "Either gain 1 (B) or convert up to 3 of your dice into [B].",
             "unit": "Grey Knight: When an enemy unit suffers damage during this execution round, it is destroyed. *newpara* Black Ship: Rout 1 of your opponent's units.",
             "icons": "BBBM"
-        }
+        }]
     ]
 }
