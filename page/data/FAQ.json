@@ -7,6 +7,7 @@
         "items": [
           {
             "Faction": "Rules Clarification",
+            "picture": "pictures/icons/general_3.png",
             "items": [
               {
                 "Phrase": "If all units from both players are destroyed before the end of combat, who wins?",
@@ -64,6 +65,7 @@
           },
           {
             "Faction": "Advance Order",
+            "picture": "pictures/icons/advance.png",
             "items": [
               {
                 "Phrase": "Can I attack with more units than the Areas capacity?",
@@ -117,6 +119,7 @@
           },
           {
             "Faction": "Deploy Order",
+            "picture": "pictures/icons/deploy.png",
             "items": [
               {
                 "Phrase": "Can I voluntarily destroy units in order to deploy them again?",
@@ -154,6 +157,7 @@
           },
           {
             "Faction": "Dominate Order",
+            "picture": "pictures/icons/dominate.png",
             "items": [
               {
                 "Phrase": "Do I still get to resolve my Dominate Faction bonus if I choose to put the Order Token on top of the Event Deck instead of resolving normally?",
@@ -167,6 +171,7 @@
           },
           {
             "Faction": "Strategize Order",
+            "picture": "pictures/icons/strategize.png",
             "items": [
               {
                 "Phrase": "Are the results of Strategize public information?",
@@ -176,6 +181,7 @@
           },
           {
             "Faction": "Orbital Strike",
+            "picture": "pictures/icons/orbital_strike.png",
             "items": [
               {
                 "Phrase": "Do planets have to be adjacent to my ships in order to orbital strike?",
@@ -201,6 +207,7 @@
           },
           {
             "Faction": "Structures",
+            "picture": "pictures/icons/general_2.png",
             "items": [
               {
                 "Phrase": "What happens when a Bastion is assigned damage?",
@@ -234,6 +241,7 @@
           },
           {
             "Faction": "Battle and Retreats",
+            "picture": "pictures/icons/retreat.png",
             "items": [
               {
                 "Phrase": "Can I retreat if I moved via Combat Card or Order Upgrade Effects?",
@@ -255,6 +263,7 @@
           },
           {
             "Faction": "Routed Units",
+            "picture": "pictures/icons/routed.png",
             "items": [
               {
                 "Phrase": "Can you move a routed unit via Order or Card Effect?",
@@ -288,6 +297,7 @@
           },
           {
             "Faction": "Setup",
+            "picture": "pictures/icons/general.png",
             "items": [
               {
                 "Phrase": "Does in a 2 player game the 3rd tile placed by each player has 0 objectives on it?",
@@ -318,6 +328,7 @@
         "items": [
           {
             "Faction": "Space Marines",
+            "picture": "pictures/icons/space_marine.png",
             "items": [
               {
                 "Phrase": "Armoured Advance",
@@ -343,6 +354,7 @@
           },
           {
             "Faction": "Chaos",
+            "picture": "pictures/icons/chaos.png",
             "items": [
               {
                 "Phrase": "Chaos United",
@@ -368,6 +380,7 @@
           },
           {
             "Faction": "Orks",
+            "picture": "pictures/icons/ork.png",
             "items": [
               {
                 "Phrase": "Mek Boyz",
@@ -381,6 +394,7 @@
           },
           {
             "Faction": "Eldar",
+            "picture": "pictures/icons/eldar.png",
             "items": [
               {
                 "Phrase": "Corsair Raid",
@@ -411,6 +425,7 @@
         "items": [
           {
             "Faction": "Space Marines",
+            "picture": "pictures/icons/space_marine.png",
             "items": [
               {
                 "Phrase": "Emperor Protects",
@@ -420,6 +435,7 @@
           },
           {
             "Faction": "Chaos",
+            "picture": "pictures/icons/chaos.png",
             "items": [
               {
                 "Phrase": "Prayer to the Dark Gods",
@@ -445,6 +461,7 @@
           },
           {
             "Faction": "Orks",
+            "picture": "pictures/icons/ork.png",
             "items": [
               {
                 "Phrase": "Gitz Dem!",
@@ -458,6 +475,7 @@
           },
           {
             "Faction": "Eldar",
+            "picture": "pictures/icons/eldar.png",
             "items": [
               {
                 "Phrase": "Warp Gate",
@@ -472,6 +490,7 @@
         "items": [
           {
             "Faction": "Space Marines",
+            "picture": "pictures/icons/space_marine.png",
             "items": [
               {
                 "Phrase": "Crusade",
@@ -493,6 +512,7 @@
           },
           {
             "Faction": "Chaos",
+            "picture": "pictures/icons/chaos.png",
             "items": [
               {
                 "Phrase": "Complete Destruction",
@@ -518,6 +538,7 @@
           },
           {
             "Faction": "Orks",
+            "picture":"pictures/icons/ork.png",
             "items": [
               {
                 "Phrase": "Green Tide",
@@ -535,6 +556,7 @@
           },
           {
             "Faction": "Eldar",
+            "picture": "pictures/icons/eldar.png",
             "items": [
               {
                 "Phrase": "Farseers",
@@ -566,6 +588,7 @@
         "items": [
           {
             "Faction": "Tyranid",
+            "picture": "pictures/icons/tyranid.png",
             "items": [
               {
                 "Phrase": "Winged Horror",
@@ -575,6 +598,7 @@
           },
           {
             "Faction": "Imperial Guard",
+            "picture": "pictures/icons/ig.png",
             "items": [
               {
                 "Phrase": "Bullgryn Bulwark",
@@ -612,6 +636,7 @@
           },
           {
             "Faction": "Tau",
+            "picture": "pictures/icons/tau.png",
             "items": [
               {
                 "Phrase": "Feigned Retreat",
@@ -641,6 +666,7 @@
           },
           {
             "Faction": "Necron",
+            "picture": "pictures/icons/necron.png",
             "items": [
               {
                 "Phrase": "Monolith Phalanx",
@@ -655,6 +681,7 @@
         "items": [
           {
             "Faction": "Tyranid",
+            "picture": "pictures/icons/tyranid.png",
             "items": [
               {
                 "Phrase": "Shadow in The Warp",
@@ -664,6 +691,7 @@
           },
           {
             "Faction": "Imperial Guard",
+            "picture": "pictures/icons/ig.png",
             "items": [
               {
                 "Phrase": "Tactical Genius",
@@ -677,6 +705,7 @@
           },
           {
             "Faction": "Tau",
+            "picture": "pictures/icons/tau.png",
             "items": [
               {
                 "Phrase": "Critical strike",
@@ -699,6 +728,7 @@
         "items": [
           {
             "Faction": "Tyranid",
+            "picture": "pictures/icons/tyranid.png",
             "items": [
               {
                 "Phrase": "Mycetic Spores",
@@ -712,6 +742,7 @@
           },
           {
             "Faction": "Imperial Guard",
+            "picture": "pictures/icons/ig.png",
             "items": [
               {
                 "Phrase": "Departmento Munitorum",
@@ -729,6 +760,7 @@
           },
           {
             "Faction": "Tau",
+            "picture": "pictures/icons/tau.png",
             "items": [
               {
                 "Phrase": "Mobilised Hunter Cadres",
@@ -748,6 +780,7 @@
         "items": [
           {
             "Faction": "Dark Eldar",
+            "picture": "pictures/icons/dark_eldar.png",
             "items": [
               {
                 "Phrase": "Agents of Vect",
@@ -761,6 +794,7 @@
           },
           {
             "Faction": "Sisters of Battle",
+            "picture": "pictures/icons/sisters.png",
             "items": [
               {
                 "Phrase": "Becon of Faith",
@@ -774,6 +808,7 @@
           },
           {
             "Faction": "Inquisition",
+            "picture": "pictures/icons/inquisition.png",
             "items": [
               {
                 "Phrase": "Truesilver Armour",
@@ -788,6 +823,7 @@
         "items": [
           {
             "Faction": "Dark Eldar",
+            "picture": "pictures/icons/dark_eldar.png",
             "items": [
               {
                 "Phrase": "Heroine in the Making",
@@ -797,6 +833,7 @@
           },
           {
             "Faction": "Sisters of Battle",
+            "picture": "pictures/icons/sisters.png",
             "items": [
               {
                 "Phrase": "Heroine in the Making",
@@ -806,6 +843,8 @@
           },
           {
             "Faction": "Inquisition",
+            "picture": "pictures/icons/inquisition.png",
+
             "items": [
               {
                 "Phrase": "Theosophamy",
@@ -820,6 +859,7 @@
         "items": [
           {
             "Faction": "Sisters of Battle",
+            "picture": "pictures/icons/sisters.png",
             "items": [
               {
                 "Phrase": "War Hymns",

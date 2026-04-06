@@ -20,24 +20,263 @@ document.addEventListener('DOMContentLoaded', async function () {
 	const cardsContentsContainer = document.getElementById('cards-tabs');
 	const cardsContainer = document.getElementById('cards-container');
 	const faqContainer = document.getElementById('faq-container');
-	const faqIframe = document.getElementById('faq-frame');
-	const faqFrameSource = faqIframe?.dataset?.src ?? 'faq_manuscript_page.html';
-	let faqLoaded = false;
+	const faqContent = document.getElementById('faq-content');
+	const faqSearchInput = document.getElementById('faq-search-input');
+	const faqSearchMeta = document.getElementById('faq-search-meta');
+	const FAQ_JSON_PATH = './data/FAQ.json';
 
-	const setFaqFrameHeight = (height) => {
-		if (!faqIframe) {
+	let faqOriginalData = [];
+	let faqLoaded = false;
+	let faqLoadingPromise = null;
+
+	const normalizeFaqValue = (value) => String(value ?? '').toLowerCase();
+	const faqMatches = (value, query) => normalizeFaqValue(value).includes(query);
+	const faqEscapeHtml = (str) => String(str ?? '')
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/\"/g, '&quot;')
+		.replace(/'/g, '&#039;');
+	const faqWithArray = (value) => Array.isArray(value) ? value : [];
+	const getFaqPicture = (node) => node && typeof node === 'object' ? node.picture || '' : '';
+
+	function normalizeFaqMainText(value) {
+		return String(value ?? '')
+			.replace(/\\r\\n/g, '\n')
+			.replace(/\\n/g, '\n');
+	}
+
+	function highlightFaqText(text, query) {
+		const raw = String(text ?? '');
+		if (!query) {
+			return faqEscapeHtml(raw);
+		}
+
+		const escaped = faqEscapeHtml(raw);
+		const safeQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+		const regex = new RegExp(`(${safeQuery})`, 'ig');
+		return escaped.replace(regex, '<mark>$1</mark>');
+	}
+
+	function createFaqLevelRow(textHtml, picture) {
+		const row = document.createElement('div');
+		row.className = `faq-level-row ${picture ? '' : 'no-picture'}`.trim();
+
+		const textWrap = document.createElement('div');
+		textWrap.innerHTML = textHtml;
+		row.appendChild(textWrap);
+
+		if (picture) {
+			const img = document.createElement('img');
+			img.className = 'faq-level-image';
+			img.src = picture;
+			img.alt = '';
+			img.loading = 'lazy';
+			row.appendChild(img);
+		}
+		return row;
+	}
+
+	function renderFaqPhraseBlock(phraseObj, query) {
+		const phraseBlock = document.createElement('section');
+		phraseBlock.className = 'faq-phrase-block faq-level-block';
+
+		const phraseText = phraseObj.Phrase ?? '';
+		const mainText = normalizeFaqMainText(phraseObj.Main ?? '');
+		const picture = getFaqPicture(phraseObj);
+
+		const textHtml = `
+			<div class="faq-phrase-title"><strong>${highlightFaqText(phraseText, query)}</strong></div>
+			<div class="faq-main-text">${highlightFaqText(mainText, query)}</div>
+		`;
+
+		phraseBlock.appendChild(createFaqLevelRow(textHtml, picture));
+		return phraseBlock;
+	}
+
+	function renderFaqFactionBlock(factionObj, query) {
+		const block = document.createElement('section');
+		block.className = 'faq-faction-block faq-level-block';
+
+		const title = factionObj.Faction ?? '';
+		const picture = getFaqPicture(factionObj);
+		const headerHtml = `
+			<h3>${highlightFaqText(title, query)}</h3>
+			<div class="faq-separator"></div>
+		`;
+
+		block.appendChild(createFaqLevelRow(headerHtml, picture));
+
+		faqWithArray(factionObj.items).forEach((phraseObj) => {
+			block.appendChild(renderFaqPhraseBlock(phraseObj, query));
+		});
+
+		return block;
+	}
+
+	function renderFaqSubCategoryBlock(subObj, query) {
+		const block = document.createElement('section');
+		block.className = 'faq-subcategory-block faq-level-block';
+
+		const title = subObj.SubCategory ?? '';
+		const picture = getFaqPicture(subObj);
+		const headerHtml = `
+			<h2>${highlightFaqText(title, query)}</h2>
+			<div class="faq-separator"></div>
+		`;
+
+		block.appendChild(createFaqLevelRow(headerHtml, picture));
+
+		faqWithArray(subObj.items).forEach((factionObj) => {
+			block.appendChild(renderFaqFactionBlock(factionObj, query));
+		});
+
+		return block;
+	}
+
+	function renderFaqCategoryBlock(categoryObj, query) {
+		const block = document.createElement('section');
+		block.className = 'faq-category-block faq-level-block';
+
+		const title = categoryObj.Category ?? '';
+		const picture = getFaqPicture(categoryObj);
+		const headerHtml = `
+			<h1>${highlightFaqText(title, query)}</h1>
+			<div class="faq-separator"></div>
+		`;
+
+		block.appendChild(createFaqLevelRow(headerHtml, picture));
+
+		faqWithArray(categoryObj.items).forEach((subObj) => {
+			block.appendChild(renderFaqSubCategoryBlock(subObj, query));
+		});
+
+		return block;
+	}
+
+	function renderFaq(data, query = '') {
+		if (!faqContent) {
 			return;
 		}
-		const minHeight = 760; // keep a reasonable viewport while FAQ loads
-		const safeHeight = Math.max(Number(height) || 0, minHeight);
-		faqIframe.style.height = `${safeHeight}px`;
-	};
 
-	window.addEventListener('message', (event) => {
-		if (event?.data?.type === 'faq-height') {
-			setFaqFrameHeight(event.data.height);
+		faqContent.innerHTML = '';
+
+		if (!data.length) {
+			const empty = document.createElement('div');
+			empty.className = 'faq-empty-state';
+			empty.textContent = query ? 'No results found.' : 'No FAQ entries available.';
+			faqContent.appendChild(empty);
+			return;
 		}
-	});
+
+		data.forEach((categoryObj) => {
+			faqContent.appendChild(renderFaqCategoryBlock(categoryObj, query));
+		});
+	}
+
+	function filterFaqData(data, rawQuery) {
+		const query = normalizeFaqValue(rawQuery).trim();
+		if (!query) {
+			return data;
+		}
+
+		return faqWithArray(data).flatMap((categoryObj) => {
+			const filteredSubCategories = faqWithArray(categoryObj.items).flatMap((subObj) => {
+				if (faqMatches(subObj.SubCategory, query)) {
+					return [subObj];
+				}
+
+				const filteredFactions = faqWithArray(subObj.items).flatMap((factionObj) => {
+					if (faqMatches(factionObj.Faction, query)) {
+						return [factionObj];
+					}
+
+					const filteredPhrases = faqWithArray(factionObj.items).filter((phraseObj) => {
+						return faqMatches(phraseObj.Phrase, query) || faqMatches(phraseObj.Main, query);
+					});
+
+					if (filteredPhrases.length) {
+						return [{
+							...factionObj,
+							items: filteredPhrases
+						}];
+					}
+
+					return [];
+				});
+
+				if (filteredFactions.length) {
+					return [{
+						...subObj,
+						items: filteredFactions
+					}];
+				}
+
+				return [];
+			});
+
+			if (filteredSubCategories.length) {
+				return [{
+					...categoryObj,
+					items: filteredSubCategories
+				}];
+			}
+
+			return [];
+		});
+	}
+
+	function updateFaqSearchResults(rawQuery) {
+		const query = rawQuery.trim();
+		const filtered = filterFaqData(faqOriginalData, rawQuery);
+		renderFaq(filtered, query);
+
+		if (faqSearchMeta) {
+			faqSearchMeta.textContent = query
+				? `Search: "${query}"`
+				: 'Showing full FAQ';
+		}
+	}
+
+	async function loadFaq() {
+		if (faqLoaded) {
+			return faqOriginalData;
+		}
+
+		if (faqLoadingPromise) {
+			return faqLoadingPromise;
+		}
+
+		faqLoadingPromise = fetch(FAQ_JSON_PATH, { cache: 'no-store' })
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error(`Failed to load FAQ JSON: ${response.status}`);
+				}
+
+				return response.json();
+			})
+			.then((data) => {
+				faqOriginalData = Array.isArray(data) ? data : [];
+				faqLoaded = true;
+				updateFaqSearchResults(faqSearchInput?.value ?? '');
+				return faqOriginalData;
+			})
+			.catch((error) => {
+				console.error(error);
+				faqLoaded = false;
+
+				if (faqContent) {
+					faqContent.innerHTML = '<div class="faq-empty-state">Failed to load FAQ data.</div>';
+				}
+
+				throw error;
+			})
+			.finally(() => {
+				faqLoadingPromise = null;
+			});
+
+		return faqLoadingPromise;
+	}
 
 	const showCardsView = () => {
 		if (factionTabsContainer) factionTabsContainer.style.display = '';
@@ -51,11 +290,14 @@ document.addEventListener('DOMContentLoaded', async function () {
 		if (cardsContentsContainer) cardsContentsContainer.style.display = 'none';
 		if (cardsContainer) cardsContainer.style.display = 'none';
 		if (faqContainer) faqContainer.classList.add('active');
-		if (faqIframe && !faqLoaded) {
-			faqIframe.src = faqFrameSource;
-			faqLoaded = true;
-		}
+		loadFaq().catch(() => {});
 	};
+
+	if (faqSearchInput) {
+		faqSearchInput.addEventListener('input', (event) => {
+			updateFaqSearchResults(event.target.value);
+		});
+	}
 
 	// Size of cards - rest is calculated just based on this.
 	const maxWidth = 450;
@@ -199,7 +441,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 								subTabContents.id = `cards-${expansionFolder___}-${factionFolder__}-${cardTypeReference}`;
 								cardsContainer.appendChild(subTabContents);
 
-								console.log(`Loading text.json for ${expansionFolder___}/${factionFolder__}...`);
+								// console.log(`Loading text.json for ${expansionFolder___}/${factionFolder__}...`);
 								fetch(`factions/${expansionFolder___}/${factionFolder__}/text.json`)
 									.then(response => response.ok ? response.json() : "")
 									.then(textData => {

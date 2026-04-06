@@ -40,6 +40,9 @@ body {
     background: var(--background);
 }
 
+page_container {
+
+}
 
 @keyframes spin {
     0% {
@@ -137,12 +140,168 @@ body {
     flex-direction: column;
 }
 
-#faq-frame {
+.faq-page-shell {
+    position: relative;
     width: 100%;
-    min-height: 760px;
-    border: none;
+    min-height: 100vh;
+    color: var(--text_2);
+}
+
+.faq-header-panel {
+    position: sticky;
+    top: 12px;
+    z-index: 20;
+    max-width: var(--max-width);
+    margin: 0 auto 24px;
+    padding: 14px;
+    background-color: var(--background_2);
+    color: var(--text);
+    border-radius: 18px;
+    opacity: 0.85;
+}
+
+.faq-search-wrap {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.faq-search-box {
+    flex: 1 1 340px;
+    min-width: 260px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    border: var(--border);
+    background-color: var(--background);
+    font-size: 16px;
+    font-family: 'ForbiddenStars';
+    outline: none;
+}
+
+.faq-search-meta {
+    font-size: 14px;
+    border-radius: 12px;
+    font-family: 'ForbiddenStars';
+}
+
+.faq-content {
+    position: relative;
+    max-width: var(--content-width);
+    margin: 0 auto;
+    padding: 50px 30px 200px 15px;
+    border-radius: 24px;
+    overflow: hidden;
+}
+
+.faq-empty-state {
+    padding: 24px 0;
+    font-size: 18px;
+    text-align: center;
+    opacity: 0.8;
+}
+
+.faq-level-block {
+    margin: 0 0 28px;
+}
+
+.faq-level-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(180px, 280px);
+    gap: 18px;
+    align-items: start;
+}
+
+.faq-level-row.no-picture {
+    grid-template-columns: 1fr;
+}
+
+.faq-level-image {
+    max-width: 100px;
+    border-radius: 10px;
+    border: var(--border);
     display: block;
-    height: auto;
+    justify-self: end;
+}
+
+.faq-content h1,
+.faq-content h2,
+.faq-content h3 {
+    margin: 0;
+    line-height: 1.15;
+    font-family: 'EventFont';
+    letter-spacing: 0.01em;
+}
+
+.faq-phrase-title,
+.faq-main-text {
+    font-family: 'ForbiddenStars';
+}
+
+.faq-content h1 {
+    font-size: clamp(30px, 4vw, 44px);
+    margin-bottom: 10px;
+}
+
+.faq-content h2 {
+    font-size: clamp(24px, 3vw, 34px);
+    margin-bottom: 8px;
+}
+
+.faq-content h3 {
+    font-size: clamp(22px, 2.8vw, 30px);
+    margin-bottom: 8px;
+}
+
+.faq-separator {
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(to right, transparent, var(--blue), transparent);
+    margin: 0 0 16px;
+}
+
+.faq-category-block {
+    margin-bottom: 42px;
+}
+
+.faq-subcategory-block {
+    margin: 22px 0 28px;
+    padding-left: 10px;
+}
+
+.faq-faction-block {
+    margin: 18px 0 24px;
+    padding-left: 12px;
+}
+
+.faq-phrase-block {
+    margin: 14px 0 16px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: var(--background);
+    border: var(--border);
+}
+
+.faq-phrase-title {
+    display: block;
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: var(--text_3);
+}
+
+.faq-main-text {
+    font-size: 17px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.faq-content mark {
+    background: var(--highlight);
+    color: inherit;
+    padding: 0 0.1em;
+    border-radius: 0.15em;
 }
 
 .grid {
