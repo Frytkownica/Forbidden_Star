@@ -13,6 +13,21 @@
     src: url('../fonts/EventFont.woff2') format('woff2');
 }
 
+:root {
+  --text:#bbb;
+  --text_2:#222;
+  --text_3: #000;
+  --background:#999;
+  --background_2:#222;
+  --background_3:#777;
+  --highlight: #aa6;
+  --spinnerColor: #36f;
+  --blue:rgba(47, 95, 255, 0.5);
+  --border:1px solid rgba(0, 0, 100, 0.5);
+  --max-width:1040px;
+  --content-width:940px;
+}
+
 body {
     top: 0;
     display: flex;
@@ -21,6 +36,8 @@ body {
     width: 1420px;
     min-height: 100vh;
     gap: 5px;
+    color: var(--text);
+    background: var(--background);
 }
 
 
@@ -38,15 +55,18 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    font-family: 'EventFont';
     width: 450px;
     height: 650px;
-    background-color: rgba(0, 0, 0, 0.1);
+    color: var(--text);
+    font-size: 25px;
+    background-color: var(--background_2);
     border-radius: 8px;
 }
 
 .card-placeholder .card-spinner {
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #3498db;
+    border: var(--border);
+    border-top: 4px solid var(--spinnerColor);
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -71,26 +91,28 @@ body {
 .expansion-header,
 .faction-header,
 .card-header {
+    border-radius:12px;
     display: inline-block;
     padding: 5px;
     padding-left: 8px;
     padding-right: 8px;
-    background-color: #bbb;
+    background-color: var(--background_2);
     z-index: 1000;
     cursor: grab;
 }
 
 .expansion-header.active,
 .faction-header.active {
-    background-color: #fff;
+    background-color: var(--background_3);
+    color: var(--text_2);
     box-shadow: 0 0 30px #f80;
     cursor: default;
 }
 
 .card-header.active {
-    background-color: #111;
+    background-color: var(--background_3);
     box-shadow: 0 0 10px #090;
-    color: #fff;
+    color: var(--text_2);
     cursor: default;
 }
 
@@ -118,7 +140,6 @@ body {
     width: 100%;
     min-height: 760px;
     border: none;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
     border-radius: 14px;
     display: block;
     height: auto;
@@ -128,28 +149,34 @@ body {
     display: grid;
     gap: 20px 20px;
     grid-template-columns: repeat(3, 1fr);
+    background-color: var(--background_3);
+    gap: 5px 5px;
     padding: 10px;
 }
 
 .grid.events {
     grid-template-columns: repeat(4, 1fr);
-    background-color: rgb(163, 163, 163);
-    gap: 5px 5px;
     width: 1835px;
 }
 
-.grid.cardBack {
+.grid.cardBackImages {
     grid-template-columns: repeat(3, 1fr);
-    background-color: rgb(163, 163, 163);
     gap: 5px 5px;
 }
 
-.grid.factionCard {
+.grid.factionCardImage {
+    grid-template-columns: repeat(1, 1fr);
     width: 1835px;
 }
+
+.grid.mapImages {
+    grid-template-columns: repeat(2, 1fr);
+    width: 1835px;
+}
+
 
 .grid.orders {
-    background-color: #aaa;
+    grid-template-columns: repeat(3, 1fr);
 }
 
 .grid.combat.s-section {
@@ -218,17 +245,19 @@ body {
 .faction-header.active[data-faction="adepta_sororitas"] {
     background-color: #fff;
     box-shadow: 0 0 5px #fff;
+    color: #000;
 }
 
 .faction-header.active[data-faction="dark_eldar"] {
     background-color: #1ed;
     box-shadow: 0 0 5px #1ed;
+    color: #000;
 }
 
 .faction-header.active[data-faction="inquisition"] {
     background-color: #80f;
     box-shadow: 0 0 5px #80f;
-    color: #fff
+    color: #fff;
 }
 
 .faction-header.active[data-faction="worldeaters"] {

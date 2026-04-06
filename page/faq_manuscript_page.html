@@ -6,242 +6,154 @@
   <link rel="stylesheet" href="style\styles.css">
   <style>
 
-@font-face {
-    font-family: 'ForbiddenStars';
-    src: url('../fonts/ForbiddenStars.woff2') format('woff2');
+@font-face {font-family:'ForbiddenStars';src:url('../fonts/ForbiddenStars.woff2') format('woff2');}
+@font-face {font-family:'EventFont';src:url('../fonts/EventFont.woff2') format('woff2');}
+
+
+
+*{box-sizing:border-box;}
+
+html,body{
+  margin:0;
+  padding:0;
+  min-height:100%;
+  color:var(--text_2);
+  background:var(--background);
 }
 
-@font-face {
-    font-family: 'EventFont';
-    src: url('../fonts/EventFont.woff2') format('woff2');
+body{
+  position:relative;
+  overflow-x:hidden;
+  font-family:'ForbiddenStars',normal;
 }
 
-    :root {
-      --text: #f8fbff;
-      --line: rgba(120, 200, 255, 0.45);
-      --panel: rgba(3, 18, 40, 0.95);
-      --panel-strong: rgba(2, 6, 16, 0.95);
-      --shadow: rgba(0, 0, 0, 0.45);
-      --max-width: 1040px;
-      --content-width: 940px;
-      --bg-scroll-speed: 78s;
-    }
+.page-shell{
+  position:relative;
+  width:100%;
+  min-height:100vh;
+  padding:32px 20px 80px;
+}
 
-    * {
-      box-sizing: border-box;
-    }
+.header-panel{
+  position:sticky;
+  top:12px;
+  z-index:20;
+  max-width:var(--max-width);
+  margin:0 auto 24px;
+  padding:14px;
+  border: 0px;
+  background-color: var(--background_2);
+  color:var(--text);
+  border-radius:18px;
+  opacity:.85
+}
 
-    html, body {
-      margin: 0;
-      padding: 0;
-      min-height: 100%;
-      color: var(--text);
-      background: #030914;
-    }
+.content{
+  position:relative;
+  max-width:var(--content-width);
+  margin:0 auto;
+  padding:50px 30px 200px 15px;
+  border-radius:24px;
+  overflow:hidden;
+}
 
-    body {
-      position: relative;
-      overflow-x: hidden;
-      font-family: 'ForbiddenStars', normal;
-    }
+.search-wrap{
+  display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
 
-    .content {
-      position: relative;
-      max-width: var(--content-width);
-      margin: 0 auto;
-      padding: 50px 30px 200px 15px;
-      border-radius: 24px;
-      background: rgba(15, 28, 58, 0.9);
-      box-shadow: 0 20px 40px var(--shadow);
-      overflow: hidden;
-    }
+.search-box{
+  flex:1 1 340px;
+  min-width:260px;
+  padding:14px 18px;
+  border-radius:12px;
+  border:var(--border);
+  background-color: var(--background);
+  font-size:16px;
+  font-family:'ForbiddenStars',normal;
+  outline:none;
+}
 
-    .content::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-    }
+.search-meta{
+  font-size:14px;
+  border-radius:12px;
+  font-family:'ForbiddenStars',normal;
+}
 
-    .content > * {
-      position: relative;
-      z-index: 1;
-    }
+.empty-state{padding:24px 0;font-size:18px;text-align:center;opacity:.8;}
 
-    .page-shell {
-      position: relative;
-      width: 100%;
-      min-height: 100vh;
-      padding: 32px 20px 80px;
-    }
+.level-block{margin:0 0 28px;}
 
-    .header-panel {
-      position: sticky;
-      top: 12px;
-      z-index: 20;
-      max-width: var(--max-width);
-      margin: 0 auto 24px;
-      padding: 14px;
-      border: 1px solid rgba(100, 75, 40, 0.25);
-      border-radius: 18px;
-      background: rgba(12, 22, 44, 0.9);
-      backdrop-filter: blur(12px);
-      box-shadow: 0 12px 28px var(--shadow);
-    }
+.level-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(180px,280px);
+  gap:18px;
+  align-items:start;
+}
 
-    .search-wrap {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
+.level-row.no-picture{grid-template-columns:1fr;}
 
-    .search-box {
-      flex: 1 1 340px;
-      min-width: 260px;
-      padding: 14px 18px;
-      border-radius: 12px;
-      border: 1px solid rgba(100, 75, 40, 0.25);
-      background: rgba(14, 24, 48, 0.9);
-      color: var(--text);
-      font-size: 16px;
-      font-family: 'ForbiddenStars', normal;
-      outline: none;
-      box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-    }
+.level-image{
+  width:100%;
+  max-width:280px;
+  border-radius:14px;
+  border:var(--border);
+  display:block;
+  justify-self:end;
 
-    .search-box:focus {
-      border-color: rgba(106, 74, 43, 0.6);
-      box-shadow: 0 0 0 3px rgba(100, 75, 40, 0.25);
-    }
+}
 
-    .search-meta {
-      font-size: 14px;
-      opacity: 0.82;
-      font-family: 'ForbiddenStars', normal;
-      color: rgba(229, 240, 255, 0.82);
-    }
+h1,h2,h3{
+  margin:0;
+  line-height:1.15;
+  font-family:'EventFont',normal;
+  letter-spacing:.02em;
+}
 
+.phrase-title,.main-text{font-family:'ForbiddenStars',normal;}
 
-    .empty-state {
-      padding: 24px 0;
-      font-size: 18px;
-      text-align: center;
-      opacity: 0.8;
-    }
+h1{font-size:clamp(30px,4vw,44px);margin-bottom:10px;}
+h2{font-size:clamp(24px,3vw,34px);margin-bottom:8px;}
+h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:8px;}
 
-    .level-block {
-      margin: 0 0 28px;
-    }
+.separator{
+  width:100%;
+  height:3px;
+  background:linear-gradient(to right,transparent,var(--line),transparent);
+  margin:0 0 16px;
+}
 
-    .level-row {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(180px, 280px);
-      gap: 18px;
-      align-items: start;
-    }
+.category-block{margin-bottom:42px;}
+.subcategory-block{margin:22px 0 28px;padding-left:10px;}
+.faction-block{margin:18px 0 24px;padding-left:12px;}
 
-    .level-row.no-picture {
-      grid-template-columns: 1fr;
-    }
+.phrase-block{
+  margin:14px 0 16px;
+  padding:14px 16px;
+  border-radius:14px;
+  background:var(--background);
+  border: var(--border);
+}
 
-    .level-image {
-      width: 100%;
-      max-width: 280px;
-      border-radius: 14px;
-      border: 1px solid rgba(106, 74, 43, 0.22);
-      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-      display: block;
-      justify-self: end;
-      background: rgba(255,255,255,0.4);
-    }
+.phrase-title{
+  display:block;
+  font-weight:700;
+  font-size:18px;
+  margin-bottom:8px;
+  color: var(--text3);
+}
 
-    h1, h2, h3 {
-      margin: 0;
-      line-height: 1.15;
-    }
+.main-text{
+  font-size:17px;
+  line-height:1.7;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
 
-    h1, h2, h3 {
-      font-family: 'EventFont', normal;
-      letter-spacing: 0.02em;
-    }
-
-   .phrase-title, .main-text {
-      font-family: 'ForbiddenStars', normal;
-    }
-
-    h1 {
-      font-size: clamp(30px, 4vw, 44px);
-      margin-bottom: 10px;
-    }
-
-    h2 {
-      font-size: clamp(24px, 3vw, 34px);
-      margin-bottom: 8px;
-    }
-
-    h3 {
-      font-size: clamp(22px, 2.8vw, 30px);
-      margin-bottom: 8px;
-    }
-
-    .separator {
-      width: 100%;
-      height: 3px;
-      background: linear-gradient(to right, transparent, var(--line), transparent);
-      margin: 0 0 16px;
-    }
-
-    .category-block {
-      margin-bottom: 42px;
-    }
-
-    .subcategory-block {
-      margin: 22px 0 28px;
-      padding-left: 10px;
-      border-left: 2px solid rgba(97, 70, 43, 0.12);
-    }
-
-    .faction-block {
-      margin: 18px 0 24px;
-      padding-left: 12px;
-    }
-
-    .phrase-block {
-      margin: 14px 0 16px;
-      padding: 14px 16px;
-      border-radius: 14px;
-      background: rgba(12, 18, 38, 0.65);
-      border: 1px solid rgba(120, 190, 255, 0.25);
-    }
-
-    .phrase-title {
-      display: block;
-      font-weight: 700;
-      font-size: 18px;
-      margin-bottom: 8px;
-      color: #a2d4ff;
-    }
-
-    .main-text {
-      font-size: 17px;
-      line-height: 1.7;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-
-    mark {
-      background: rgba(173, 192, 0, 0.42);
-      color: inherit;
-      padding: 0 0.1em;
-      border-radius: 0.15em;
-    }
-
-    @keyframes scrollBackground {
-      from { background-position: center 0; }
-      to { background-position: center 1200px; }
-    }
+mark{
+  background:var(--highlight);
+  color:inherit;
+  padding:0 .1em;
+  border-radius:.15em;
+}
 
   </style>
 </head>

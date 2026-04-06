@@ -290,7 +290,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 					placeholder.replaceWith(canvas);
 				}).catch(err => {
 					console.error('Error drawing combat card:', err);
-					placeholder.innerHTML = '<span style="color:red;">Error loading card</span>';
+					placeholder.innerHTML = 'Error loading image';
 				});
 			});
 			container.appendChild(sectionContainer);
@@ -325,7 +325,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 				placeholder.replaceWith(canvas);
 			}).catch(err => {
 				console.error('Error drawing order card:', err);
-				placeholder.innerHTML = '<span style="color:red;">Error loading card</span>';
+				placeholder.innerHTML = 'Error loading image';
 			});
 		});
 
@@ -361,7 +361,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 				placeholder.replaceWith(canvas);
 			}).catch(err => {
 				console.error('Error drawing event card:', err);
-				placeholder.innerHTML = '<span style="color:red;">Error loading card</span>';
+				placeholder.innerHTML = 'Error loading image';
 			});
 		});
 		container.appendChild(categoryContainer);
@@ -379,7 +379,7 @@ function imageLoaderUniversal(files, maxWidth, maxHeight, pathToImage, container
 				placeholder.replaceWith(img);
 			};
 			img.onerror = () => {
-				placeholder.innerHTML = '<span style="color:red;">Error loading image</span>';
+				placeholder.innerHTML = 'Error loading image';
 			};
 		});
 		container.appendChild(categoryContainer);
@@ -387,7 +387,7 @@ function imageLoaderUniversal(files, maxWidth, maxHeight, pathToImage, container
 
 	function createFactioncardContent(container, expansionFolder, factionfolder, files) {
 		const categoryContainer = document.createElement('div');
-		categoryContainer.classList.add('factionCardImage');
+		categoryContainer.classList.add('grid','factionCardImage');
 		imageLoaderUniversal(files, maxWidth*3, false, `factions/${expansionFolder}/${factionfolder}/faction_card/`, container, categoryContainer);
 	}
 
