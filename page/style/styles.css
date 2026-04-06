@@ -1,23 +1,23 @@
 @font-face {
-    font-family: 'HeadlinerNo45';
-    src: url('../fonts/headlinerno45.ttf') format('truetype');
+    font-family: 'Headline';
+    src: url('../fonts/Headline.woff2') format('woff2');
 }
 
 @font-face {
     font-family: 'ForbiddenStars';
-    src: url('../fonts/forbiddenstars.ttf') format('truetype');
+    src: url('../fonts/ForbiddenStars.woff2') format('woff2');
 }
 
 @font-face {
-    font-family: 'FrizQuadrataStd';
-    src: url('../fonts/frizquadratastd.ttf') format('truetype');
+    font-family: 'EventFont';
+    src: url('../fonts/EventFont.woff2') format('woff2');
 }
 
 body {
     top: 0;
     display: flex;
     flex-direction: column;
-    font-family: 'HeadlinerNo45';
+    font-family: 'Headline';
     width: 100%;
     gap: 5px;
     width: 1420px;
