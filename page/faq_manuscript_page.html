@@ -1,164 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style\styles.css">
   <style>
 
-@font-face {font-family:'ForbiddenStars';src:url('../fonts/ForbiddenStars.woff2') format('woff2');}
-@font-face {font-family:'EventFont';src:url('../fonts/EventFont.woff2') format('woff2');}
+    * {
+      box-sizing: border-box;
+    }
 
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      color: var(--text_2);
+      background: var(--background);
+      font-family: 'ForbiddenStars', normal;
+    }
 
+    body {
+      /* position:relative; */
+      /* overflow-x:hidden; */
+    }
 
-*{box-sizing:border-box;}
+    body::-webkit-scrollbar {
+      width: 20px;
+    }
 
-html,body{
-  margin:0;
-  padding:0;
-  min-height:100%;
-  color:var(--text_2);
-  background:var(--background);
-}
+    .page-shell {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+    }
 
-body{
-  position:relative;
-  overflow-x:hidden;
-  font-family:'ForbiddenStars',normal;
-}
+    .header-panel {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      max-width: var(--max-width);
+      margin: 0 auto 24px;
+      padding: 14px;
+      border: 0px;
+      background-color: var(--background_2);
+      color: var(--text);
+      border-radius: 18px;
+      opacity: .85
+    }
 
-.page-shell{
-  position:relative;
-  width:100%;
-  min-height:100vh;
-  padding:32px 20px 80px;
-}
+    .content {
+      position: relative;
+      max-width: var(--content-width);
+      margin: 0 auto;
+      padding: 50px 30px 200px 15px;
+      border-radius: 24px;
+      overflow: hidden;
+    }
 
-.header-panel{
-  position:sticky;
-  top:12px;
-  z-index:20;
-  max-width:var(--max-width);
-  margin:0 auto 24px;
-  padding:14px;
-  border: 0px;
-  background-color: var(--background_2);
-  color:var(--text);
-  border-radius:18px;
-  opacity:.85
-}
+    .search-wrap {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
 
-.content{
-  position:relative;
-  max-width:var(--content-width);
-  margin:0 auto;
-  padding:50px 30px 200px 15px;
-  border-radius:24px;
-  overflow:hidden;
-}
+    .search-box {
+      flex: 1 1 340px;
+      min-width: 260px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: var(--border);
+      background-color: var(--background);
+      font-size: 16px;
+      font-family: 'ForbiddenStars', normal;
+      outline: none;
+    }
 
-.search-wrap{
-  display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+    .search-meta {
+      font-size: 14px;
+      border-radius: 12px;
+      font-family: 'ForbiddenStars', normal;
+    }
 
-.search-box{
-  flex:1 1 340px;
-  min-width:260px;
-  padding:14px 18px;
-  border-radius:12px;
-  border:var(--border);
-  background-color: var(--background);
-  font-size:16px;
-  font-family:'ForbiddenStars',normal;
-  outline:none;
-}
+    .empty-state {
+      padding: 24px 0;
+      font-size: 18px;
+      text-align: center;
+      opacity: .8;
+    }
 
-.search-meta{
-  font-size:14px;
-  border-radius:12px;
-  font-family:'ForbiddenStars',normal;
-}
+    .level-block {
+      margin: 0 0 28px;
+    }
 
-.empty-state{padding:24px 0;font-size:18px;text-align:center;opacity:.8;}
+    .level-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(180px, 280px);
+      gap: 18px;
+      align-items: start;
+    }
 
-.level-block{margin:0 0 28px;}
+    .level-row.no-picture {
+      grid-template-columns: 1fr;
+    }
 
-.level-row{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) minmax(180px,280px);
-  gap:18px;
-  align-items:start;
-}
+    .level-image {
+      width: 100%;
+      max-width: 280px;
+      border-radius: 14px;
+      border: var(--border);
+      display: block;
+      justify-self: end;
 
-.level-row.no-picture{grid-template-columns:1fr;}
+    }
 
-.level-image{
-  width:100%;
-  max-width:280px;
-  border-radius:14px;
-  border:var(--border);
-  display:block;
-  justify-self:end;
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.15;
+      font-family: 'EventFont', normal;
+      letter-spacing: .01em;
+    }
 
-}
+    .phrase-title,
+    .main-text {
+      font-family: 'ForbiddenStars', normal;
+    }
 
-h1,h2,h3{
-  margin:0;
-  line-height:1.15;
-  font-family:'EventFont',normal;
-  letter-spacing:.02em;
-}
+    h1 {
+      font-size: clamp(30px, 4vw, 44px);
+      margin-bottom: 10px;
+    }
 
-.phrase-title,.main-text{font-family:'ForbiddenStars',normal;}
+    h2 {
+      font-size: clamp(24px, 3vw, 34px);
+      margin-bottom: 8px;
+    }
 
-h1{font-size:clamp(30px,4vw,44px);margin-bottom:10px;}
-h2{font-size:clamp(24px,3vw,34px);margin-bottom:8px;}
-h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:8px;}
+    h3 {
+      font-size: clamp(22px, 2.8vw, 30px);
+      margin-bottom: 8px;
+    }
 
-.separator{
-  width:100%;
-  height:3px;
-  background:linear-gradient(to right,transparent,var(--line),transparent);
-  margin:0 0 16px;
-}
+    .separator {
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(to right, transparent, var(--blue), transparent);
+      margin: 0 0 16px;
+    }
 
-.category-block{margin-bottom:42px;}
-.subcategory-block{margin:22px 0 28px;padding-left:10px;}
-.faction-block{margin:18px 0 24px;padding-left:12px;}
+    .category-block {
+      margin-bottom: 42px;
+    }
 
-.phrase-block{
-  margin:14px 0 16px;
-  padding:14px 16px;
-  border-radius:14px;
-  background:var(--background);
-  border: var(--border);
-}
+    .subcategory-block {
+      margin: 22px 0 28px;
+      padding-left: 10px;
+    }
 
-.phrase-title{
-  display:block;
-  font-weight:700;
-  font-size:18px;
-  margin-bottom:8px;
-  color: var(--text3);
-}
+    .faction-block {
+      margin: 18px 0 24px;
+      padding-left: 12px;
+    }
 
-.main-text{
-  font-size:17px;
-  line-height:1.7;
-  white-space:pre-wrap;
-  word-break:break-word;
-}
+    .phrase-block {
+      margin: 14px 0 16px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: var(--background);
+      border: var(--border);
+    }
 
-mark{
-  background:var(--highlight);
-  color:inherit;
-  padding:0 .1em;
-  border-radius:.15em;
-}
+    .phrase-title {
+      display: block;
+      font-weight: 700;
+      font-size: 18px;
+      margin-bottom: 8px;
+      color: var(--text3);
+    }
 
+    .main-text {
+      font-size: 17px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    mark {
+      background: var(--highlight);
+      color: inherit;
+      padding: 0 .1em;
+      border-radius: .15em;
+    }
   </style>
 </head>
+
 <body>
-  
+
 
   <div class="page-shell">
     <div class="header-panel">
@@ -402,11 +443,12 @@ mark{
       const filtered = filterData(originalData, query);
       render(filtered, query.trim());
       searchMeta.textContent = query.trim()
-        ? `Search: “${query.trim()}”` 
+        ? `Search: “${query.trim()}”`
         : 'Showing full FAQ';
     });
 
     loadFaq();
   </script>
 </body>
+
 </html>

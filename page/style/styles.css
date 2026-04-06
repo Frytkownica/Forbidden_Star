@@ -99,6 +99,7 @@ body {
     background-color: var(--background_2);
     z-index: 1000;
     cursor: grab;
+    letter-spacing: .01em;
 }
 
 .expansion-header.active,
@@ -140,7 +141,6 @@ body {
     width: 100%;
     min-height: 760px;
     border: none;
-    border-radius: 14px;
     display: block;
     height: auto;
 }
