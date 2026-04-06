@@ -23,18 +23,21 @@ document.addEventListener('DOMContentLoaded', async function () {
 	const faqIframe = document.getElementById('faq-frame');
 	const faqFrameSource = faqIframe?.dataset?.src ?? 'faq_manuscript_page.html';
 	let faqLoaded = false;
-	const faqFramePadding = 5;
 
-	const updateFaqFrameHeight = () => {
-		if (!faqIframe || !expansionTabsContainer) {
+	const setFaqFrameHeight = (height) => {
+		if (!faqIframe) {
 			return;
 		}
-		const tabsHeight = expansionTabsContainer.offsetHeight || 0;
-		const targetHeight = Math.max(0, window.innerHeight - tabsHeight - faqFramePadding);
-		faqIframe.style.height = `${targetHeight}px`;
+		const minHeight = 760; // keep a reasonable viewport while FAQ loads
+		const safeHeight = Math.max(Number(height) || 0, minHeight);
+		faqIframe.style.height = `${safeHeight}px`;
 	};
 
-	window.addEventListener('resize', updateFaqFrameHeight);
+	window.addEventListener('message', (event) => {
+		if (event?.data?.type === 'faq-height') {
+			setFaqFrameHeight(event.data.height);
+		}
+	});
 
 	const showCardsView = () => {
 		if (factionTabsContainer) factionTabsContainer.style.display = '';
@@ -52,7 +55,6 @@ document.addEventListener('DOMContentLoaded', async function () {
 			faqIframe.src = faqFrameSource;
 			faqLoaded = true;
 		}
-		updateFaqFrameHeight();
 	};
 
 	// Size of cards - rest is calculated just based on this.

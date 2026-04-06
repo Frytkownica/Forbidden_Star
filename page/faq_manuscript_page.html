@@ -221,6 +221,24 @@
     const searchInput = document.getElementById('searchInput');
     const searchMeta = document.getElementById('searchMeta');
 
+    const notifyParentHeight = () => {
+      if (!window.parent || window.parent === window) return;
+      const height = document.documentElement.scrollHeight;
+      window.parent.postMessage({ type: 'faq-height', height }, '*');
+    };
+
+    const observeHeight = () => {
+      notifyParentHeight();
+      if ('ResizeObserver' in window) {
+        const ro = new ResizeObserver(notifyParentHeight);
+        ro.observe(document.body);
+        ro.observe(document.documentElement);
+      } else {
+        window.addEventListener('resize', notifyParentHeight);
+        window.addEventListener('load', notifyParentHeight);
+      }
+    };
+
     const normalize = (value) => String(value ?? '').toLowerCase();
 
     const matches = (value, query) => normalize(value).includes(query);
@@ -364,12 +382,15 @@
         empty.className = 'empty-state';
         empty.textContent = query ? 'No results found.' : 'No FAQ entries available.';
         contentEl.appendChild(empty);
+        notifyParentHeight();
         return;
       }
 
       data.forEach((categoryObj) => {
         contentEl.appendChild(renderCategoryBlock(categoryObj, query));
       });
+
+      notifyParentHeight();
     }
 
     function filterData(data, rawQuery) {
@@ -435,6 +456,7 @@
       } catch (error) {
         console.error(error);
         contentEl.innerHTML = '<div class="empty-state">Failed to load FAQ data.</div>';
+        notifyParentHeight();
       }
     }
 
@@ -445,8 +467,10 @@
       searchMeta.textContent = query.trim()
         ? `Search: “${query.trim()}”`
         : 'Showing full FAQ';
+      notifyParentHeight();
     });
 
+    observeHeight();
     loadFaq();
   </script>
 </body>
