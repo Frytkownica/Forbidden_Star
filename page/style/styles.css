@@ -18,9 +18,9 @@ body {
     display: flex;
     flex-direction: column;
     font-family: 'Headline';
-    width: 100%;
-    gap: 5px;
     width: 1420px;
+    min-height: 100vh;
+    gap: 5px;
 }
 
 
@@ -100,6 +100,28 @@ body {
 
 .card-container.active {
     display: block;
+}
+
+#faq-container {
+    display: none;
+    width: 100%;
+    position: relative;
+    flex: 1;
+}
+
+#faq-container.active {
+    display: flex;
+    flex-direction: column;
+}
+
+#faq-frame {
+    width: 100%;
+    min-height: 760px;
+    border: none;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+    border-radius: 14px;
+    display: block;
+    height: auto;
 }
 
 .grid {

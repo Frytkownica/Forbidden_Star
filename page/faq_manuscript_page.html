@@ -3,27 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FAQ Manuscript</title>
+  <link rel="stylesheet" href="style\styles.css">
   <style>
-    @font-face {
-        font-family: 'HeadlinerNo45';
-        src: url('./fonts/headlinerno45.ttf') format('truetype');
-    }
 
-    @font-face {
-        font-family: 'ForbiddenStars';
-        src: url('./fonts/forbiddenstars.ttf') format('truetype');
-    }
+@font-face {
+    font-family: 'ForbiddenStars';
+    src: url('../fonts/ForbiddenStars.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'EventFont';
+    src: url('../fonts/EventFont.woff2') format('woff2');
+}
 
     :root {
-      --text: #251505;
-      --line: rgba(20, 20, 5, 0.35);
-      --panel: rgba(255, 179, 0, 0.8);
-      --panel-strong: rgba(31, 21, 0, 0.9);
-      --shadow: rgba(0, 0, 0, 0.18);
-      --max-width: 1000px;
-      --content-width: 900px;
-      --bg-scroll-speed: 80s;
+      --text: #f8fbff;
+      --line: rgba(120, 200, 255, 0.45);
+      --panel: rgba(3, 18, 40, 0.95);
+      --panel-strong: rgba(2, 6, 16, 0.95);
+      --shadow: rgba(0, 0, 0, 0.45);
+      --max-width: 1040px;
+      --content-width: 940px;
+      --bg-scroll-speed: 78s;
     }
 
     * {
@@ -35,13 +36,13 @@
       padding: 0;
       min-height: 100%;
       color: var(--text);
-      background: #251c06;
+      background: #030914;
     }
 
     body {
       position: relative;
       overflow-x: hidden;
-      font-family: 'ForbiddenStars', serif;
+      font-family: 'ForbiddenStars', normal;
     }
 
     .content {
@@ -50,8 +51,8 @@
       margin: 0 auto;
       padding: 50px 30px 200px 15px;
       border-radius: 24px;
-      background: rgba(255, 255, 255, 0.5);
-      box-shadow: 0 12px 32px var(--shadow);
+      background: rgba(15, 28, 58, 0.9);
+      box-shadow: 0 20px 40px var(--shadow);
       overflow: hidden;
     }
 
@@ -84,9 +85,9 @@
       padding: 14px;
       border: 1px solid rgba(100, 75, 40, 0.25);
       border-radius: 18px;
-      background: rgba(245, 240, 220, 0.8);
-      backdrop-filter: blur(8px);
-      box-shadow: 0 8px 24px var(--shadow);
+      background: rgba(12, 22, 44, 0.9);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 12px 28px var(--shadow);
     }
 
     .search-wrap {
@@ -102,10 +103,10 @@
       padding: 14px 18px;
       border-radius: 12px;
       border: 1px solid rgba(100, 75, 40, 0.25);
-      background:  rgba(245, 240, 220, 0.8);
+      background: rgba(14, 24, 48, 0.9);
       color: var(--text);
       font-size: 16px;
-      font-family: 'ForbiddenStars', serif;
+      font-family: 'ForbiddenStars', normal;
       outline: none;
       box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
     }
@@ -118,7 +119,8 @@
     .search-meta {
       font-size: 14px;
       opacity: 0.82;
-      font-family: 'ForbiddenStars', serif;
+      font-family: 'ForbiddenStars', normal;
+      color: rgba(229, 240, 255, 0.82);
     }
 
 
@@ -161,12 +163,12 @@
     }
 
     h1, h2, h3 {
-      font-family: 'HeadlinerNo45', serif;
+      font-family: 'EventFont', normal;
       letter-spacing: 0.02em;
     }
 
    .phrase-title, .main-text {
-      font-family: 'ForbiddenStars', serif;
+      font-family: 'ForbiddenStars', normal;
     }
 
     h1 {
@@ -210,8 +212,8 @@
       margin: 14px 0 16px;
       padding: 14px 16px;
       border-radius: 14px;
-      background: rgba(255, 251, 239, 0.38);
-      border: 1px solid rgba(106, 74, 43, 0.12);
+      background: rgba(12, 18, 38, 0.65);
+      border: 1px solid rgba(120, 190, 255, 0.25);
     }
 
     .phrase-title {
@@ -219,7 +221,7 @@
       font-weight: 700;
       font-size: 18px;
       margin-bottom: 8px;
-      color: #3d2b1b;
+      color: #a2d4ff;
     }
 
     .main-text {

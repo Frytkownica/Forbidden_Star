@@ -19,6 +19,41 @@ document.addEventListener('DOMContentLoaded', async function () {
 	const factionTabsContainer = document.getElementById('faction-tabs');
 	const cardsContentsContainer = document.getElementById('cards-tabs');
 	const cardsContainer = document.getElementById('cards-container');
+	const faqContainer = document.getElementById('faq-container');
+	const faqIframe = document.getElementById('faq-frame');
+	const faqFrameSource = faqIframe?.dataset?.src ?? 'faq_manuscript_page.html';
+	let faqLoaded = false;
+	const faqFramePadding = 5;
+
+	const updateFaqFrameHeight = () => {
+		if (!faqIframe || !expansionTabsContainer) {
+			return;
+		}
+		const tabsHeight = expansionTabsContainer.offsetHeight || 0;
+		const targetHeight = Math.max(0, window.innerHeight - tabsHeight - faqFramePadding);
+		faqIframe.style.height = `${targetHeight}px`;
+	};
+
+	window.addEventListener('resize', updateFaqFrameHeight);
+
+	const showCardsView = () => {
+		if (factionTabsContainer) factionTabsContainer.style.display = '';
+		if (cardsContentsContainer) cardsContentsContainer.style.display = '';
+		if (cardsContainer) cardsContainer.style.display = '';
+		if (faqContainer) faqContainer.classList.remove('active');
+	};
+
+	const showFaqView = () => {
+		if (factionTabsContainer) factionTabsContainer.style.display = 'none';
+		if (cardsContentsContainer) cardsContentsContainer.style.display = 'none';
+		if (cardsContainer) cardsContainer.style.display = 'none';
+		if (faqContainer) faqContainer.classList.add('active');
+		if (faqIframe && !faqLoaded) {
+			faqIframe.src = faqFrameSource;
+			faqLoaded = true;
+		}
+		updateFaqFrameHeight();
+	};
 
 	// Size of cards - rest is calculated just based on this.
 	const maxWidth = 450;
@@ -64,16 +99,30 @@ document.addEventListener('DOMContentLoaded', async function () {
 				expansionTabsContainer.appendChild(expansionTabHeader);
 			});
 
+			const faqTabHeader = document.createElement('div');
+			faqTabHeader.textContent = 'FAQ';
+			faqTabHeader.classList.add('expansion-header');
+			faqTabHeader.dataset.expansion = 'faq';
+			faqTabHeader.dataset.special = 'faq';
+			expansionTabsContainer.appendChild(faqTabHeader);
+
 			expansionTabsContainer.addEventListener('click', function (e) {
 				if (e.target.classList.contains('expansion-header')) {
+					const isFaqTab = e.target.dataset.special === 'faq';
 					const buttonExp = e.target.dataset.expansion;
 					document.querySelectorAll('.expansion-header').forEach(h => h.classList.remove('active'));
 					e.target.classList.add('active');
-					loadFactions(buttonExp);
+					if (isFaqTab) {
+						showFaqView();
+					} else {
+						showCardsView();
+						loadFactions(buttonExp);
+					}
 				}
 			});
 
 			if (firstRun === true) {
+				showCardsView();
 				loadFactions(expansionFolderList[0]);
 			}
 
