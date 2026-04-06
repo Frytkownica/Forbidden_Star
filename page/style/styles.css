@@ -40,9 +40,6 @@ body {
     background: var(--background);
 }
 
-page_container {
-
-}
 
 @keyframes spin {
     0% {
@@ -96,13 +93,12 @@ page_container {
 .card-header {
     border-radius:12px;
     display: inline-block;
-    padding: 5px;
-    padding-left: 8px;
-    padding-right: 8px;
+    padding: 5px 8px 8px 8px;
     background-color: var(--background_2);
     z-index: 1000;
     cursor: grab;
     letter-spacing: .01em;
+    margin: 1px;
 }
 
 .expansion-header.active,
