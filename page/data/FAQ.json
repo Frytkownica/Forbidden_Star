@@ -42,8 +42,8 @@
                 "Main": "No. Just reveal the one you will play."
               },
               {
-                "Phrase": "Can I use multiple order upgrades on the same order?",
-                "Main": "Yes. Multiple order upgrades can be used during the same order."
+                "Phrase": "Can I use multiple Order Upgrade Cards on the same order?",
+                "Main": "Yes. Multiple Order Upgrade Cards can be used during the same order."
               },
               {
                 "Phrase": "Are Areas in different system, but sharing a gold border, still considered Adjacent?",
@@ -197,7 +197,7 @@
               },
               {
                 "Phrase": "Can I use Orbital Strike a planet with just a structure?",
-                "Main": "Yes. You can always choose to use Orbital Strike on any Enemy World, and use any Order Upgrades you want to. If the structure is a City/Factory, since they have no HP, they cannot be destroyed."
+                "Main": "Yes. You can always choose to use Orbital Strike on any Enemy World, and use any Order Upgrade Cards you want to. If the structure is a City/Factory, since they have no HP, they cannot be destroyed."
               },
               {
                 "Phrase": "Can I take over planets by destroying all ground units using Orbital Strikes?",
@@ -606,7 +606,7 @@
               },
               {
                 "Phrase": "Combined Arms",
-                "Main": "Q: Is one ground unit type enough to gain 1 combat token? \nA: Yes, it’s per unit of different command level.\n\nQ: Is one ship type enough to gain 2 combat token? \nA: Yes, it’s per unit of different command level."
+                "Main": "Q: Is one ground unit type enough to gain 1 combat token? \nA: Yes, it’s per unit of different command level.\n\nQ: Is one ship type enough to gain 2 combat tokens? \nA: Yes, it’s per unit of different command level."
               },
               
               {
@@ -615,7 +615,7 @@
               },
               {
                 "Phrase": "Hammer of the Emperor",
-                "Main": "Q: Is one ground unit type enough to gain 2 combat token? \nA: Yes, it’s per unit of different command level.\n\nQ: Is one ship type enough to gain 3 combat token? \nA: Yes, it’s per unit of different command level."
+                "Main": "Q: Is one ground unit type enough to gain 2 combat tokens? \nA: Yes, it’s per unit of different command level.\n\nQ: Is one ship type enough to gain 3 combat tokens? \nA: Yes, it’s per unit of different command level."
               },
               {
                 "Phrase": "Iron Discipline",
@@ -695,7 +695,7 @@
             "items": [
               {
                 "Phrase": "Tactical Genius",
-                "Main": "Q: When resolving this event, if I choose to play a combat card from my upgrade deck, what happens to that card at the end of the combat?\nA: A card that was played from the upgrade deck while resolving Tactical Genius is returned to the upgrade deck at the end of the combat.\n\nQ: When exactly this card has to be played? Do my opponent see what card I play before he plays his card?\nA: Combat cards should be placed simultaneously, so before either side places cards you need to declare you are going to use the scheme. But because cards are placed simultaneously your opponent cannot react to the card you will choose by picking a different card instead, but there is a catch. If you chosen a card from your combat deck, place that card secretly face down. But because the cards that can be bought is public information, then if you choose a card you haven't bought yet, then place that card face up even if you are defending."
+                "Main": "Q: When resolving this event, if I choose to play a combat card from my upgrade deck, what happens to that card at the end of the combat?\nA: A card that was played from the upgrade deck while resolving Tactical Genius is returned to the upgrade deck at the end of the combat.\n\nQ: When exactly this card needs to be used?\nA: When you would play a combat card, you may discard it to play a combat card from either your combat deck or your combat upgrade deck. Combat cards are played simultaneously, so your opponent does not have prior knowledge that you would use this scheme when choosing his combat card."
               },
               {
                 "Phrase": "Deathstrike missile",
@@ -709,11 +709,11 @@
             "items": [
               {
                 "Phrase": "Critical strike",
-                "Main": "Q: Can it destroy a Bastion that had damage assigned to it?\nA: No. Schem reads \"unit\".\n\nQ: If the unit is unroutable, but it had damage assigned to it, can the scheme be used to destroy it?\nA: Yes.\n\nQ: Can I use the scheme when units are routed from other effects than damage?\nA: No. It is explicitly specified the unit has to suffer damage. Orbital strike doesn't count either since it’s explicitly specified it has to be during combat."
+                "Main": "Q: Can it destroy a Bastion that had damage assigned to it?\nA: No. Bastions are not units.\n\nQ: If a unit suffers damage but is not routed due to another card's effect, can this card be used to destroy it?\nA: Yes.\n\nQ: Can I use this card when an opponent's unit is routed by another card's effect?\nA: No. It is explicitly specified the unit has to suffer damage. Orbital strike doesn't count either since it’s explicitly specified it has to be during combat."
               },
               {
                 "Phrase": "Denial of Supplies",
-                "Main": "Q: Does Denial of Supplies prevent my opponent from placing a reinforcement token in the contested area from the supply?\nA: No. Denial of Supplies specifies it only applies to reinforcement tokens placed from a player’s play area."
+                "Main": "Q:  Does Denial of Supplies prevent my opponent from placing reinforcement tokens from the supply in the contested area?\nA: No. As specified, it only applies to reinforcement tokens placed from a player’s play area."
               },
               {
                 "Phrase": "Philosophy of War",
@@ -724,7 +724,7 @@
         ]
       },
       {
-        "SubCategory": "Order Upgrades",
+        "SubCategory": "Order Upgrade Cards",
         "items": [
           {
             "Faction": "Tyranid",
@@ -732,7 +732,7 @@
             "items": [
               {
                 "Phrase": "Mycetic Spores",
-                "Main": "Q: Can I directly buy Mycetic Spores? \nA: Yes, but to use the Mycetic Spores order upgrade the Tyranid player first has to purchase the Breeding Chambers order upgrade."
+                "Main": "Q: Can I purchase this order upgrade card before purchasing the Breeding Chambers upgrade? \nA: Yes, but in order to use it you need to have both cards purchased. "
               },
               {
                 "Phrase": "Without Number",
@@ -746,15 +746,15 @@
             "items": [
               {
                 "Phrase": "Departmento Munitorum",
-                "Main": "Q: When resolving Departmento Munitorum’s limited Advance Order, can I resolve an orbital strike?\nA: Yes. Departmento Munitorum’s ability text states all of the applicable limitations of the limited orders. In case of the limited Advance Order you are only allowed to move units from 1 area, which is the only difference between Departmento Munitorum’s limited and a regular Advance order.\n\nQ: Can order upgrades can be used when resolving the limited order?\nA: Yes."
+                "Main": "Q: When resolving Departmento Munitorum’s limited Advance Order, can I resolve an orbital strike?\nA: Yes. Departmento Munitorum’s ability text states all of the applicable limitations of the limited orders. In case of the limited Advance Order you are only allowed to move units from 1 area, which is the only difference between Departmento Munitorum’s limited and a regular Advance order.\n\nQ: Can Order Upgrade Cards can be used when resolving the limited order?\nA: Yes."
               },
               {
-                "Phrase": "Forced Recruitment",
-                "Main": "Q: Does the passive ability works even if Forced Recruitment was used?\nA: Yes. The bottom ability is a permanent one.\n\nQ: Can I use this order upgrade when resolving Mass Production (Domination)? \nA: Yes. It can be used together with his faction ability."
+                "Phrase": "Forced Recruitment", 
+                "Main": "Q:  Does the passive ability work even if Forced Recruitment was used?\nA: Yes. The bottom ability is a permanent one.\n\nQ: Can I use this order upgrade when resolving Mass Production (faction ability)? \nA: Yes."
               },
               {
                 "Phrase": "Mass Production (Domination)",
-                "Main": "Q: Can I use the part of the faction ability that allows to reduce the cost of 2 Guardsmen by 1 each by spending a cache token always or just when resolving a dominate order and using the faction ability?\nA: You can do this only when resolving your faction ability as part of a dominate order.\n\nQ: Can I purchase structures when using the faction ability?\nA: No, you are only allowed to purchase units."
+                "Main": "Q: Can I always use the part of the faction ability that allows me reduce the cost of 2 Command Level 0 units by 1 each by spending a cache token or only just when resolving a faction ability?\nA: Only when resolving your faction ability.\n\nQ: Can I purchase structures when using the faction ability?\nA: No, you are only allowed to purchase units."
               }
             ]
           },
@@ -784,7 +784,7 @@
             "items": [
               {
                 "Phrase": "Agents of Vect",
-                "Main": "Q: Do I add the reinforcement token to the combat wit the general ability?\nA: No. You gain it in your play area, and can add it to the combat with the unit’s ability."
+                "Main": "Q: Do I add the reinforcement token to the combat with the general ability?\nA: No. You gain it in your play area, and can add it to the combat with the unit’s ability."
               },
               {
                 "Phrase": "Crucible of Melediction",
@@ -855,7 +855,7 @@
         ]
       },
       {
-        "SubCategory": "Order Upgrades",
+        "SubCategory": "Order Upgrade Cards",
         "items": [
           {
             "Faction": "Sisters of Battle",
