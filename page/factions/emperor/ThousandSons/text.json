@@ -1,0 +1,59 @@
+{
+    "filenames": {
+        "combat": [
+            [
+                "s_1.jpg",
+                "s_2.jpg",
+                "s_3.jpg",
+                "s_4.jpg",
+                "s_5.jpg"
+            ],
+            [
+                "t0_1.jpg",
+                "t0_2.jpg",
+                "t0_3.jpg",
+                "t0_4.jpg"
+            ],
+            [
+                "t2_1.jpg",
+                "t2_2.jpg",
+                "t2_3.jpg"
+            ],
+            [
+                "t3_1.jpg",
+                "t3_2.jpg"
+            ]
+        ],
+        "orders": [
+            "o_1.jpg",
+            "o_2.jpg",
+            "o_3.jpg",
+            "o_4.jpg",
+            "o_5.jpg"
+        ],
+        "events": [
+            "e_1.jpg",
+            "e_2.jpg",
+            "e_3.jpg",
+            "e_4.jpg",
+            "e_5.jpg",
+            "e_6.jpg",
+            "e_7.jpg",
+            "e_8.jpg",
+            "e_9.jpg"
+        ],
+        "faction_card": [
+            "sheet_front_1.jpg",
+            "sheet_back_1.jpg"
+        ],
+        "backs": [
+            "back_1.jpg",
+            "back_2.jpg",
+            "back_3.jpg"
+        ],
+        "map": [
+            "system_tile_front_1.jpg",
+            "system_tile_back_1.jpg"
+        ]
+    }
+}

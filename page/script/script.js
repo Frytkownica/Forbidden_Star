@@ -441,16 +441,16 @@ document.addEventListener('DOMContentLoaded', async function () {
 								subTabContents.id = `cards-${expansionFolder___}-${factionFolder__}-${cardTypeReference}`;
 								cardsContainer.appendChild(subTabContents);
 
-								// console.log(`Loading text.json for ${expansionFolder___}/${factionFolder__}...`);
 								fetch(`factions/${expansionFolder___}/${factionFolder__}/text.json`)
 									.then(response => response.ok ? response.json() : "")
 									.then(textData => {
-										const cardsFilenameCombatList = textData?.cards ?? generalData.filenames.combat;
-										const cardsFilenameOrderList = textData?.cards ?? generalData.filenames.orders;
-										const cardsFilenameEventList = textData?.cards ?? generalData.filenames.events;
-										const cardsFilenameFactioncardList = textData?.cards ?? generalData.filenames.faction_card;
-										const cardsFilenameBacksList = textData?.cards ?? generalData.filenames.backs;
-										const cardsFilenameMapList = textData?.cards ?? generalData.filenames.map;
+										console.log(textData);
+										const cardsFilenameCombatList = textData?.filenames?.combat ?? generalData.filenames.combat;
+										const cardsFilenameOrderList = textData?.filenames?.orders ?? generalData.filenames.orders;
+										const cardsFilenameEventList = textData?.filenames?.events ?? generalData.filenames.events;
+										const cardsFilenameFactioncardList = textData?.filenames?.faction_card ?? generalData.filenames.faction_card;
+										const cardsFilenameBacksList = textData?.filenames?.backs ?? generalData.filenames.backs;
+										const cardsFilenameMapList = textData?.filenames?.map ?? generalData.filenames.map;
 										const cardsOrdersText = textData?.ordersText ?? false;
 										const cardsEventsText = textData?.eventsText ?? false;
 										const cardsCombatText = textData?.combatText ?? false;
@@ -494,7 +494,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 			't2-section': files[2],
 			't3-section': files[3]
 		};
-		console.log(textData);
+
 		const combatText = textData
 			? {
 				's-section': textData[0],
@@ -502,7 +502,6 @@ document.addEventListener('DOMContentLoaded', async function () {
 				't2-section': textData[2],
 				't3-section': textData[3]
 			} : false;
-		console.log(combatText);
 		
 		Object.keys(sections).forEach(section => {
 			const sectionContainer = document.createElement('div');
@@ -644,7 +643,7 @@ function imageLoaderUniversal(files, maxWidth, maxHeight, pathToImage, container
 	function mapCardContent(container, expansionFolder, factionfolder, files) {
 		const categoryContainer = document.createElement('div');
 		categoryContainer.classList.add('grid', 'mapImages');
-		imageLoaderUniversal(files, maxWidth*3, false, `factions/${expansionFolder}/${factionfolder}/maps/`, container, categoryContainer);
+		imageLoaderUniversal(files, maxWidth*2, false, `factions/${expansionFolder}/${factionfolder}/maps/`, container, categoryContainer);
 	}
 
 	// CANVAS TOOLS
