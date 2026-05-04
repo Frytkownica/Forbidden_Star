@@ -358,7 +358,7 @@
             "items": [
               {
                 "Phrase": "Chaos United",
-                "Main": "That response is based on the FGG stance, with mindset “rules as written”\n\nQ: Can my opponent choose to rout a routed unit?\nA: No. The rules state you cannot rout a unit that is already routed.\n\nQ: If my opponent has no units to rout, do I gain a die?\nA: Yes.\n\nQ: If my opponent only has a bastion, do I gain a die?\nA: Yes.\n\nQ: Do I have to say what die I would choose before my opponent chooses if he wants to rout a unit?\nA: No. Your opponent must choose whether or not to rout one of his units before the Chaos player chooses which die he gains from this card’s general ability."
+                "Main": "That response is based on the FFG stance, with mindset “rules as written”\n\nQ: Can my opponent choose to rout a routed unit?\nA: No. The rules state you cannot rout a unit that is already routed.\n\nQ: If my opponent has no units to rout, do I gain a die?\nA: Yes.\n\nQ: If my opponent only has a bastion, do I gain a die?\nA: Yes.\n\nQ: Do I have to say what die I would choose before my opponent chooses if he wants to rout a unit?\nA: No. Your opponent must choose whether or not to rout one of his units before the Chaos player chooses which die he gains from this card’s general ability."
               },
               {
                 "Phrase": "Khorne’s Rage",
@@ -366,7 +366,7 @@
               },
               {
                 "Phrase": "Lure of Chaos",
-                "Main": "Those responses are based on the FGG stance, with mindset “rules as written”\n\nQ: Can my opponent choose to rout a routed unit to gain the die?\nA: No. The rules state you cannot rout a unit that is already routed.\n\nQ: If my opponent has no units to rout, do I gain free Cultist/Iconoclast?\nA: Yes.\n\nQ: If my opponent only has a bastion, do I gain free Cultist/Iconoclast?\nA: Yes.\n\nQ: Does the cultist get added to battle or is just placed on the world?\nA: The new cultist enters combat, but it does not roll additional dice.\n\nQ: If my opponent already has 8 dice, can he still rout a unit to prevent me from gaining a free unit?\nA: Yes. The “does not” refers only to the “choose and rout 1 of his units”."
+                "Main": "Those responses are based on the FFG stance, with mindset “rules as written”\n\nQ: Can my opponent choose to rout a routed unit to gain the die?\nA: No. The rules state you cannot rout a unit that is already routed.\n\nQ: If my opponent has no units to rout, do I gain free Cultist/Iconoclast?\nA: Yes.\n\nQ: If my opponent only has a bastion, do I gain free Cultist/Iconoclast?\nA: Yes.\n\nQ: Does the cultist get added to battle or is just placed on the world?\nA: The new cultist enters combat, but it does not roll additional dice.\n\nQ: If my opponent already has 8 dice, can he still rout a unit to prevent me from gaining a free unit?\nA: Yes. The “does not” refers only to the “choose and rout 1 of his units”."
               },
               {
                 "Phrase": "Mark of Nurgle",
@@ -656,7 +656,7 @@
               },
               {
                 "Phrase": "Stealth Teams",
-                "Main": "That response is based on the FGG stance, with mindset “rules as written”\n\nQ: Can my opponent choose to rout a routed unit?\nA: No. The rules state you cannot rout a unit that is already routed.\n\nQ: If your opponent has no units to rout, does he lose a die?\nA: Yes.\n\nQ: If my opponent only has a bastion, do he lose a die?\nA: Yes."
+                "Main": "That response is based on the FFG stance, with mindset “rules as written”\n\nQ: Can my opponent choose to rout a routed unit?\nA: No. The rules state you cannot rout a unit that is already routed.\n\nQ: If your opponent has no units to rout, does he lose a die?\nA: Yes.\n\nQ: If my opponent only has a bastion, do he lose a die?\nA: Yes."
               },
               {
                 "Phrase": "Evasion",
