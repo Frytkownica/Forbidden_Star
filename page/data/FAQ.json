@@ -826,8 +826,8 @@
             "picture": "pictures/icons/dark_eldar.png",
             "items": [
               {
-                "Phrase": "Heroine in the Making",
-                "Main": "Q: Can I firstly use Orbital Strike and then create a Contested Area, and start a combat?\nA: No. The rule that you cannot start an Orbital Strike when there already was a combat still applies to the whole round. Please choose one."
+                "Phrase": "Shadowfield projection",
+                "Main": "Q: Can I firstly use Orbital Strike and then create a Contested Area, and start a combat?\nA: No. The rule that there can either be 1 Orbital Strike or 1 contested area applies to the whole round. Please decide on one."
               }
             ]
           },
