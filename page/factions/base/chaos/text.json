@@ -1,0 +1,10 @@
+{
+  "materialsText": [
+    { "label": "Cultists", "value": "7" },
+    { "label": "Iconoclast Destroyers", "value": "2" },
+    { "label": "Chaos Space Marines", "value": "4" },
+    { "label": "Helbrutes", "value": "3" },
+    { "label": "Repulsive Grand Cruisers", "value": "3" },
+    { "label": "Chaos Reaver Titans", "value": "3" }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "materialsText": [
+    { "label": "Ork Boyz", "value": "5" },
+    { "label": "Onslaught Attack Ships", "value": "3" },
+    { "label": "Nobz", "value": "5" },
+    { "label": "Battlewagons", "value": "3" },
+    { "label": "Kill Kroozers", "value": "3" },
+    { "label": "Gargants", "value": "3" }
+  ]
+}

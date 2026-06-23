@@ -454,12 +454,15 @@ document.addEventListener('DOMContentLoaded', async function () {
 										const cardsOrdersText = textData?.ordersText ?? false;
 										const cardsEventsText = textData?.eventsText ?? false;
 										const cardsCombatText = textData?.combatText ?? false;
-										if (cardTypeReference === "combat") {
-											createCombatContent(subTabContents, expansionFolder___, factionFolder__, cardsFilenameCombatList, cardsCombatText);
-										} else if (cardTypeReference === "orders") {
-											createOrdersContent(subTabContents, expansionFolder___, factionFolder__, cardsFilenameOrderList, cardsOrdersText);
-										} else if (cardTypeReference === "events") {
-											createEventContent(subTabContents, expansionFolder___, factionFolder__, cardsFilenameEventList, cardsEventsText);
+									const cardsMaterialsText = textData?.materialsText ?? false;
+									if (cardTypeReference === "combat") {
+										createCombatContent(subTabContents, expansionFolder___, factionFolder__, cardsFilenameCombatList, cardsCombatText);
+									} else if (cardTypeReference === "orders") {
+										createOrdersContent(subTabContents, expansionFolder___, factionFolder__, cardsFilenameOrderList, cardsOrdersText);
+									} else if (cardTypeReference === "events") {
+										createEventContent(subTabContents, expansionFolder___, factionFolder__, cardsFilenameEventList, cardsEventsText);
+									} else if (cardTypeReference === "material") {
+										createMaterialContent(subTabContents, expansionFolder___, factionFolder__, cardsMaterialsText);
 										} else if (cardTypeReference === "faction_card") {
 											createFactioncardContent(subTabContents, expansionFolder___, factionFolder__, cardsFilenameFactioncardList);
 										} else if (cardTypeReference === "backs") {
@@ -607,6 +610,56 @@ document.addEventListener('DOMContentLoaded', async function () {
 				placeholder.innerHTML = 'Error loading image';
 			});
 		});
+		container.appendChild(categoryContainer);
+	}
+
+	function createMaterialContent(container, expansionFolder, factionfolder, materialsText) {
+		const categoryContainer = document.createElement('div');
+		categoryContainer.classList.add('grid', 'materials');
+
+		const materialCard = document.createElement('div');
+		materialCard.classList.add('material-card');
+
+		const heading = document.createElement('div');
+		heading.classList.add('material-heading');
+		heading.textContent = 'Material';
+		materialCard.appendChild(heading);
+
+		const body = document.createElement('div');
+		body.classList.add('material-body');
+
+		if (materialsText && Array.isArray(materialsText) && materialsText.length) {
+			materialsText.forEach(item => {
+				const line = document.createElement('div');
+				line.classList.add('material-line');
+				if (typeof item === 'string') {
+					line.textContent = item;
+				} else if (item && typeof item === 'object') {
+					const label = document.createElement('span');
+					label.classList.add('material-label');
+					label.textContent = item.label || '';
+					const value = document.createElement('span');
+					value.classList.add('material-value');
+					value.textContent = item.value || '';
+					line.appendChild(label);
+					if (item.label && item.value) {
+						line.appendChild(document.createTextNode(': '));
+					}
+					line.appendChild(value);
+				} else {
+					line.textContent = String(item);
+				}
+				body.appendChild(line);
+			});
+		} else {
+			const empty = document.createElement('p');
+			empty.classList.add('material-empty');
+			empty.textContent = 'Material information not available for this faction.';
+			body.appendChild(empty);
+		}
+
+		materialCard.appendChild(body);
+		categoryContainer.appendChild(materialCard);
 		container.appendChild(categoryContainer);
 	}
 
