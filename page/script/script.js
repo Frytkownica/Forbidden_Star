@@ -1,1019 +1,537 @@
-async function preloadCanvasFonts() {
-    if (!document.fonts) {
-        return;
+/* Forbidden Stars — Card Codex
+ * Vanilla, data-driven card browser. No framework / no build step.
+ *
+ * Data model (all under page/factions/):
+ *   general.json                       — expansions, categories, default filenames
+ *   <expansion>/faction.json           — factions in that expansion
+ *   <expansion>/<faction>/text.json    — optional per-faction `filenames` override
+ *   <expansion>/<faction>/<folder>/<file>  — the card artwork
+ *
+ * Missing artwork (e.g. an expansion without maps) is handled gracefully: a card
+ * whose image 404s removes itself from the grid.
+ */
+(function () {
+  'use strict';
+
+  var ACCENT = 'amber'; // amber | steel | crimson  (drives --fs-accent CSS vars)
+  var DENSITY = 5;      // grid columns for standard card categories (desktop)
+
+  // Standard-card grid columns adapt to viewport width so cards stay readable
+  // (the lightbox handles zoom). Map (1) and Faction Card (1) layouts unaffected.
+  function density() {
+    var w = window.innerWidth || 1200;
+    if (w <= 480) return 2;
+    if (w <= 720) return 3;
+    if (w <= 1024) return 4;
+    if (w <= 1440) return DENSITY;
+    return DENSITY + 1;
+  }
+
+  // category ref -> on-disk folder (only `map` differs)
+  var FOLDER = {
+    combat: 'combat', orders: 'orders', events: 'events',
+    backs: 'backs', faction_card: 'faction_card', map: 'maps',
+  };
+  // nicer category labels than the raw general.json names, by ref
+  var CAT_LABEL = {
+    combat: 'Combat', orders: 'Orders', events: 'Events',
+    backs: 'Card Backs', faction_card: 'Faction Card', map: 'Maps', material: 'Unit Count',
+  };
+  var TIER_LABELS = ['Standard', 'Tier I', 'Tier II', 'Tier III', 'Tier IV', 'Tier V'];
+  var BACK_LABELS = { combat: 'Combat Deck Back', order: 'Order Deck Back', event: 'Event Deck Back' };
+  // a palette so every faction (across all expansions) gets a distinct dot
+  var DOTS = [
+    'oklch(0.64 0.12 245)', 'oklch(0.57 0.19 25)', 'oklch(0.66 0.15 142)', 'oklch(0.80 0.13 90)',
+    'oklch(0.62 0.16 300)', 'oklch(0.70 0.13 195)', 'oklch(0.60 0.17 350)', 'oklch(0.72 0.14 60)',
+  ];
+
+  var ACC = {
+    amber:   { a: 'oklch(0.80 0.12 80)',  fg: '#1c1810' },
+    steel:   { a: 'oklch(0.72 0.10 232)', fg: '#0b1019' },
+    crimson: { a: 'oklch(0.62 0.185 25)', fg: '#1c0d0c' },
+  };
+
+  /* ---------------- data store ---------------- */
+
+  var DATA = {
+    general: null,          // raw general.json
+    expansions: [],         // [{key, name}]
+    categories: [],         // [{key, name}]
+    defaults: null,         // general.filenames
+    factions: {},           // exp -> [{key, name, dot}]
+    manifest: {},           // "exp/fac" -> {combat:[[..]], orders:[..], ...}  (filenames)
+    text: {},               // "exp/fac" -> {combat:[[{title,general,unit,icons}]], orders:[..], events:[..]} or null
+    loading: {},            // in-flight guards
+  };
+
+  var state = { expansion: null, faction: null, category: 'combat', lb: null, lbFull: false };
+  var flat = []; // flat list of currently-visible cards, for the lightbox
+
+  function setState(patch) {
+    for (var k in patch) { if (patch.hasOwnProperty(k)) state[k] = patch[k]; }
+    render();
+  }
+
+  function fetchJSON(url) {
+    return fetch(url, { cache: 'no-store' }).then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status + ' for ' + url);
+      return r.json();
+    });
+  }
+
+  // load factions for an expansion (once)
+  function ensureFactions(exp) {
+    if (DATA.factions[exp] || DATA.loading['fac:' + exp]) return;
+    DATA.loading['fac:' + exp] = true;
+    fetchJSON('factions/' + exp + '/faction.json').then(function (fj) {
+      var list = (fj.folder || []).map(function (key, i) {
+        return { key: key, name: (fj.name && fj.name[i]) || key, dot: DOTS[i % DOTS.length] };
+      });
+      DATA.factions[exp] = list;
+      // prefetch manifests so sidebar counts populate
+      list.forEach(function (f) { ensureManifest(exp, f.key); });
+      // if no faction selected for the now-active expansion, pick the first
+      if (state.expansion === exp && !state.faction && list[0]) state.faction = list[0].key;
+      render();
+    }).catch(function (e) {
+      DATA.factions[exp] = [];
+      console.error(e);
+      render();
+    });
+  }
+
+  // load a faction's filename manifest (text.json override, else defaults)
+  function ensureManifest(exp, fac) {
+    var id = exp + '/' + fac;
+    if (DATA.manifest[id] || DATA.loading['man:' + id]) return;
+    DATA.loading['man:' + id] = true;
+    fetchJSON('factions/' + exp + '/' + fac + '/text.json').then(function (t) {
+      DATA.manifest[id] = mergeFilenames(t && t.filenames);
+      DATA.text[id] = {
+        combat: (t && t.combatText) || null,
+        orders: (t && t.ordersText) || null,
+        events: (t && t.eventsText) || null,
+        materials: (t && t.materialsText) || null,
+      };
+      render();
+    }).catch(function () {
+      // no text.json -> use the global defaults, no overlay text
+      DATA.manifest[id] = mergeFilenames(null);
+      DATA.text[id] = { combat: null, orders: null, events: null, materials: null };
+      render();
+    });
+  }
+
+  function mergeFilenames(over) {
+    var d = DATA.defaults || {};
+    over = over || {};
+    return {
+      combat: over.combat || d.combat || [],
+      orders: over.orders || d.orders || [],
+      events: over.events || d.events || [],
+      backs: over.backs || d.backs || [],
+      faction_card: over.faction_card || d.faction_card || [],
+      map: over.map || d.map || [],
+    };
+  }
+
+  function manifestCount(man) {
+    if (!man) return null;
+    var n = 0;
+    (man.combat || []).forEach(function (tier) { n += tier.length; });
+    ['orders', 'events', 'backs', 'faction_card', 'map'].forEach(function (k) { n += (man[k] || []).length; });
+    return n;
+  }
+
+  /* ---------------- lookups ---------------- */
+
+  function facList() { return DATA.factions[state.expansion] || []; }
+  function facName(k) { var f = findKey(facList(), k); return f ? f.name : ''; }
+  function catName(k) { return CAT_LABEL[k] || (function () { var c = findKey(DATA.categories, k); return c ? c.name : ''; })(); }
+  function expName(k) { var e = findKey(DATA.expansions, k); return e ? e.name : ''; }
+  function findKey(list, key) {
+    for (var i = 0; i < list.length; i++) { if (list[i].key === key) return list[i]; }
+    return null;
+  }
+
+  /* ---------------- element builder ---------------- */
+
+  function el(tag, props, children) {
+    var node = document.createElement(tag);
+    props = props || {};
+    for (var key in props) {
+      if (!props.hasOwnProperty(key)) continue;
+      var val = props[key];
+      if (val == null) continue;
+      if (key === 'class') node.className = val;
+      else if (key === 'html') node.innerHTML = val;
+      else if (key === 'text') node.textContent = val;
+      else if (key.indexOf('on') === 0 && typeof val === 'function') {
+        node.addEventListener(key.slice(2).toLowerCase(), val);
+      } else {
+        node.setAttribute(key, val);
+      }
+    }
+    if (children) {
+      if (!Array.isArray(children)) children = [children];
+      for (var i = 0; i < children.length; i++) {
+        var c = children[i];
+        if (c == null || c === false) continue;
+        node.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+      }
+    }
+    return node;
+  }
+
+  // For template cards (e.g. Symphony of War) draw the card text onto the art
+  // and swap in the composited image once ready. Bare-art cards are left as-is.
+  function applyComposite(imgEl, card) {
+    if (!card.text || !card.kind || !window.FSCardRender) return;
+    window.FSCardRender.compose(card).then(function (url) {
+      if (url && url !== card.src) imgEl.src = url;
+    });
+  }
+
+  function lbImg(card) {
+    var img = el('img', { src: card.src, alt: card.label });
+    applyComposite(img, card);
+    return img;
+  }
+
+  // "Unit Count" — a faction's component tally, rendered as a table card.
+  function renderMaterial(materials) {
+    var body;
+    if (materials && materials.length) {
+      body = el('div', { class: 'fs-material-body' }, materials.map(function (item) {
+        if (typeof item === 'string') return el('div', { class: 'fs-material-line', text: item });
+        return el('div', { class: 'fs-material-line' }, [
+          el('span', { class: 'fs-material-label', text: (item && item.label) || '' }),
+          el('span', { class: 'fs-material-value', text: (item && item.value != null) ? String(item.value) : '' }),
+        ]);
+      }));
+    } else {
+      body = el('div', { class: 'fs-material-body' }, [
+        el('p', { class: 'fs-note', text: 'Unit counts not available for this faction.' }),
+      ]);
+    }
+    return el('div', { class: 'fs-material-card' }, [
+      el('div', { class: 'fs-material-heading', text: 'Material' }),
+      body,
+    ]);
+  }
+
+  function maybeEmptyNote(scrollarea) {
+    if (!scrollarea || scrollarea.querySelector('.fs-note')) return;
+    var cards = scrollarea.querySelectorAll('.fs-card');
+    for (var i = 0; i < cards.length; i++) {
+      if (cards[i].style.display !== 'none') return; // still something visible
+    }
+    if (cards.length) scrollarea.appendChild(el('div', { class: 'fs-note', text: 'No artwork available for this set.' }));
+  }
+
+  /* ---------------- card model ---------------- */
+
+  function build() {
+    var fac = state.faction, cat = state.category;
+    var id = state.expansion + '/' + fac;
+    var man = DATA.manifest[id];
+    var txt = DATA.text[id];
+    var groups = [];
+    flat = [];
+    if (!man || !fac) return { groups: groups, ready: false };
+
+    // "Unit Count" is a data table, not an image grid
+    if (cat === 'material') {
+      return { groups: groups, ready: true, material: (txt && txt.materials) || null };
     }
 
-    const families = ['ForbiddenStars', 'Headline', 'EventFont'];
-    const fontLoads = families.map(family => document.fonts.load(`1em ${family}`));
-
-    try {
-        await Promise.all([...fontLoads, document.fonts.ready]);
-    } catch (error) {
-        console.warn('Some canvas fonts did not finish loading before the first draw.', error);
+    var base = 'factions/' + state.expansion + '/' + fac + '/' + FOLDER[cat] + '/';
+    function push(file, label, kind, text) {
+      var idx = flat.length;
+      var c = { src: base + file, label: label, index: idx, kind: kind || null, text: text || null };
+      flat.push(c);
+      return c;
     }
-}
 
-document.addEventListener('DOMContentLoaded', async function () {
-	await preloadCanvasFonts();
-	const expansionTabsContainer = document.getElementById('expansion-tabs');
-	const factionTabsContainer = document.getElementById('faction-tabs');
-	const cardsContentsContainer = document.getElementById('cards-tabs');
-	const cardsContainer = document.getElementById('cards-container');
-	const faqContainer = document.getElementById('faq-container');
-	const faqContent = document.getElementById('faq-content');
-	const faqSearchInput = document.getElementById('faq-search-input');
-	const faqSearchMeta = document.getElementById('faq-search-meta');
-	const FAQ_JSON_PATH = './data/FAQ.json';
-
-	let faqOriginalData = [];
-	let faqLoaded = false;
-	let faqLoadingPromise = null;
-
-	const normalizeFaqValue = (value) => String(value ?? '').toLowerCase();
-	const faqMatches = (value, query) => normalizeFaqValue(value).includes(query);
-	const faqEscapeHtml = (str) => String(str ?? '')
-		.replace(/&/g, '&amp;')
-		.replace(/</g, '&lt;')
-		.replace(/>/g, '&gt;')
-		.replace(/\"/g, '&quot;')
-		.replace(/'/g, '&#039;');
-	const faqWithArray = (value) => Array.isArray(value) ? value : [];
-	const getFaqPicture = (node) => node && typeof node === 'object' ? node.picture || '' : '';
-
-	function normalizeFaqMainText(value) {
-		return String(value ?? '')
-			.replace(/\\r\\n/g, '\n')
-			.replace(/\\n/g, '\n');
-	}
-
-	function highlightFaqText(text, query) {
-		const raw = String(text ?? '');
-		if (!query) {
-			return faqEscapeHtml(raw);
-		}
-
-		const escaped = faqEscapeHtml(raw);
-		const safeQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-		const regex = new RegExp(`(${safeQuery})`, 'ig');
-		return escaped.replace(regex, '<mark>$1</mark>');
-	}
-
-	function createFaqLevelRow(textHtml, picture) {
-		const row = document.createElement('div');
-		row.className = `faq-level-row ${picture ? '' : 'no-picture'}`.trim();
-
-		const textWrap = document.createElement('div');
-		textWrap.innerHTML = textHtml;
-		row.appendChild(textWrap);
-
-		if (picture) {
-			const img = document.createElement('img');
-			img.className = 'faq-level-image';
-			img.src = picture;
-			img.alt = '';
-			img.loading = 'lazy';
-			row.appendChild(img);
-		}
-		return row;
-	}
-
-	function renderFaqPhraseBlock(phraseObj, query) {
-		const phraseBlock = document.createElement('section');
-		phraseBlock.className = 'faq-phrase-block faq-level-block';
-
-		const phraseText = phraseObj.Phrase ?? '';
-		const mainText = normalizeFaqMainText(phraseObj.Main ?? '');
-		const picture = getFaqPicture(phraseObj);
-
-		const textHtml = `
-			<div class="faq-phrase-title"><strong>${highlightFaqText(phraseText, query)}</strong></div>
-			<div class="faq-main-text">${highlightFaqText(mainText, query)}</div>
-		`;
-
-		phraseBlock.appendChild(createFaqLevelRow(textHtml, picture));
-		return phraseBlock;
-	}
-
-	function renderFaqFactionBlock(factionObj, query) {
-		const block = document.createElement('section');
-		block.className = 'faq-faction-block faq-level-block';
-
-		const title = factionObj.Faction ?? '';
-		const picture = getFaqPicture(factionObj);
-		const headerHtml = `
-			<h3>${highlightFaqText(title, query)}</h3>
-			<div class="faq-separator"></div>
-		`;
-
-		block.appendChild(createFaqLevelRow(headerHtml, picture));
-
-		faqWithArray(factionObj.items).forEach((phraseObj) => {
-			block.appendChild(renderFaqPhraseBlock(phraseObj, query));
-		});
-
-		return block;
-	}
-
-	function renderFaqSubCategoryBlock(subObj, query) {
-		const block = document.createElement('section');
-		block.className = 'faq-subcategory-block faq-level-block';
-
-		const title = subObj.SubCategory ?? '';
-		const picture = getFaqPicture(subObj);
-		const headerHtml = `
-			<h2>${highlightFaqText(title, query)}</h2>
-			<div class="faq-separator"></div>
-		`;
-
-		block.appendChild(createFaqLevelRow(headerHtml, picture));
-
-		faqWithArray(subObj.items).forEach((factionObj) => {
-			block.appendChild(renderFaqFactionBlock(factionObj, query));
-		});
-
-		return block;
-	}
-
-	function renderFaqCategoryBlock(categoryObj, query) {
-		const block = document.createElement('section');
-		block.className = 'faq-category-block faq-level-block';
-
-		const title = categoryObj.Category ?? '';
-		const picture = getFaqPicture(categoryObj);
-		const headerHtml = `
-			<h1>${highlightFaqText(title, query)}</h1>
-			<div class="faq-separator"></div>
-		`;
-
-		block.appendChild(createFaqLevelRow(headerHtml, picture));
-
-		faqWithArray(categoryObj.items).forEach((subObj) => {
-			block.appendChild(renderFaqSubCategoryBlock(subObj, query));
-		});
-
-		return block;
-	}
-
-	function renderFaq(data, query = '') {
-		if (!faqContent) {
-			return;
-		}
-
-		faqContent.innerHTML = '';
-
-		if (!data.length) {
-			const empty = document.createElement('div');
-			empty.className = 'faq-empty-state';
-			empty.textContent = query ? 'No results found.' : 'No FAQ entries available.';
-			faqContent.appendChild(empty);
-			return;
-		}
-
-		data.forEach((categoryObj) => {
-			faqContent.appendChild(renderFaqCategoryBlock(categoryObj, query));
-		});
-	}
-
-	function filterFaqData(data, rawQuery) {
-		const query = normalizeFaqValue(rawQuery).trim();
-		if (!query) {
-			return data;
-		}
-
-		return faqWithArray(data).flatMap((categoryObj) => {
-			const filteredSubCategories = faqWithArray(categoryObj.items).flatMap((subObj) => {
-				if (faqMatches(subObj.SubCategory, query)) {
-					return [subObj];
-				}
-
-				const filteredFactions = faqWithArray(subObj.items).flatMap((factionObj) => {
-					if (faqMatches(factionObj.Faction, query)) {
-						return [factionObj];
-					}
-
-					const filteredPhrases = faqWithArray(factionObj.items).filter((phraseObj) => {
-						return faqMatches(phraseObj.Phrase, query) || faqMatches(phraseObj.Main, query);
-					});
-
-					if (filteredPhrases.length) {
-						return [{
-							...factionObj,
-							items: filteredPhrases
-						}];
-					}
-
-					return [];
-				});
-
-				if (filteredFactions.length) {
-					return [{
-						...subObj,
-						items: filteredFactions
-					}];
-				}
-
-				return [];
-			});
-
-			if (filteredSubCategories.length) {
-				return [{
-					...categoryObj,
-					items: filteredSubCategories
-				}];
-			}
-
-			return [];
-		});
-	}
-
-	function updateFaqSearchResults(rawQuery) {
-		const query = rawQuery.trim();
-		const filtered = filterFaqData(faqOriginalData, rawQuery);
-		renderFaq(filtered, query);
-
-		if (faqSearchMeta) {
-			faqSearchMeta.textContent = query
-				? `Search: "${query}"`
-				: 'Showing full FAQ';
-		}
-	}
-
-	async function loadFaq() {
-		if (faqLoaded) {
-			return faqOriginalData;
-		}
-
-		if (faqLoadingPromise) {
-			return faqLoadingPromise;
-		}
-
-		faqLoadingPromise = fetch(FAQ_JSON_PATH, { cache: 'no-store' })
-			.then((response) => {
-				if (!response.ok) {
-					throw new Error(`Failed to load FAQ JSON: ${response.status}`);
-				}
-
-				return response.json();
-			})
-			.then((data) => {
-				faqOriginalData = Array.isArray(data) ? data : [];
-				faqLoaded = true;
-				updateFaqSearchResults(faqSearchInput?.value ?? '');
-				return faqOriginalData;
-			})
-			.catch((error) => {
-				console.error(error);
-				faqLoaded = false;
-
-				if (faqContent) {
-					faqContent.innerHTML = '<div class="faq-empty-state">Failed to load FAQ data.</div>';
-				}
-
-				throw error;
-			})
-			.finally(() => {
-				faqLoadingPromise = null;
-			});
-
-		return faqLoadingPromise;
-	}
-
-	const showCardsView = () => {
-		if (factionTabsContainer) factionTabsContainer.style.display = '';
-		if (cardsContentsContainer) cardsContentsContainer.style.display = '';
-		if (cardsContainer) cardsContainer.style.display = '';
-		if (faqContainer) faqContainer.classList.remove('active');
-	};
-
-	const showFaqView = () => {
-		if (factionTabsContainer) factionTabsContainer.style.display = 'none';
-		if (cardsContentsContainer) cardsContentsContainer.style.display = 'none';
-		if (cardsContainer) cardsContainer.style.display = 'none';
-		if (faqContainer) faqContainer.classList.add('active');
-		loadFaq().catch(() => {});
-	};
-
-	if (faqSearchInput) {
-		faqSearchInput.addEventListener('input', (event) => {
-			updateFaqSearchResults(event.target.value);
-		});
-	}
-
-	// Size of cards - rest is calculated just based on this.
-	const maxWidth = 450;
-	const maxHeight = 650;
-
-	// Size of boxes for combat cards.
-	const textBackgroundSize = 759;
-	const textBottomBarHeight = 18;
-	const textBottomBarWidth = 454;
-
-	const titleFontSize = maxHeight * 0.05;
-	const marginWidth = maxWidth * 0.0578;
-	const maxTextWidth = maxWidth - 2 * marginWidth;
-
-	// Icons positioning predefinitions.
-	const iconSize = maxWidth * 0.097;
-	const iconSpacing = maxWidth * 0.011;
-	const iconX = maxWidth * 0.0632;
-	const startY = maxHeight * 0.242;
-
-	const iconMap = {
-		'B': 'pictures/bolter.png',
-		'S': 'pictures/shield.png',
-		'M': 'pictures/moral.png'
-	};
-
-	// MENU SECTION BUILDER
-	fetch('factions/general.json')
-		.then(response => response.json())
-		.then(generalData => {
-			var firstRun = true;
-			expansionTabsContainer.innerHTML = '';
-
-			const expansionFolderList = generalData.expansion.folder;
-			const expansionNameList = generalData.expansion.name;
-
-			expansionFolderList.forEach((expansionFolder, expansionFolderIndex) => {
-				const expansionTabHeader = document.createElement('div');
-				expansionTabHeader.textContent = expansionNameList[expansionFolderIndex];
-				expansionTabHeader.classList.add('expansion-header');
-				expansionTabHeader.dataset.expansion = expansionFolder;
-				if (expansionFolderIndex === 0) expansionTabHeader.classList.add('active');
-				expansionTabsContainer.appendChild(expansionTabHeader);
-			});
-
-			const faqTabHeader = document.createElement('div');
-			faqTabHeader.textContent = 'FAQ';
-			faqTabHeader.classList.add('expansion-header');
-			faqTabHeader.dataset.expansion = 'faq';
-			faqTabHeader.dataset.special = 'faq';
-			expansionTabsContainer.appendChild(faqTabHeader);
-
-			expansionTabsContainer.addEventListener('click', function (e) {
-				if (e.target.classList.contains('expansion-header')) {
-					const isFaqTab = e.target.dataset.special === 'faq';
-					const buttonExp = e.target.dataset.expansion;
-					document.querySelectorAll('.expansion-header').forEach(h => h.classList.remove('active'));
-					e.target.classList.add('active');
-					if (isFaqTab) {
-						showFaqView();
-					} else {
-						showCardsView();
-						loadFactions(buttonExp);
-					}
-				}
-			});
-
-			if (firstRun === true) {
-				showCardsView();
-				loadFactions(expansionFolderList[0]);
-			}
-
-			function loadFactions(expansionFolder_) {
-				factionTabsContainer.innerHTML = '';
-				fetch('factions/' + expansionFolder_ + '/faction.json')
-					.then(response => response.json())
-					.then(expansionData => {
-
-						const factionFolderList = expansionData.folder;
-						const factionNameList = expansionData.name;
-
-						factionFolderList.forEach((factionFolder, factionFolderIndex) => {
-							const factionTabHeader = document.createElement('div');
-							factionTabHeader.textContent = factionNameList[factionFolderIndex];
-							factionTabHeader.classList.add('faction-header');
-							factionTabHeader.dataset.faction = factionFolder;
-							factionTabHeader.dataset.expansion = expansionFolder_;
-							if (factionFolderIndex === 0) factionTabHeader.classList.add('active');
-							factionTabsContainer.appendChild(factionTabHeader);
-						});
-
-						factionTabsContainer.addEventListener('click', function (e) {
-							if (e.target.classList.contains('faction-header')) {
-								const buttonExp = e.target.dataset.expansion;
-								const buttonFac = e.target.dataset.faction;
-								document.querySelectorAll('.faction-header').forEach(h => h.classList.remove('active'));
-								e.target.classList.add('active');
-								loadCardsMenu(buttonExp, buttonFac);
-							}
-						});
-
-						if (firstRun) {
-							loadCardsMenu(expansionFolder_, factionFolderList[0]);
-						}
-
-						function loadCardsMenu(expansionFolder__, factionFolder_) {
-
-							const cardsDefaultName = generalData.cardsDefault.name;
-							const cardsDefaultReference = generalData.cardsDefault.reference;
-							cardsContentsContainer.innerHTML = '';
-							cardsDefaultReference.forEach((reference, referenceIndex) => {
-								const cardTabHeader = document.createElement('div');
-								cardTabHeader.textContent = cardsDefaultName[referenceIndex];
-								cardTabHeader.classList.add('card-header');
-								cardTabHeader.dataset.faction = factionFolder_;
-								cardTabHeader.dataset.expansion = expansionFolder__;
-								cardTabHeader.dataset.cardType = reference;
-								if (referenceIndex === 0) cardTabHeader.classList.add('active');
-								cardsContentsContainer.appendChild(cardTabHeader);
-							});
-
-							cardsContentsContainer.addEventListener('click', function (e) {
-								if (e.target.classList.contains('card-header')) {
-									const buttonExp = e.target.dataset.expansion;
-									const buttonFac = e.target.dataset.faction;
-									const buttonCard = e.target.dataset.cardType;
-									document.querySelectorAll('.card-header').forEach(h => h.classList.remove('active'));
-									e.target.classList.add('active');
-									loadCards(buttonExp, buttonFac, buttonCard);
-								}
-							});
-
-							if (firstRun) {
-								loadCards(expansionFolder__, factionFolder_, cardsDefaultReference[0]);
-							}
-
-							function loadCards(expansionFolder___, factionFolder__, cardTypeReference) {
-								cardsContainer.innerHTML = '';
-								const subTabContents = document.createElement('div');
-								subTabContents.classList.add('card-contents');
-								subTabContents.id = `cards-${expansionFolder___}-${factionFolder__}-${cardTypeReference}`;
-								cardsContainer.appendChild(subTabContents);
-
-								fetch(`factions/${expansionFolder___}/${factionFolder__}/text.json`)
-									.then(response => response.ok ? response.json() : "")
-									.then(textData => {
-										console.log(textData);
-										const cardsFilenameCombatList = textData?.filenames?.combat ?? generalData.filenames.combat;
-										const cardsFilenameOrderList = textData?.filenames?.orders ?? generalData.filenames.orders;
-										const cardsFilenameEventList = textData?.filenames?.events ?? generalData.filenames.events;
-										const cardsFilenameFactioncardList = textData?.filenames?.faction_card ?? generalData.filenames.faction_card;
-										const cardsFilenameBacksList = textData?.filenames?.backs ?? generalData.filenames.backs;
-										const cardsFilenameMapList = textData?.filenames?.map ?? generalData.filenames.map;
-										const cardsOrdersText = textData?.ordersText ?? false;
-										const cardsEventsText = textData?.eventsText ?? false;
-										const cardsCombatText = textData?.combatText ?? false;
-									const cardsMaterialsText = textData?.materialsText ?? false;
-									if (cardTypeReference === "combat") {
-										createCombatContent(subTabContents, expansionFolder___, factionFolder__, cardsFilenameCombatList, cardsCombatText);
-									} else if (cardTypeReference === "orders") {
-										createOrdersContent(subTabContents, expansionFolder___, factionFolder__, cardsFilenameOrderList, cardsOrdersText);
-									} else if (cardTypeReference === "events") {
-										createEventContent(subTabContents, expansionFolder___, factionFolder__, cardsFilenameEventList, cardsEventsText);
-									} else if (cardTypeReference === "material") {
-										createMaterialContent(subTabContents, expansionFolder___, factionFolder__, cardsMaterialsText);
-										} else if (cardTypeReference === "faction_card") {
-											createFactioncardContent(subTabContents, expansionFolder___, factionFolder__, cardsFilenameFactioncardList);
-										} else if (cardTypeReference === "backs") {
-											backCardContent(subTabContents, expansionFolder___, factionFolder__, cardsFilenameBacksList);
-										} else if (cardTypeReference === "map") {
-											mapCardContent(subTabContents, expansionFolder___, factionFolder__, cardsFilenameMapList);
-										}
-									})
-									.catch(error => console.error('Error loading text.json:', error));
-							};
-						};
-					});
-			};
-		})
-		.catch(error => console.error('Error loading file_names.json:', error));
-	firstRun = false;
-
-	function createPlaceholderWithSpinner() {
-			const placeholder = document.createElement('div');
-			placeholder.classList.add('card-placeholder');
-			const spinner = document.createElement('div');
-			spinner.classList.add('card-spinner');
-			placeholder.appendChild(spinner);
-			return placeholder;
-	}
-
-	//   CREATING CONTENT FOR CANVAS
-	function createCombatContent(container, expansionFolder, factionfolder, files, textData) {
-		const sections = {
-			's-section': files[0],
-			't1-section': files[1],
-			't2-section': files[2],
-			't3-section': files[3]
-		};
-
-		const combatText = textData
-			? {
-				's-section': textData[0],
-				't1-section': textData[1],
-				't2-section': textData[2],
-				't3-section': textData[3]
-			} : false;
-		
-		Object.keys(sections).forEach(section => {
-			const sectionContainer = document.createElement('div');
-			sectionContainer.classList.add('grid', 'combat', section);
-			sections[section].forEach((file, idx) => {
-				// Create placeholder with spinner
-				const placeholder = createPlaceholderWithSpinner();
-				sectionContainer.appendChild(placeholder);
-
-				// Prepare card data
-				const jsonData = {};
-				jsonData["picture"] = `factions/${expansionFolder}/${factionfolder}/combat/${file}`;
-				if (combatText) {
-					jsonData["hasText"] = true;
-					jsonData["title"] = combatText[section][idx].title || "";
-					jsonData["background"] = combatText[section][idx].general || "";
-					jsonData["foreground"] = combatText[section][idx].unit || "";
-					jsonData["icons"] = combatText[section][idx].icons || "";
-				} else {
-					jsonData["hasText"] = false;
-				}
-
-				const canvas = document.createElement('canvas');
-				canvas.width = maxWidth;
-				canvas.height = maxHeight;
-				const context = canvas.getContext('2d');
-
-				drawCombatCard(jsonData, context).then(() => {
-					placeholder.replaceWith(canvas);
-				}).catch(err => {
-					console.error('Error drawing combat card:', err);
-					placeholder.innerHTML = 'Error loading image';
-				});
-			});
-			container.appendChild(sectionContainer);
-		});
-	}
-
-
-	function createOrdersContent(container, expansionFolder, factionfolder, files, textData) {
-		const categoryContainer = document.createElement('div');
-		categoryContainer.classList.add('grid', 'orders');
-
-		files.forEach((file, idx) => {
-			const placeholder = createPlaceholderWithSpinner();
-			categoryContainer.appendChild(placeholder);
-			const jsonData = {};
-			jsonData["picture"] = `factions/${expansionFolder}/${factionfolder}/orders/${file}`;
-			if (textData) {
-				jsonData["hasText"] = true;
-				jsonData["title"] = `${textData[idx].title}`;
-				jsonData["general"] = `${textData[idx].general}`;
-			} else {
-				jsonData["hasText"] = false;
-			}
-
-			const canvas = document.createElement('canvas');
-			canvas.width = maxWidth;
-			canvas.height = maxHeight;
-			const context = canvas.getContext('2d');
-
-			// Draw card and replace placeholder when done
-			drawOrderCard(jsonData, context).then(() => {
-				placeholder.replaceWith(canvas);
-			}).catch(err => {
-				console.error('Error drawing order card:', err);
-				placeholder.innerHTML = 'Error loading image';
-			});
-		});
-
-		container.appendChild(categoryContainer);
-	}
-
-	function createEventContent(container, expansionFolder, factionfolder, files, textData) {
-		const categoryContainer = document.createElement('div');
-		categoryContainer.classList.add('grid', 'events');
-
-		files.forEach((file, idx) => {
-			const placeholder = createPlaceholderWithSpinner();
-			categoryContainer.appendChild(placeholder);
-			const jsonData = {};
-			jsonData["picture"] = `factions/${expansionFolder}/${factionfolder}/events/${file}`;
-
-			if (textData) {
-				jsonData["hasText"] = true;
-				jsonData["title"] = `${textData[idx].title}`;
-				jsonData["general"] = `${textData[idx].general}`;
-				jsonData["type"] = `${textData[idx].type}`;
-			} else {
-				jsonData["hasText"] = false;
-			}
-
-			const canvas = document.createElement('canvas');
-			canvas.width = maxWidth;
-			canvas.height = maxHeight;
-			const context = canvas.getContext('2d');
-
-			// Draw card and replace placeholder when done
-			drawEventCard(jsonData, context).then(() => {
-				placeholder.replaceWith(canvas);
-			}).catch(err => {
-				console.error('Error drawing event card:', err);
-				placeholder.innerHTML = 'Error loading image';
-			});
-		});
-		container.appendChild(categoryContainer);
-	}
-
-	function createMaterialContent(container, expansionFolder, factionfolder, materialsText) {
-		const categoryContainer = document.createElement('div');
-		categoryContainer.classList.add('grid', 'materials');
-
-		const materialCard = document.createElement('div');
-		materialCard.classList.add('material-card');
-
-		const heading = document.createElement('div');
-		heading.classList.add('material-heading');
-		heading.textContent = 'Material';
-		materialCard.appendChild(heading);
-
-		const body = document.createElement('div');
-		body.classList.add('material-body');
-
-		if (materialsText && Array.isArray(materialsText) && materialsText.length) {
-			materialsText.forEach(item => {
-				const line = document.createElement('div');
-				line.classList.add('material-line');
-				if (typeof item === 'string') {
-					line.textContent = item;
-				} else if (item && typeof item === 'object') {
-					const label = document.createElement('span');
-					label.classList.add('material-label');
-					label.textContent = item.label || '';
-					const value = document.createElement('span');
-					value.classList.add('material-value');
-					value.textContent = item.value || '';
-					line.appendChild(label);
-					if (item.label && item.value) {
-						line.appendChild(document.createTextNode(': '));
-					}
-					line.appendChild(value);
-				} else {
-					line.textContent = String(item);
-				}
-				body.appendChild(line);
-			});
-		} else {
-			const empty = document.createElement('p');
-			empty.classList.add('material-empty');
-			empty.textContent = 'Material information not available for this faction.';
-			body.appendChild(empty);
-		}
-
-		materialCard.appendChild(body);
-		categoryContainer.appendChild(materialCard);
-		container.appendChild(categoryContainer);
-	}
-
-function imageLoaderUniversal(files, maxWidth, maxHeight, pathToImage, container, categoryContainer) {
-	files.forEach((file, _) => {
-			const placeholder = createPlaceholderWithSpinner();
-			categoryContainer.appendChild(placeholder);
-			const img = document.createElement('img');
-			img.src = pathToImage+file;
-			if (maxWidth) img.width = maxWidth;
-			if (maxHeight) img.height = maxHeight;
-			img.onload = () => {
-				placeholder.replaceWith(img);
-			};
-			img.onerror = () => {
-				placeholder.innerHTML = 'Error loading image';
-			};
-		});
-		container.appendChild(categoryContainer);
-}
-
-	function createFactioncardContent(container, expansionFolder, factionfolder, files) {
-		const categoryContainer = document.createElement('div');
-		categoryContainer.classList.add('grid','factionCardImage');
-		imageLoaderUniversal(files, maxWidth*3, false, `factions/${expansionFolder}/${factionfolder}/faction_card/`, container, categoryContainer);
-	}
-
-	function backCardContent(container, expansionFolder, factionfolder, files) {
-		const categoryContainer = document.createElement('div');
-		categoryContainer.classList.add('grid', 'cardBackImages');
-		imageLoaderUniversal(files, maxWidth, maxHeight, `factions/${expansionFolder}/${factionfolder}/backs/`, container, categoryContainer);
-	}
-
-	function mapCardContent(container, expansionFolder, factionfolder, files) {
-		const categoryContainer = document.createElement('div');
-		categoryContainer.classList.add('grid', 'mapImages');
-		imageLoaderUniversal(files, maxWidth*2, false, `factions/${expansionFolder}/${factionfolder}/maps/`, container, categoryContainer);
-	}
-
-	// CANVAS TOOLS
-	function replaceForbiddenStarsElements(str) {
-		str = str.replace(/\[B\]/g, "}");
-		str = str.replace(/\[S\]/g, "{");
-		str = str.replace(/\[M\]/g, "<");
-		str = str.replace(/\[D\]/g, "|");
-		str = str.replace(/\(B\)/g, "#");
-		str = str.replace(/\(S\)/g, "@");
-		return str
-	}
-
-	function calculateTextHeight(context, text, extraHeight, marginHeight, interline, fontSize) {
-		context.font = `${fontSize}px ForbiddenStars`;
-		const words = text.split(' ');
-		let line = '';
-		let lineHeight = parseInt(context.font.match(/\d+/), 10);
-		let returnHeight = 0;
-		for (let n = 0; n < words.length; n++) {
-			if (words[n] === "*newline*") {
-				returnHeight += lineHeight + interline;
-				line = '';
-			}
-			else if (words[n] === "*newpara*") {
-				returnHeight += 2 * lineHeight;
-				line = '';
-			}
-			else {
-				const testLine = line + words[n] + ' ';
-				const metrics = context.measureText(testLine);
-				if (metrics.width > maxTextWidth && n > 0) {
-					returnHeight += lineHeight + interline;
-					line = words[n] + ' ';
-				} else {
-					line = testLine;
-				}
-			}
-		}
-		returnHeight += lineHeight * 2 + extraHeight + marginHeight * 2;
-		return returnHeight;
-	};
-
-
-	function loadImage(url) {
-		return new Promise((resolve, reject) => {
-			const img = new Image();
-			img.src = url;
-			img.onload = () => resolve(img);
-			img.onerror = () => reject(new Error('Failed to load image'));
-		});
-	};
-
-	// DRAWING CANVAS SECTION
-	async function drawCombatCard(data, ctx) {
-		const bottomImageheight = maxHeight * 0.025;
-		const maxFieldsHeight = maxHeight * 0.4;
-		const extraForegroundTriangle = maxHeight * 0.0455;
-		const extraBackgroundborder = maxHeight * 0.0385;
-
-		let interline = maxHeight * 0.0077;
-		let marginHeight = maxWidth * 0.05;
-		let fontSize = maxHeight * 0.03;
-
-		// Load images from paths
-		const picture = await loadImage(data.picture);
-		const background = await loadImage('pictures/background.png');
-		const foreground = await loadImage('pictures/foreground.png');
-		const bottomImage = await loadImage('pictures/bottom.png');
-
-		// Initial settings for margin and font size
-		let backgroundTextHeight = 0;
-		let foregroundTextHeight = 0;
-
-		// Draw the main picture resized
-		if (!data.hasText) {
-			ctx.drawImage(picture, 0, 0, maxWidth, maxHeight);
-
-		} else {
-
-			const backgroundWithFbElements = replaceForbiddenStarsElements(data.background)
-			const foregroundWithFbElements = replaceForbiddenStarsElements(data.foreground)
-
-			// Cards text height Declaration
-			const recalculateTextHeight = () => {
-				if (data.background.length > 0) {
-					backgroundTextHeight = calculateTextHeight(ctx, backgroundWithFbElements, extraBackgroundborder, marginHeight, interline, fontSize);
-				}
-				if (data.foreground.length > 0) {
-					foregroundTextHeight = calculateTextHeight(ctx, foregroundWithFbElements, extraForegroundTriangle, marginHeight, interline, fontSize);
-				}
-			};
-			recalculateTextHeight()
-
-			const resizeCardText = () => {
-				marginHeight *= 0.8;
-				fontSize *= 0.99;
-				interline *= 0.95;
-				recalculateTextHeight();
-			};
-
-			if (data.background.length > 0 && data.foreground.length > 0) {
-				while ((backgroundTextHeight + foregroundTextHeight) > maxFieldsHeight) {
-					resizeCardText();
-				};
-			} else {
-				while (Math.max(backgroundTextHeight, foregroundTextHeight) > maxFieldsHeight) {
-					resizeCardText();
-				};
-			};
-
-			const drawText = (text, yPosition, extra) => {
-				ctx.font = `${fontSize}px ForbiddenStars`;
-				const words = text.split(' ');
-				let line = '';
-				let lineHeight = parseInt(ctx.font.match(/\d+/), 10);
-				yPosition += marginHeight + extra + lineHeight;
-				for (let n = 0; n < words.length; n++) {
-					if (words[n] === "*newline*") {
-						ctx.fillText(line, marginWidth, yPosition);
-						yPosition += lineHeight + interline;
-						line = '';
-					}
-					else if (words[n] === "*newpara*") {
-						ctx.fillText(line, marginWidth, yPosition);
-						yPosition += 2 * lineHeight;
-						line = '';
-					}
-					else {
-						const testLine = line + words[n] + ' ';
-						const metrics = ctx.measureText(testLine);
-						if (metrics.width > maxWidth - 2 * marginWidth && n > 0) {
-							ctx.fillText(line, marginWidth, yPosition);
-							yPosition += lineHeight + interline;
-							line = words[n] + ' ';
-						} else {
-							line = testLine;
-						};
-					};
-				};
-				ctx.fillText(line, marginWidth, yPosition);
-			};
-
-			const drawImageCropped = (img, height) => {
-				ctx.drawImage(img, 0, 0, textBackgroundSize, maxHeight - height, 0, height, maxWidth, maxHeight - height);
-			};
-
-			ctx.drawImage(picture, 0, 0, maxWidth, maxHeight);
-			ctx.font = `${titleFontSize}px Headline`;
-			ctx.fillText(data.title, maxWidth * 0.27, maxHeight * 0.077);
-
-			if (data.background.length > 0) {
-				const backgroundY = maxHeight - (backgroundTextHeight + foregroundTextHeight);
-				drawImageCropped(background, backgroundY);
-				drawText(backgroundWithFbElements, backgroundY, extraBackgroundborder);
-			}
-			if (data.foreground.length > 0) {
-				const foregroundY = maxHeight - (foregroundTextHeight + extraForegroundTriangle * 0.35);
-				drawImageCropped(foreground, foregroundY);
-				drawText(foregroundWithFbElements, foregroundY, extraForegroundTriangle);
-			}
-			if (data.icons && data.icons.length > 0) {
-				let currentY = startY;
-				for (let letterPosition = 0; letterPosition < data.icons.length; letterPosition++) {
-					const iconChar = data.icons[letterPosition].toUpperCase();
-					if (iconMap[iconChar]) {
-						const iconImg = await loadImage(iconMap[iconChar]);
-						ctx.drawImage(iconImg, iconX, currentY, iconSize, iconSize);
-						currentY += iconSize + iconSpacing;
-					}
-				}
-			}
-			ctx.drawImage(bottomImage, 0, 0, textBottomBarWidth, textBottomBarHeight, 0, maxHeight - bottomImageheight, maxWidth, bottomImageheight);
-		}
-	}
-
-	async function drawOrderCard(data, ctx) {
-		const maxFieldsHeight = maxHeight * 0.455;
-		const textPosition = maxHeight * 0.54;
-		const marginOrderWidth = maxHeight * 0.1;
-
-		let interline = maxHeight * 0.0077;
-		let fontSize = maxHeight * 0.03;
-
-		// Load images from paths
-		const picture = await loadImage(data.picture);
-
-		if (!data.hasText) {
-			ctx.drawImage(picture, 0, 0, maxWidth, maxHeight);
-		} else {
-
-			// Initial settings for margin and font size
-			let generalTextHeight = 0;
-			const generalTextWithFbElements = replaceForbiddenStarsElements(data.general)
-			const recalculateTextHeight = () => {
-				generalTextHeight = calculateTextHeight(ctx, generalTextWithFbElements, 0, marginOrderWidth, interline, fontSize);
-			};
-
-			const resizeAllShit = () => {
-				fontSize *= 0.95;
-				interline *= 0.97;
-				recalculateTextHeight();
-			};
-
-			recalculateTextHeight()
-			while (generalTextHeight > maxFieldsHeight) {
-				resizeAllShit();
-			};
-
-			const drawText = (text, yPosition) => {
-				ctx.font = `${fontSize}px ForbiddenStars`;
-				const words = text.split(' ');
-				let line = '';
-				let lineHeight = parseInt(ctx.font.match(/\d+/), 10);
-				yPosition += lineHeight;
-				for (let n = 0; n < words.length; n++) {
-					if (words[n] === "*newline*") {
-						ctx.fillText(line, maxWidth * 0.5, yPosition);
-						yPosition += lineHeight + interline;
-						line = '';
-					}
-					else if (words[n] === "*newpara*") {
-						yPosition += 2 * lineHeight;
-						line = '';
-					}
-					else {
-						const testLine = line + words[n] + ' ';
-						const metrics = ctx.measureText(testLine);
-						if (metrics.width > maxWidth - 2 * marginOrderWidth && n > 0) {
-							ctx.fillText(line, maxWidth * 0.5, yPosition);
-							yPosition += lineHeight + interline;
-							line = words[n] + ' ';
-						} else {
-							line = testLine;
-						};
-					};
-				};
-				ctx.fillText(line, maxWidth * 0.5, yPosition);
-			};
-
-			ctx.drawImage(picture, 0, 0, maxWidth, maxHeight);
-			ctx.font = `${titleFontSize}px Headline`;
-			ctx.textAlign = "center";
-			ctx.fillText(data.title, maxWidth * 0.5, maxHeight * 0.2325);
-
-			drawText(generalTextWithFbElements, textPosition);
-		}
-	}
-
-	async function drawEventCard(data, ctx) {
-		const maxFieldsHeight = maxHeight * 0.278;
-		const textPosition = maxHeight * 0.685;
-
-		let interline = maxHeight * 0.0077;
-		let fontSize = maxHeight * 0.03;
-
-		// Load images from paths
-		const picture = await loadImage(data.picture);
-
-		if (!data.hasText) {
-			ctx.drawImage(picture, 0, 0, maxWidth, maxHeight);
-		} else {
-			// Initial settings for margin and font size
-			let generalTextHeight = 0;
-			const generalTextWithFbElements = replaceForbiddenStarsElements(data.general);
-			const recalculateTextHeight = () => {
-				generalTextHeight = calculateTextHeight(ctx, generalTextWithFbElements, 20, 0, interline, fontSize);
-			};
-			const resizeAllShit = () => {
-				fontSize *= 0.95;
-				interline *= 0.97;
-				recalculateTextHeight()
-			};
-			recalculateTextHeight()
-			while (generalTextHeight > maxFieldsHeight) {
-				resizeAllShit();
-			};
-			const drawText = (ctx_, text, yPosition) => {
-				ctx_.font = `${fontSize}px ForbiddenStars`;
-				const words = text.split(' ');
-				let line = '';
-				let lineHeight = parseInt(ctx_.font.match(/\d+/), 10);
-				yPosition += lineHeight;
-				for (let n = 0; n < words.length; n++) {
-					if (words[n] === "*newline*") {
-						ctx_.fillText(line, marginWidth, yPosition);
-						yPosition += lineHeight + interline;
-						line = '';
-					}
-					else if (words[n] === "*newpara*") {
-						ctx_.fillText(line, marginWidth, yPosition);
-						yPosition += 2 * lineHeight;
-						line = '';
-					}
-					else {
-						const testLine = line + words[n] + ' ';
-						const metrics = ctx_.measureText(testLine);
-						if (metrics.width > maxWidth - 2 * marginWidth && n > 0) {
-							ctx_.fillText(line, marginWidth, yPosition);
-							yPosition += lineHeight + interline;
-							line = words[n] + ' ';
-						} else {
-							line = testLine;
-						};
-					};
-				};
-				ctx_.fillText(line, marginWidth, yPosition);
-			};
-
-			ctx.drawImage(picture, 0, 0, maxWidth, maxHeight);
-			ctx.font = `${titleFontSize * 0.8}px EventFont`;
-			ctx.textAlign = "center";
-			ctx.fillText(data.type, maxWidth * 0.5, maxHeight * 0.573);
-			ctx.font = `${titleFontSize}px Headline`;
-			ctx.textAlign = "left";
-			ctx.fillText(data.title, maxWidth * 0.05, maxHeight * 0.0735);
-			drawText(ctx, generalTextWithFbElements, textPosition);
-		}
-	}
-});
+    if (cat === 'combat') {
+      (man.combat || []).forEach(function (files, ti) {
+        var label = TIER_LABELS[ti] || ('Set ' + (ti + 1));
+        var tierTxt = txt && txt.combat ? txt.combat[ti] : null;
+        var cards = files.map(function (f, i) {
+          var t = tierTxt && tierTxt[i]
+            ? { title: tierTxt[i].title, background: tierTxt[i].general, foreground: tierTxt[i].unit, icons: tierTxt[i].icons }
+            : null;
+          return push(f, facName(fac) + ' · ' + label + ' ' + (i + 1), 'combat', t);
+        });
+        if (cards.length) groups.push({ label: label, sub: cards.length + ' cards', cards: cards });
+      });
+    } else {
+      var files = man[cat] || [];
+      var labels, kind = null, textList = null;
+      if (cat === 'backs') {
+        labels = files.map(function (f) { return BACK_LABELS[f.replace(/\.[a-z]+$/i, '')] || 'Card Back'; });
+      } else if (cat === 'faction_card') {
+        labels = files.map(function (_, i) { return facName(fac) + ' Reference' + (files.length > 1 ? ' ' + (i + 1) : ''); });
+      } else if (cat === 'map') {
+        labels = files.map(function (_, i) { return 'Map ' + String.fromCharCode(65 + i); });
+      } else if (cat === 'orders') {
+        labels = files.map(function (_, i) { return 'Order Upgrade ' + (i + 1); });
+        kind = 'orders'; textList = txt ? txt.orders : null;
+      } else { // events
+        labels = files.map(function (_, i) { return 'Event ' + (i + 1); });
+        kind = 'events'; textList = txt ? txt.events : null;
+      }
+      var cards = files.map(function (f, i) {
+        var t = (kind && textList && textList[i]) ? textList[i] : null;
+        return push(f, labels[i], kind, t);
+      });
+      if (cards.length) groups.push({ label: null, sub: '', cards: cards });
+    }
+    return { groups: groups, ready: true };
+  }
+
+  /* ---------------- lightbox ---------------- */
+
+  function openLb(idx) { setState({ lb: idx, lbFull: false }); }
+  function closeLb() { setState({ lb: null, lbFull: false }); }
+  function step(d) {
+    if (!flat.length || state.lb === null) return;
+    setState({ lb: (state.lb + d + flat.length) % flat.length, lbFull: false });
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (state.lb === null) return;
+    if (e.key === 'Escape') closeLb();
+    else if (e.key === 'ArrowRight') step(1);
+    else if (e.key === 'ArrowLeft') step(-1);
+  });
+
+  /* ---------------- render ---------------- */
+
+  function render() {
+    var acc = ACC[ACCENT] || ACC.amber;
+    var cols = Math.max(2, Math.min(8, density()));
+    var cat = state.category;
+
+    var built = build();
+    var groups = built.groups;
+
+    // grid geometry per category
+    var gridCols, gridJustify, cardAspect;
+    if (cat === 'faction_card') {
+      gridCols = 'repeat(1, minmax(0, 860px))'; gridJustify = 'center'; cardAspect = '1688 / 2000';
+    } else if (cat === 'map') {
+      gridCols = 'repeat(1, minmax(0, 920px))'; gridJustify = 'center'; cardAspect = '1 / 1';
+    } else {
+      gridCols = 'repeat(' + cols + ', minmax(0, 1fr))'; gridJustify = 'start'; cardAspect = '434 / 615';
+    }
+
+    var app = el('div', { class: 'fs-app', 'data-accent': ACCENT });
+
+    /* ---- header ---- */
+    var exptabs = el('div', { class: 'fs-exptabs fs-scroll' },
+      DATA.expansions.map(function (e) {
+        return el('button', {
+          class: 'fs-tab' + (state.expansion === e.key ? ' is-active' : ''),
+          onclick: (function (key) { return function () { selectExpansion(key); }; })(e.key),
+        }, [el('span', { text: e.name })]);
+      })
+    );
+    var header = el('header', { class: 'fs-header' }, [
+      el('div', { class: 'fs-brand' }, [
+        el('div', { class: 'fs-logo' }, [
+          el('div', { class: 'fs-logo-ring' }),
+          el('div', { class: 'fs-logo-core' }),
+        ]),
+        el('div', { class: 'fs-brand-text' }, [
+          el('span', { class: 'fs-brand-title', text: 'FORBIDDEN STARS' }),
+          el('span', { class: 'fs-brand-sub', text: 'Card Codex' }),
+        ]),
+      ]),
+      exptabs,
+    ]);
+
+    /* ---- sidebar ---- */
+    var nav = el('nav', { class: 'fs-nav' },
+      facList().map(function (f) {
+        var cnt = manifestCount(DATA.manifest[state.expansion + '/' + f.key]);
+        return el('button', {
+          class: 'fs-fac' + (state.faction === f.key ? ' is-active' : ''),
+          onclick: (function (key) { return function () { setState({ faction: key, lb: null }); }; })(f.key),
+        }, [
+          el('span', { class: 'fs-fac-dot', style: 'background:' + f.dot + ';' }),
+          el('span', { class: 'fs-fac-name', text: f.name }),
+          el('span', { class: 'fs-fac-count', text: cnt == null ? '' : String(cnt) }),
+        ]);
+      })
+    );
+    var sidebar = el('aside', { class: 'fs-sidebar' }, [
+      el('div', { class: 'fs-sidebar-label', text: 'Factions' }),
+      nav,
+      el('div', { class: 'fs-sidebar-foot' }, [
+        el('a', { class: 'fs-faq-link', href: 'faq_manuscript_page.html', text: 'FAQ & Rules' }),
+        el('p', { html: 'FAN PROJECT &middot; NON&#8209;COMMERCIAL<br>Artwork &copy; Games Workshop' }),
+      ]),
+    ]);
+
+    /* ---- main ---- */
+    var main = el('main', { class: 'fs-main' });
+
+    var cattabs = el('div', { class: 'fs-cattabs fs-scroll' },
+      DATA.categories.map(function (c) {
+        return el('button', {
+          class: 'fs-cat' + (cat === c.key ? ' is-active' : ''),
+          onclick: (function (key) { return function () { setState({ category: key, lb: null }); }; })(c.key),
+          text: catName(c.key),
+        });
+      })
+    );
+    main.appendChild(el('div', { class: 'fs-cattabs-wrap' }, [cattabs]));
+
+    main.appendChild(el('div', { class: 'fs-breadcrumb' }, [
+      el('div', { class: 'fs-bc-left' }, [
+        el('span', { class: 'fs-bc-exp', text: expName(state.expansion) }),
+        el('span', { class: 'fs-bc-sep', text: '/' }),
+        el('h1', { class: 'fs-bc-title', text: (facName(state.faction) || '…') + ' — ' + catName(cat) }),
+      ]),
+      el('span', {
+        class: 'fs-bc-total',
+        text: cat === 'material'
+          ? ((built.material && built.material.length ? built.material.length + ' units' : ''))
+          : (flat.length + ' ' + (flat.length === 1 ? 'card' : 'cards')),
+      }),
+    ]));
+
+    var scrollarea = el('div', { class: 'fs-scrollarea fs-scroll' });
+    if (!built.ready) {
+      scrollarea.appendChild(el('div', { class: 'fs-note', text: 'Loading…' }));
+    } else if (cat === 'material') {
+      scrollarea.appendChild(renderMaterial(built.material));
+    } else if (!groups.length) {
+      scrollarea.appendChild(el('div', { class: 'fs-note', text: 'No cards of this type in this set.' }));
+    } else {
+      groups.forEach(function (group) {
+        if (group.label) {
+          scrollarea.appendChild(el('div', { class: 'fs-group-head' }, [
+            el('span', { class: 'fs-group-label', text: group.label }),
+            el('span', { class: 'fs-group-rule' }),
+            el('span', { class: 'fs-group-sub', text: group.sub }),
+          ]));
+        }
+        var grid = el('div', {
+          class: 'fs-grid',
+          style: 'grid-template-columns:' + gridCols + ';justify-content:' + gridJustify + ';',
+        }, group.cards.map(function (card) {
+          var btn = el('button', {
+            class: 'fs-card',
+            title: card.label,
+            style: 'aspect-ratio:' + cardAspect + ';',
+            onclick: (function (idx) { return function () { openLb(idx); }; })(card.index),
+          }, [
+            el('img', { src: card.src, alt: card.label, loading: 'lazy' }),
+          ]);
+          var imgEl = btn.querySelector('img');
+          // hide the whole card if its artwork fails to load (e.g. a set without maps);
+          // if that empties the whole view, surface a note instead of a blank panel
+          imgEl.addEventListener('error', function () {
+            btn.style.display = 'none';
+            maybeEmptyNote(scrollarea);
+          });
+          applyComposite(imgEl, card);
+          return btn;
+        }));
+        scrollarea.appendChild(grid);
+      });
+    }
+    main.appendChild(scrollarea);
+
+    app.appendChild(header);
+    app.appendChild(el('div', { class: 'fs-body' }, [sidebar, main]));
+
+    /* ---- lightbox ---- */
+    if (state.lb !== null) {
+      var c = flat[state.lb];
+      if (c) {
+        var bigFormat = cat === 'faction_card' || cat === 'map';
+        var full = bigFormat && state.lbFull;
+        var children = [
+          el('button', {
+            class: 'fs-lb-nav', 'aria-label': 'Previous card', html: '&lsaquo;',
+            onclick: function (e) { e.stopPropagation(); step(-1); },
+          }),
+          el('figure', { class: 'fs-lb-fig' + (full ? ' is-full' : ''), onclick: function (e) { e.stopPropagation(); } }, [
+            lbImg(c),
+            el('figcaption', { class: 'fs-lb-cap' }, [
+              el('span', { class: 'fs-lb-label', text: c.label }),
+              el('span', {
+                class: 'fs-lb-meta',
+                text: catName(cat) + ' · ' + facName(state.faction) + ' · ' + (state.lb + 1) + ' / ' + flat.length,
+              }),
+            ]),
+          ]),
+          el('button', {
+            class: 'fs-lb-nav', 'aria-label': 'Next card', html: '&rsaquo;',
+            onclick: function (e) { e.stopPropagation(); step(1); },
+          }),
+          bigFormat ? el('button', {
+            class: 'fs-lb-full', 'aria-label': full ? 'Exit full screen' : 'Full screen',
+            title: full ? 'Exit full screen' : 'Full screen', html: full ? '&#10532;' : '&#10530;',
+            onclick: function (e) { e.stopPropagation(); setState({ lbFull: !state.lbFull }); },
+          }) : null,
+          el('button', {
+            class: 'fs-lb-close', 'aria-label': 'Close', html: '&#10005;',
+            onclick: function (e) { e.stopPropagation(); closeLb(); },
+          }),
+        ];
+        app.appendChild(el('div', { class: 'fs-lb', onclick: closeLb }, children));
+      }
+    }
+
+    var root = document.getElementById('app');
+    root.innerHTML = '';
+    root.appendChild(app);
+  }
+
+  function selectExpansion(key) {
+    ensureFactions(key);
+    var list = DATA.factions[key];
+    // keep current faction if it exists in the target expansion, else first/null
+    var keep = list && findKey(list, state.faction) ? state.faction : (list && list[0] ? list[0].key : null);
+    setState({ expansion: key, faction: keep, lb: null });
+  }
+
+  // Re-render on resize (debounced) so the column count tracks the viewport.
+  var _rt;
+  window.addEventListener('resize', function () {
+    clearTimeout(_rt);
+    _rt = setTimeout(render, 120);
+  });
+
+  /* ---------------- boot ---------------- */
+
+  function boot() {
+    fetchJSON('factions/general.json').then(function (g) {
+      DATA.general = g;
+      DATA.defaults = g.filenames;
+      DATA.expansions = (g.expansion.folder || []).map(function (key, i) {
+        return { key: key, name: (g.expansion.name && g.expansion.name[i]) || key };
+      });
+      DATA.categories = (g.cardsDefault.reference || []).map(function (key, i) {
+        return { key: key, name: (g.cardsDefault.name && g.cardsDefault.name[i]) || key };
+      });
+      state.expansion = DATA.expansions[0] ? DATA.expansions[0].key : null;
+      render();
+      if (state.expansion) ensureFactions(state.expansion);
+    }).catch(function (e) {
+      console.error(e);
+      var root = document.getElementById('app');
+      if (root) root.textContent = 'Failed to load card data.';
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();
