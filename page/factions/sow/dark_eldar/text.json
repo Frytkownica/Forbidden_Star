@@ -29,7 +29,7 @@
         },
         {
             "title": "SHADOWFIELD PROJECTION",
-            "general": "Place this card in your play area and discard all of your other schemes. *newpara* While resolving an Advance Order, you may discard this card to perform its steps in any order.",
+            "general": "Place this card in your play area and discard all of your other schemes. *newpara* While resolving an Advance Order, you may discard this card to perform its steps in any order. You may not create contested area after Resolved Combat step.",
             "type": "SCHEME"
         },
         {

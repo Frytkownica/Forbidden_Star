@@ -22,8 +22,8 @@
       "Event Cards",
       "Card Backs",
       "Faction Card",
-      "Material",
-      "Map"
+      "Map",
+      "Unit Count"
     ],
     "reference": [
       "combat",
@@ -31,8 +31,8 @@
       "events",
       "backs",
       "faction_card",
+      "map",
       "material",
-      "map"
     ]
   },
   "filenames": {
