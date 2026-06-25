@@ -22,6 +22,7 @@
       "Event Cards",
       "Card Backs",
       "Faction Card",
+      "Material",
       "Map"
     ],
     "reference": [
@@ -30,6 +31,7 @@
       "events",
       "backs",
       "faction_card",
+      "material",
       "map"
     ]
   },

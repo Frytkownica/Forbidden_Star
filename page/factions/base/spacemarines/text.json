@@ -1,0 +1,10 @@
+{
+  "materialsText": [
+    { "label": "Scouts", "value": "2" },
+    { "label": "Strike Cruisers", "value": "2" },
+    { "label": "Space Marines", "value": "5" },
+    { "label": "Land Raiders", "value": "6" },
+    { "label": "Battle Barges", "value": "3" },
+    { "label": "Warlord Titansaw", "value": "3" }
+  ]
+}
