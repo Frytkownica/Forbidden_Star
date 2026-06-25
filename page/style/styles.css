@@ -1,438 +1,300 @@
-@font-face {
-    font-family: 'Headline';
-    src: url('../fonts/Headline.woff2') format('woff2');
-}
+/* Forbidden Stars — Card Codex
+   Ported from the "Forbidden Stars Codex" Claude Design component.
+   Pure static CSS, no build step. Desktop-first 100vh app shell. */
 
-@font-face {
-    font-family: 'ForbiddenStars';
-    src: url('../fonts/ForbiddenStars.woff2') format('woff2');
-}
+* { box-sizing: border-box; }
 
-@font-face {
-    font-family: 'EventFont';
-    src: url('../fonts/EventFont.woff2') format('woff2');
-}
-
-:root {
-  --text:#bbb;
-  --text_2:#222;
-  --text_3: #000;
-  --background:#999;
-  --background_2:#222;
-  --background_3:#777;
-  --highlight: #aa6;
-  --spinnerColor: #36f;
-  --blue:rgba(47, 95, 255, 0.5);
-  --border:1px solid rgba(0, 0, 100, 0.5);
-  --max-width:1040px;
-  --content-width:940px;
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #121110;
 }
 
 body {
-    top: 0;
-    display: flex;
-    flex-direction: column;
-    font-family: 'Headline';
-    width: 1420px;
-    min-height: 100vh;
-    gap: 5px;
-    color: var(--text);
-    background: var(--background);
+  color: #ece8e1;
+  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
+::selection { background: rgba(216, 166, 87, 0.28); }
 
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
+/* ---- scrollbars ---- */
+.fs-scroll::-webkit-scrollbar { width: 10px; height: 10px; }
+.fs-scroll::-webkit-scrollbar-thumb {
+  background: #2c2925;
+  border-radius: 8px;
+  border: 2px solid #121110;
+}
+.fs-scroll::-webkit-scrollbar-thumb:hover { background: #3a3631; }
+.fs-scroll::-webkit-scrollbar-track { background: transparent; }
 
-    100% {
-        transform: rotate(360deg);
-    }
+/* ---- animations ---- */
+@keyframes fsfade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fspop  { from { opacity: 0; transform: scale(.965); } to { opacity: 1; transform: scale(1); } }
+
+/* ---- accent themes (set via [data-accent] on .fs-app) ---- */
+.fs-app {
+  --fs-accent: oklch(0.80 0.12 80);
+  --fs-accent-fg: #1c1810;
+}
+.fs-app[data-accent="amber"]   { --fs-accent: oklch(0.80 0.12 80);  --fs-accent-fg: #1c1810; }
+.fs-app[data-accent="steel"]   { --fs-accent: oklch(0.72 0.10 232); --fs-accent-fg: #0b1019; }
+.fs-app[data-accent="crimson"] { --fs-accent: oklch(0.62 0.185 25); --fs-accent-fg: #1c0d0c; }
+
+/* ---- app shell ---- */
+.fs-app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #121110;
+  color: #ece8e1;
+  overflow: hidden;
 }
 
-.card-placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'EventFont';
-    width: 450px;
-    height: 650px;
-    color: var(--text);
-    font-size: 25px;
-    background-color: var(--background_2);
-    border-radius: 8px;
+/* ---- header ---- */
+.fs-header {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  padding: 0 22px;
+  height: 60px;
+  border-bottom: 1px solid #2c2925;
+  background: #16140f;
+  flex-shrink: 0;
+  z-index: 10;
+}
+.fs-brand { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.fs-logo { position: relative; width: 24px; height: 24px; flex-shrink: 0; }
+.fs-logo-ring {
+  position: absolute; inset: 2px; transform: rotate(45deg);
+  border: 1.5px solid var(--fs-accent); border-radius: 3px;
+}
+.fs-logo-core {
+  position: absolute; left: 50%; top: 50%; width: 6px; height: 6px;
+  margin: -3px 0 0 -3px; background: var(--fs-accent); transform: rotate(45deg);
+}
+.fs-brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+.fs-brand-title { font-size: 14.5px; font-weight: 700; letter-spacing: 0.16em; }
+.fs-brand-sub {
+  font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.34em;
+  color: #857f74; text-transform: uppercase; margin-top: 2px;
 }
 
-.card-placeholder .card-spinner {
-    border: var(--border);
-    border-top: 4px solid var(--spinnerColor);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
+.fs-exptabs {
+  display: flex; align-items: center; gap: 3px;
+  overflow-x: auto; margin-left: 4px;
 }
 
-#expansion-tabs {
-    font-size: 30px;
-    width: 100%;
+/* ---- generic tab (expansion bar) ---- */
+.fs-tab {
+  appearance: none; border: none; cursor: pointer; font-family: inherit;
+  font-size: 12.5px; font-weight: 500; letter-spacing: 0.01em;
+  padding: 7px 13px; border-radius: 8px; white-space: nowrap;
+  display: inline-flex; align-items: center;
+  background: transparent; color: #8a847a;
+  transition: background .15s, color .15s;
+}
+.fs-tab:hover { color: #c4bdb1; }
+.fs-tab.is-active {
+  font-weight: 600; background: var(--fs-accent); color: var(--fs-accent-fg);
+}
+.fs-tab-soon {
+  margin-left: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 8px;
+  letter-spacing: 0.12em; opacity: 0.55;
 }
 
-#faction-tabs {
-    font-size: 28px;
-    width: 100%;
+/* ---- body row ---- */
+.fs-body { flex: 1; display: flex; min-height: 0; }
+
+/* ---- sidebar ---- */
+.fs-sidebar {
+  width: 236px; flex-shrink: 0; border-right: 1px solid #2c2925;
+  background: #16140f; display: flex; flex-direction: column; padding: 18px 14px;
+}
+.fs-sidebar-label {
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.26em;
+  color: #857f74; text-transform: uppercase; padding: 0 8px 12px;
+}
+.fs-nav { display: flex; flex-direction: column; gap: 3px; }
+
+.fs-fac {
+  display: flex; align-items: center; gap: 11px; width: 100%; text-align: left;
+  appearance: none; border: 1px solid transparent; background: transparent;
+  cursor: pointer; font-family: inherit; color: #b3ada3; font-size: 13.5px;
+  font-weight: 500; padding: 9px 11px; border-radius: 10px; transition: all .15s;
+}
+.fs-fac:hover { background: #1d1b18; }
+.fs-fac.is-active {
+  border: 1px solid #34302a; background: #221f1a; color: #f3efe8; font-weight: 600;
+  box-shadow: inset 2px 0 0 var(--fs-accent);
+}
+.fs-fac-dot {
+  width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.035);
+}
+.fs-fac-name { flex: 1; }
+.fs-fac-count { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #6f6a61; }
+
+.fs-sidebar-foot {
+  margin-top: auto; padding: 14px 8px 2px; border-top: 1px solid #221f1a;
+}
+.fs-sidebar-foot p {
+  font-family: 'IBM Plex Mono', monospace; font-size: 9px; line-height: 1.7;
+  color: #5c574f; margin: 0; letter-spacing: 0.05em;
+}
+.fs-faq-link {
+  display: inline-block; margin-bottom: 10px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: #857f74; text-decoration: none;
+  transition: color .15s;
+}
+.fs-faq-link:hover { color: var(--fs-accent); }
+
+/* ---- main ---- */
+.fs-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+
+.fs-cattabs-wrap {
+  padding: 0 26px; border-bottom: 1px solid #2c2925; background: #141310; flex-shrink: 0;
+}
+.fs-cattabs { display: flex; gap: 2px; overflow-x: auto; }
+.fs-cat {
+  appearance: none; border: none; background: transparent; cursor: pointer;
+  font-family: inherit; font-size: 13px; font-weight: 500; color: #8a847a;
+  padding: 13px 15px; border-bottom: 2px solid transparent; white-space: nowrap;
+  transition: color .15s, border-color .15s;
+}
+.fs-cat:hover { color: #c4bdb1; }
+.fs-cat.is-active {
+  font-weight: 600; color: #f3efe8; border-bottom: 2px solid var(--fs-accent);
 }
 
-#cards-tabs {
-    font-size: 26px;
-    width: 100%;
+.fs-breadcrumb {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 17px 26px 5px; flex-shrink: 0;
+}
+.fs-bc-left { display: flex; align-items: center; gap: 11px; min-width: 0; }
+.fs-bc-exp {
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--fs-accent); white-space: nowrap;
+}
+.fs-bc-sep { color: #3a352f; }
+.fs-bc-title {
+  font-size: 16px; font-weight: 600; margin: 0; color: #f3efe8;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.fs-bc-total {
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #857f74;
+  letter-spacing: 0.08em; white-space: nowrap;
 }
 
-.expansion-header,
-.faction-header,
-.card-header {
-    border-radius:12px;
-    display: inline-block;
-    padding: 5px 8px 8px 8px;
-    background-color: var(--background_2);
-    z-index: 1000;
-    cursor: grab;
-    letter-spacing: .01em;
-    margin: 1px;
+.fs-scrollarea { flex: 1; min-height: 0; overflow-y: auto; padding: 18px 26px 44px; }
+
+.fs-group-head { display: flex; align-items: center; gap: 13px; margin: 8px 0 16px; }
+.fs-group-label {
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase; color: #bdb7ac; white-space: nowrap;
+}
+.fs-group-rule { height: 1px; flex: 1; background: linear-gradient(90deg, #2c2925, transparent); }
+.fs-group-sub {
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #6f6a61; white-space: nowrap;
 }
 
-.expansion-header.active,
-.faction-header.active {
-    background-color: var(--background_3);
-    color: var(--text_2);
-    box-shadow: 0 0 30px #f80;
-    cursor: default;
+.fs-grid { display: grid; gap: 18px; margin-bottom: 30px; }
+
+.fs-card {
+  appearance: none; padding: 0; margin: 0; cursor: zoom-in; background: #1e1c1a;
+  border: 1px solid #2c2925; border-radius: 12px; overflow: hidden; width: 100%;
+  display: block; position: relative;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
 }
-
-.card-header.active {
-    background-color: var(--background_3);
-    box-shadow: 0 0 10px #090;
-    color: var(--text_2);
-    cursor: default;
+.fs-card:hover {
+  border-color: var(--fs-accent); transform: translateY(-5px);
+  box-shadow: 0 14px 34px -10px rgba(0, 0, 0, .78);
 }
+.fs-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-.card-container {
-    display: none;
+/* ---- unavailable state ---- */
+.fs-empty {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 18px; padding: 40px; text-align: center;
 }
-
-.card-container.active {
-    display: block;
+.fs-empty-glyph { position: relative; width: 54px; height: 54px; opacity: 0.85; }
+.fs-empty-glyph .ring {
+  position: absolute; inset: 4px; transform: rotate(45deg);
+  border: 1.5px solid #3a3631; border-radius: 6px;
 }
-
-#faq-container {
-    display: none;
-    width: 100%;
-    position: relative;
-    flex: 1;
+.fs-empty-glyph .core {
+  position: absolute; left: 50%; top: 50%; width: 12px; height: 12px;
+  margin: -6px 0 0 -6px; background: #2c2925; transform: rotate(45deg);
 }
-
-#faq-container.active {
-    display: flex;
-    flex-direction: column;
+.fs-empty-stack { display: flex; flex-direction: column; gap: 7px; align-items: center; }
+.fs-empty h2 {
+  font-size: 19px; font-weight: 600; margin: 0; color: #e6e1d8; letter-spacing: 0.01em;
 }
-
-.faq-page-shell {
-    position: relative;
-    width: 100%;
-    min-height: 100vh;
-    color: var(--text_2);
+.fs-empty p {
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.8;
+  color: #7a746a; margin: 0; max-width: 380px; letter-spacing: 0.03em;
 }
-
-.faq-header-panel {
-    position: sticky;
-    top: 12px;
-    z-index: 20;
-    max-width: var(--max-width);
-    margin: 0 auto 24px;
-    padding: 14px;
-    background-color: var(--background_2);
-    color: var(--text);
-    border-radius: 18px;
-    opacity: 0.85;
+.fs-empty-btn {
+  appearance: none; cursor: pointer; font-family: inherit; font-size: 12.5px;
+  font-weight: 600; letter-spacing: 0.02em; color: var(--fs-accent-fg);
+  background: var(--fs-accent); border: none; border-radius: 9px; padding: 10px 18px;
+  transition: opacity .15s;
 }
+.fs-empty-btn:hover { opacity: 0.9; }
 
-.faq-search-wrap {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    flex-wrap: wrap;
+/* ---- lightbox ---- */
+.fs-lb {
+  position: fixed; inset: 0; z-index: 60; background: rgba(8, 7, 6, .88);
+  backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px);
+  display: flex; align-items: center; justify-content: center; gap: 18px;
+  padding: 32px; animation: fsfade .18s ease;
 }
-
-.faq-search-box {
-    flex: 1 1 340px;
-    min-width: 260px;
-    padding: 14px 18px;
-    border-radius: 12px;
-    border: var(--border);
-    background-color: var(--background);
-    font-size: 16px;
-    font-family: 'ForbiddenStars';
-    outline: none;
+.fs-lb-nav {
+  width: 46px; height: 46px; flex-shrink: 0; border-radius: 50%;
+  border: 1px solid #38332c; background: rgba(30, 28, 26, .85); color: #d8d2c8;
+  font-size: 24px; line-height: 1; cursor: pointer; display: flex;
+  align-items: center; justify-content: center; transition: all .15s;
 }
-
-.faq-search-meta {
-    font-size: 14px;
-    border-radius: 12px;
-    font-family: 'ForbiddenStars';
+.fs-lb-nav:hover { border-color: var(--fs-accent); color: var(--fs-accent); }
+.fs-lb-fig {
+  margin: 0; display: flex; flex-direction: column; align-items: center; gap: 16px;
+  animation: fspop .2s ease;
 }
-
-.faq-content {
-    position: relative;
-    max-width: var(--content-width);
-    margin: 0 auto;
-    padding: 50px 30px 200px 15px;
-    border-radius: 24px;
-    overflow: hidden;
+.fs-lb-fig img {
+  max-height: 80vh; max-width: min(640px, 80vw); border-radius: 14px;
+  border: 1px solid #38332c; box-shadow: 0 40px 90px -25px #000; display: block;
 }
-
-.faq-empty-state {
-    padding: 24px 0;
-    font-size: 18px;
-    text-align: center;
-    opacity: 0.8;
+.fs-lb-cap { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.fs-lb-label { font-size: 15px; font-weight: 600; color: #f3efe8; }
+.fs-lb-meta {
+  font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--fs-accent);
 }
-
-.faq-level-block {
-    margin: 0 0 28px;
+.fs-lb-close {
+  position: absolute; top: 22px; right: 24px; width: 38px; height: 38px;
+  border-radius: 50%; border: 1px solid #38332c; background: rgba(30, 28, 26, .85);
+  color: #b3ada3; font-size: 15px; line-height: 1; cursor: pointer; display: flex;
+  align-items: center; justify-content: center; transition: all .15s;
 }
+.fs-lb-close:hover { border-color: var(--fs-accent); color: #f3efe8; }
 
-.faq-level-row {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(180px, 280px);
-    gap: 18px;
-    align-items: start;
+/* ---- responsive ---- */
+@media (max-width: 900px) {
+  .fs-sidebar { width: 188px; }
 }
-
-.faq-level-row.no-picture {
-    grid-template-columns: 1fr;
-}
-
-.faq-level-image {
-    max-width: 100px;
-    border-radius: 10px;
-    border: var(--border);
-    display: block;
-    justify-self: end;
-}
-
-.faq-content h1,
-.faq-content h2,
-.faq-content h3 {
-    margin: 0;
-    line-height: 1.15;
-    font-family: 'EventFont';
-    letter-spacing: 0.01em;
-}
-
-.faq-phrase-title,
-.faq-main-text {
-    font-family: 'ForbiddenStars';
-}
-
-.faq-content h1 {
-    font-size: clamp(30px, 4vw, 44px);
-    margin-bottom: 10px;
-}
-
-.faq-content h2 {
-    font-size: clamp(24px, 3vw, 34px);
-    margin-bottom: 8px;
-}
-
-.faq-content h3 {
-    font-size: clamp(22px, 2.8vw, 30px);
-    margin-bottom: 8px;
-}
-
-.faq-separator {
-    width: 100%;
-    height: 3px;
-    background: linear-gradient(to right, transparent, var(--blue), transparent);
-    margin: 0 0 16px;
-}
-
-.faq-category-block {
-    margin-bottom: 42px;
-}
-
-.faq-subcategory-block {
-    margin: 22px 0 28px;
-    padding-left: 10px;
-}
-
-.faq-faction-block {
-    margin: 18px 0 24px;
-    padding-left: 12px;
-}
-
-.faq-phrase-block {
-    margin: 14px 0 16px;
-    padding: 14px 16px;
-    border-radius: 14px;
-    background: var(--background);
-    border: var(--border);
-}
-
-.faq-phrase-title {
-    display: block;
-    font-weight: 700;
-    font-size: 18px;
-    margin-bottom: 8px;
-    color: var(--text_3);
-}
-
-.faq-main-text {
-    font-size: 17px;
-    line-height: 1.7;
-    white-space: pre-wrap;
-    word-break: break-word;
-}
-
-.faq-content mark {
-    background: var(--highlight);
-    color: inherit;
-    padding: 0 0.1em;
-    border-radius: 0.15em;
-}
-
-.grid {
-    display: grid;
-    gap: 20px 20px;
-    grid-template-columns: repeat(3, 1fr);
-    background-color: var(--background_3);
-    gap: 5px 5px;
-    padding: 10px;
-}
-
-.grid.events {
-    grid-template-columns: repeat(4, 1fr);
-    width: 1835px;
-}
-
-.grid.cardBackImages {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 5px 5px;
-}
-
-.grid.factionCardImage {
-    grid-template-columns: repeat(1, 1fr);
-    width: 1835px;
-}
-
-.grid.mapImages {
-    grid-template-columns: repeat(2, 1fr);
-    width: 1835px;
-}
-
-
-.grid.orders {
-    grid-template-columns: repeat(3, 1fr);
-}
-
-.grid.combat.s-section {
-    background-color: #090;
-}
-
-.grid.combat.t1-section {
-    background-color: #990;
-}
-
-.grid.combat.t2-section {
-    background-color: #950;
-}
-
-.grid.combat.t3-section {
-    background-color: #900;
-}
-
-.faction-header.active[data-faction="space_marines"] {
-    background-color: #66f;
-    box-shadow: 0 0 5px #66f;
-}
-
-.faction-header.active[data-faction="chaos"] {
-    background-color: #e11;
-    box-shadow: 0 0 5px #f55;
-}
-
-.faction-header.active[data-faction="ork"] {
-    background-color: #2f3;
-    box-shadow: 0 0 5px #2f4;
-}
-
-.faction-header.active[data-faction="eldar"] {
-    background-color: #ff1;
-    box-shadow: 0 0 5px #ff1;
-}
-
-.faction-header.active[data-faction="ig"] {
-    background-color: #999;
-    color: #050;
-    box-shadow: 0 0 5px #ccc;
-}
-
-.faction-header.active[data-faction="tyranid"] {
-    background-color: #b3f;
-    box-shadow: 0 0 5px #c4f;
-}
-
-.faction-header.active[data-faction="necron"] {
-    background-color: #000;
-    color: #2f1;
-    box-shadow: 0 0 5px #2f1;
-}
-
-.faction-header.active[data-faction="tau"] {
-    background-color: #fa1;
-    box-shadow: 0 0 5px #fa1;
-}
-
-.faction-header.active[data-faction="adeptus_mechanicus"] {
-    background-color: #a52;
-    box-shadow: 0 0 5px #a52;
-}
-
-.faction-header.active[data-faction="adepta_sororitas"] {
-    background-color: #fff;
-    box-shadow: 0 0 5px #fff;
-    color: #000;
-}
-
-.faction-header.active[data-faction="dark_eldar"] {
-    background-color: #1ed;
-    box-shadow: 0 0 5px #1ed;
-    color: #000;
-}
-
-.faction-header.active[data-faction="inquisition"] {
-    background-color: #80f;
-    box-shadow: 0 0 5px #80f;
-    color: #fff;
-}
-
-.faction-header.active[data-faction="worldeaters"] {
-    background-color: #f33;
-    box-shadow: 0 0 5px #f55;
-}
-
-.faction-header.active[data-faction="thousandsons"] {
-    background-color: #22f;
-    color: #cc2;
-    box-shadow: 0 0 5px #22f;
-}
-
-.faction-header.active[data-faction="emperorschildren"] {
-    background-color: #d2a;
-    box-shadow: 0 0 5px #d2a;
-}
-
-.faction-header.active[data-faction="deathguard"] {
-    background-color: #351;
-    color: #aa0;
-    box-shadow: 0 0 5px #351;
+@media (max-width: 720px) {
+  .fs-app { height: auto; min-height: 100vh; overflow: visible; }
+  .fs-body { flex-direction: column; }
+  .fs-sidebar {
+    width: 100%; border-right: none; border-bottom: 1px solid #2c2925;
+    flex-direction: row; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px 14px;
+  }
+  .fs-sidebar-label { display: none; }
+  .fs-nav { flex-direction: row; flex-wrap: wrap; flex: 1; }
+  .fs-fac { width: auto; }
+  .fs-fac-count { display: none; }
+  .fs-sidebar-foot { display: none; }
+  .fs-scrollarea { overflow-y: visible; }
+  .fs-header { gap: 14px; padding: 0 14px; }
+  .fs-grid { gap: 12px; }
 }
