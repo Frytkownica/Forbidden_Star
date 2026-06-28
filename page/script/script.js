@@ -61,10 +61,28 @@
     factions: {},           // exp -> [{key, name, dot}]
     manifest: {},           // "exp/fac" -> {combat:[[..]], orders:[..], ...}  (filenames)
     text: {},               // "exp/fac" -> {combat:[[{title,general,unit,icons}]], orders:[..], events:[..]} or null
+    faq: null,              // { topics:[{key,name,dot}], qa:[{t,q,a,tag}] } from data/FAQ.json
     loading: {},            // in-flight guards
   };
 
-  var state = { expansion: null, faction: null, category: 'combat', lb: null, lbFull: false };
+  function ensureFaq() {
+    if (DATA.faq || DATA.loading.faq || !window.FS_FAQ) return;
+    DATA.loading.faq = true;
+    fetchJSON(window.FS_FAQ.src).then(function (raw) {
+      DATA.faq = window.FS_FAQ.flatten(raw);
+      render();
+    }).catch(function (e) {
+      console.error('FAQ load failed', e);
+      DATA.faq = { topics: [{ key: 'all', name: 'All Questions', dot: 'oklch(0.80 0.12 80)' }], qa: [] };
+      render();
+    });
+  }
+
+  var state = {
+    expansion: null, faction: null, category: 'combat', lb: null, lbFull: false, lbMag: false, lbZoom: 2,
+    view: 'codex',            // 'codex' | 'faq'
+    faqTopic: 'all', faqQuery: '', faqOpen: {},
+  };
   var flat = []; // flat list of currently-visible cards, for the lightbox
 
   function setState(patch) {
@@ -198,6 +216,40 @@
     return img;
   }
 
+  // Magnifier lens: a circular loupe that follows the cursor over the lightbox
+  // image, sampling the full-resolution source for close inspection.
+  // Always wired; the lens only shows while state.lbMag is on. Toggling the
+  // magnifier flips classes in place (see the toolbar button) — no re-render,
+  // so the modal never flashes/reloads.
+  function attachMagnifier(wrap, img) {
+    var LENS = 204;
+    var lens = el('div', { class: 'fs-lb-lens' });
+    wrap.appendChild(lens);
+    var ex = null, ey = null;
+    function draw() {
+      if (!state.lbMag || ex == null) { lens.style.display = 'none'; return; }
+      var r = img.getBoundingClientRect(), wr = wrap.getBoundingClientRect();
+      var x = ex - r.left, y = ey - r.top;
+      if (x < 0 || y < 0 || x > r.width || y > r.height) { lens.style.display = 'none'; return; }
+      var z = state.lbZoom;
+      lens.style.display = 'block';
+      lens.style.backgroundImage = 'url("' + (img.currentSrc || img.src) + '")';
+      lens.style.backgroundSize = (r.width * z) + 'px ' + (r.height * z) + 'px';
+      lens.style.backgroundPosition = (-(x * z - LENS / 2)) + 'px ' + (-(y * z - LENS / 2)) + 'px';
+      lens.style.left = (ex - wr.left - LENS / 2) + 'px';
+      lens.style.top = (ey - wr.top - LENS / 2) + 'px';
+    }
+    img.addEventListener('mousemove', function (ev) { ex = ev.clientX; ey = ev.clientY; draw(); });
+    img.addEventListener('mouseleave', function () { lens.style.display = 'none'; });
+    // scrollwheel adjusts the loupe magnification (no page scroll while magnifying)
+    img.addEventListener('wheel', function (ev) {
+      if (!state.lbMag) return;
+      ev.preventDefault();
+      state.lbZoom = Math.max(1.4, Math.min(6, state.lbZoom + (ev.deltaY < 0 ? 0.3 : -0.3)));
+      draw();
+    }, { passive: false });
+  }
+
   // "Unit Count" — a faction's component tally, rendered as a table card.
   function renderMaterial(materials) {
     var body;
@@ -292,11 +344,11 @@
 
   /* ---------------- lightbox ---------------- */
 
-  function openLb(idx) { setState({ lb: idx, lbFull: false }); }
-  function closeLb() { setState({ lb: null, lbFull: false }); }
+  function openLb(idx) { setState({ lb: idx, lbFull: true }); } // open zoomed by default
+  function closeLb() { setState({ lb: null }); }
   function step(d) {
     if (!flat.length || state.lb === null) return;
-    setState({ lb: (state.lb + d + flat.length) % flat.length, lbFull: false });
+    setState({ lb: (state.lb + d + flat.length) % flat.length }); // preserve zoom state
   }
 
   document.addEventListener('keydown', function (e) {
@@ -306,9 +358,145 @@
     else if (e.key === 'ArrowLeft') step(-1);
   });
 
+  /* ---------------- FAQ (Field Manual) view ---------------- */
+
+  function faqFiltered() {
+    var data = (DATA.faq && DATA.faq.qa) || [];
+    var q = (state.faqQuery || '').trim().toLowerCase();
+    return data
+      .map(function (item, i) { return { item: item, id: i }; })
+      .filter(function (e) { return state.faqTopic === 'all' || e.item.t === state.faqTopic; })
+      .filter(function (e) { return !q || (e.item.q + ' ' + e.item.a).toLowerCase().indexOf(q) >= 0; });
+  }
+
+  function faqTopicName(k) {
+    var ts = (DATA.faq && DATA.faq.topics) || [];
+    var t = findKey(ts, k);
+    return t ? t.name : '';
+  }
+
+  function renderFaqView() {
+    ensureFaq();
+    var hero = (window.FS_FAQ && window.FS_FAQ.hero) || {};
+    var FAQ = DATA.faq || { topics: [], qa: [] };
+    var ready = !!DATA.faq;
+
+    var app = el('div', { class: 'fs-app', 'data-accent': ACCENT });
+
+    // header with centered search
+    var search = el('input', {
+      class: 'fs-faq-search', type: 'text', value: state.faqQuery,
+      placeholder: 'Search questions…', spellcheck: 'false',
+      oninput: function (e) { setState({ faqQuery: e.target.value }); },
+    });
+    var header = el('header', { class: 'fs-header fs-faq-header' }, [
+      el('div', { class: 'fs-brand' }, [
+        el('div', { class: 'fs-logo' }, [el('div', { class: 'fs-logo-ring' }), el('div', { class: 'fs-logo-core' })]),
+        el('div', { class: 'fs-brand-text' }, [
+          el('span', { class: 'fs-brand-title', text: 'FORBIDDEN STARS' }),
+          el('span', { class: 'fs-brand-sub', text: 'Field Manual · FAQ' }),
+        ]),
+      ]),
+      el('div', { class: 'fs-header-spacer' }),
+      el('div', { class: 'fs-faq-searchwrap' }, [
+        el('span', { class: 'fs-faq-searchicon', html: '&#9906;' }),
+        search,
+      ]),
+      el('div', { class: 'fs-header-spacer' }),
+    ]);
+
+    // counts per topic
+    var counts = { all: FAQ.qa.length };
+    FAQ.qa.forEach(function (x) { counts[x.t] = (counts[x.t] || 0) + 1; });
+
+    var topicsNav = el('nav', { class: 'fs-nav' },
+      FAQ.topics.map(function (t) {
+        return el('button', {
+          class: 'fs-fac' + (state.faqTopic === t.key ? ' is-active' : ''),
+          onclick: (function (key) { return function () { setState({ faqTopic: key }); }; })(t.key),
+        }, [
+          el('span', { class: 'fs-fac-dot fs-faq-dot', style: 'background:' + t.dot + ';' }),
+          el('span', { class: 'fs-fac-name', text: t.name }),
+          el('span', { class: 'fs-fac-count', text: String(counts[t.key] || 0) }),
+        ]);
+      })
+    );
+    var sidebar = el('aside', { class: 'fs-sidebar fs-scroll' }, [
+      el('div', { class: 'fs-sidebar-label', text: 'Topics' }),
+      topicsNav,
+      el('div', { class: 'fs-sidebar-foot' }, [
+        el('button', { class: 'fs-faq-link fs-faq-back', html: '&larr; Back to Card Codex',
+          onclick: function () { setState({ view: 'codex' }); } }),
+        el('p', { html: 'FAN PROJECT &middot; NON&#8209;COMMERCIAL<br>Artwork &copy; Games Workshop' }),
+      ]),
+    ]);
+
+    // main: hero + accordion
+    var list = faqFiltered();
+    var sectionLabel = state.faqTopic === 'all' ? 'All Questions' : faqTopicName(state.faqTopic);
+
+    var items = list.map(function (e, i) {
+      var open = !!state.faqOpen[e.id];
+      var head = el('button', {
+        class: 'fs-faq-qbtn',
+        onclick: (function (id) { return function () {
+          var o = {}; for (var k in state.faqOpen) { if (state.faqOpen.hasOwnProperty(k)) o[k] = state.faqOpen[k]; }
+          o[id] = !o[id]; setState({ faqOpen: o });
+        }; })(e.id),
+      }, [
+        el('span', { class: 'fs-faq-num', text: String(i + 1).length < 2 ? '0' + (i + 1) : String(i + 1) }),
+        el('span', { class: 'fs-faq-q', text: e.item.q }),
+        el('span', { class: 'fs-faq-icon' + (open ? ' is-open' : ''), text: '+' }),
+      ]);
+      var children = [head];
+      if (open) {
+        children.push(el('div', { class: 'fs-faq-answer' }, [
+          el('p', { class: 'fs-faq-atext', text: e.item.a }),
+          e.item.tag ? el('span', { class: 'fs-faq-tag', text: e.item.tag }) : null,
+        ]));
+      }
+      return el('div', { class: 'fs-faq-item' + (open ? ' is-open' : '') }, children);
+    });
+
+    var contentInner;
+    if (!ready) {
+      contentInner = el('div', { class: 'fs-note', text: 'Loading…' });
+    } else if (list.length) {
+      contentInner = el('div', { class: 'fs-faq-list' }, items);
+    } else {
+      contentInner = el('div', { class: 'fs-faq-empty' }, [
+        el('div', { class: 'fs-faq-empty-glyph' }, [el('div', { class: 'ring' })]),
+        el('p', { class: 'fs-note', text: 'No questions match “' + state.faqQuery + '”. Try another term or clear the search.' }),
+      ]);
+    }
+    var body = [
+      el('div', { class: 'fs-faq-hero' }, [
+        el('span', { class: 'fs-faq-kicker', text: hero.kicker || '' }),
+        el('h1', { class: 'fs-faq-title', text: hero.title || '' }),
+        el('p', { class: 'fs-faq-blurb', text: hero.blurb || '' }),
+      ]),
+      el('div', { class: 'fs-faq-content' }, [
+        el('div', { class: 'fs-faq-sectionrow' }, [
+          el('span', { class: 'fs-faq-sectionlabel', text: sectionLabel }),
+          el('span', { class: 'fs-faq-countlabel', text: list.length + ' ' + (list.length === 1 ? 'question' : 'questions') }),
+        ]),
+        contentInner,
+      ]),
+    ];
+    var main = el('main', { class: 'fs-main fs-scroll fs-faq-main' }, body);
+
+    app.appendChild(header);
+    app.appendChild(el('div', { class: 'fs-body' }, [sidebar, main]));
+
+    var root = document.getElementById('app');
+    root.innerHTML = '';
+    root.appendChild(app);
+  }
+
   /* ---------------- render ---------------- */
 
   function render() {
+    if (state.view === 'faq') { renderFaqView(); return; }
     var acc = ACC[ACCENT] || ACC.amber;
     var cols = Math.max(2, Math.min(8, density()));
     var cat = state.category;
@@ -316,12 +504,15 @@
     var built = build();
     var groups = built.groups;
 
-    // grid geometry per category
+    // grid geometry per category. Faction Card + Maps render at the image's
+    // NATURAL aspect (no forced ratio / no crop) since their dimensions vary by
+    // expansion (e.g. The Dying Light reference sheets are landscape, not portrait).
+    var naturalCard = (cat === 'faction_card' || cat === 'map');
     var gridCols, gridJustify, cardAspect;
     if (cat === 'faction_card') {
-      gridCols = 'repeat(1, minmax(0, 860px))'; gridJustify = 'center'; cardAspect = '1688 / 2000';
+      gridCols = 'repeat(1, minmax(0, 920px))'; gridJustify = 'center'; cardAspect = '';
     } else if (cat === 'map') {
-      gridCols = 'repeat(1, minmax(0, 920px))'; gridJustify = 'center'; cardAspect = '1 / 1';
+      gridCols = 'repeat(1, minmax(0, 920px))'; gridJustify = 'center'; cardAspect = '';
     } else {
       gridCols = 'repeat(' + cols + ', minmax(0, 1fr))'; gridJustify = 'start'; cardAspect = '434 / 615';
     }
@@ -368,8 +559,15 @@
     var sidebar = el('aside', { class: 'fs-sidebar' }, [
       el('div', { class: 'fs-sidebar-label', text: 'Factions' }),
       nav,
+      el('div', { class: 'fs-sidebar-section' }, [
+        el('div', { class: 'fs-sidebar-label', text: 'Reference' }),
+        el('button', { class: 'fs-fac fs-faq-entry', onclick: function () { setState({ view: 'faq' }); } }, [
+          el('span', { class: 'fs-fac-dot fs-faq-dot', style: 'background:var(--fs-accent);' }),
+          el('span', { class: 'fs-fac-name', text: 'Field Manual / FAQ' }),
+          el('span', { class: 'fs-fac-count', html: '&rsaquo;' }),
+        ]),
+      ]),
       el('div', { class: 'fs-sidebar-foot' }, [
-        el('a', { class: 'fs-faq-link', href: 'faq_manuscript_page.html', text: 'FAQ & Rules' }),
         el('p', { html: 'FAN PROJECT &middot; NON&#8209;COMMERCIAL<br>Artwork &copy; Games Workshop' }),
       ]),
     ]);
@@ -423,9 +621,9 @@
           style: 'grid-template-columns:' + gridCols + ';justify-content:' + gridJustify + ';',
         }, group.cards.map(function (card) {
           var btn = el('button', {
-            class: 'fs-card',
+            class: 'fs-card' + (naturalCard ? ' fs-card--natural' : ''),
             title: card.label,
-            style: 'aspect-ratio:' + cardAspect + ';',
+            style: cardAspect ? ('aspect-ratio:' + cardAspect + ';') : '',
             onclick: (function (idx) { return function () { openLb(idx); }; })(card.index),
           }, [
             el('img', { src: card.src, alt: card.label, loading: 'lazy' }),
@@ -452,15 +650,20 @@
     if (state.lb !== null) {
       var c = flat[state.lb];
       if (c) {
-        var bigFormat = cat === 'faction_card' || cat === 'map';
-        var full = bigFormat && state.lbFull;
+        var full = state.lbFull;
+        var mag = state.lbMag;
+
+        var imgEl = lbImg(c);
+        var imgWrap = el('div', { class: 'fs-lb-imgwrap' + (mag ? ' mag-on' : '') }, [imgEl]);
+        attachMagnifier(imgWrap, imgEl); // always wired; gated by state.lbMag
+
         var children = [
           el('button', {
             class: 'fs-lb-nav', 'aria-label': 'Previous card', html: '&lsaquo;',
             onclick: function (e) { e.stopPropagation(); step(-1); },
           }),
           el('figure', { class: 'fs-lb-fig' + (full ? ' is-full' : ''), onclick: function (e) { e.stopPropagation(); } }, [
-            lbImg(c),
+            imgWrap,
             el('figcaption', { class: 'fs-lb-cap' }, [
               el('span', { class: 'fs-lb-label', text: c.label }),
               el('span', {
@@ -473,13 +676,33 @@
             class: 'fs-lb-nav', 'aria-label': 'Next card', html: '&rsaquo;',
             onclick: function (e) { e.stopPropagation(); step(1); },
           }),
-          bigFormat ? el('button', {
-            class: 'fs-lb-full', 'aria-label': full ? 'Exit full screen' : 'Full screen',
-            title: full ? 'Exit full screen' : 'Full screen', html: full ? '&#10532;' : '&#10530;',
-            onclick: function (e) { e.stopPropagation(); setState({ lbFull: !state.lbFull }); },
-          }) : null,
           el('button', {
-            class: 'fs-lb-close', 'aria-label': 'Close', html: '&#10005;',
+            class: 'fs-lb-tool fs-lb-mag' + (mag ? ' is-active' : ''),
+            'aria-label': 'Toggle magnifier', title: 'Toggle magnifier (scroll to zoom)',
+            html: '&#9906;',
+            onclick: function (e) {
+              e.stopPropagation();
+              state.lbMag = !state.lbMag; // toggle in place — no re-render, no flash
+              var ov = e.currentTarget.closest('.fs-lb');
+              var wrap = ov.querySelector('.fs-lb-imgwrap');
+              wrap.classList.toggle('mag-on', state.lbMag);
+              e.currentTarget.classList.toggle('is-active', state.lbMag);
+              if (!state.lbMag) { var l = wrap.querySelector('.fs-lb-lens'); if (l) l.style.display = 'none'; }
+            },
+          }),
+          el('button', {
+            class: 'fs-lb-tool fs-lb-full', 'aria-label': 'Toggle full screen', title: 'Toggle full screen',
+            html: full ? '&#10532;' : '&#10530;',
+            onclick: function (e) {
+              e.stopPropagation();
+              state.lbFull = !state.lbFull; // toggle in place — no re-render, no flash
+              var ov = e.currentTarget.closest('.fs-lb');
+              ov.querySelector('.fs-lb-fig').classList.toggle('is-full', state.lbFull);
+              e.currentTarget.innerHTML = state.lbFull ? '&#10532;' : '&#10530;';
+            },
+          }),
+          el('button', {
+            class: 'fs-lb-tool fs-lb-close', 'aria-label': 'Close', html: '&#10005;',
             onclick: function (e) { e.stopPropagation(); closeLb(); },
           }),
         ];
