@@ -1,10 +1,10 @@
 {
   "materialsText": [
-    { "label": "Cultists", "value": "7" },
-    { "label": "Iconoclast Destroyers", "value": "2" },
-    { "label": "Chaos Space Marines", "value": "4" },
+    { "label": "Blood Cultists", "value": "6" },
+    { "label": "Carnage Cruisers", "value": "3" },
+    { "label": "Khorne Berserkers", "value": "6" },
     { "label": "Helbrutes", "value": "3" },
-    { "label": "Repulsive Grand Cruisers", "value": "3" },
-    { "label": "Chaos Reaver Titans", "value": "3" }
+    { "label": "Gloriana Battleships", "value": "3" },
+    { "label": "Chaos Predators", "value": "3" }
   ]
 }

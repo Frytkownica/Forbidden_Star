@@ -1,9 +1,9 @@
 {
   "materialsText": [
-    { "label": "Guardsmen", "value": "7" },
-    { "label": "Lunar-Class Cruisers", "value": "2" },
-    { "label": "Ogryns", "value": "4" },
-    { "label": "Leman Russ Tanks", "value": "3" },
+    { "label": "Guardsmen", "value": "12" },
+    { "label": "Lunar-Class Cruisers", "value": "3" },
+    { "label": "Ogryns", "value": "6" },
+    { "label": "Leman Russ Tanks", "value": "6" },
     { "label": "Emperor-Class Battleships", "value": "3" },
     { "label": "Warhound Titans", "value": "3" }
   ]

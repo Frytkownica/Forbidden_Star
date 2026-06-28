@@ -1,10 +1,10 @@
 {
   "materialsText": [
-    { "label": "Blood Cultists", "value": "6" },
-    { "label": "Carnage Cruisers", "value": "3" },
-    { "label": "Khorne Berserkers", "value": "6" },
-    { "label": "Helbrutes", "value": "3" },
-    { "label": "Gloriana Battleships", "value": "3" },
-    { "label": "Chaos Predators", "value": "3" }
+    { "label": "Karmic Acolytes", "value": "3" },
+    { "label": "Hellfire Cruisers", "value": "4" },
+    { "label": "Rubric Marines", "value": "6" },
+    { "label": "Defiler Scorpions", "value": "3" },
+    { "label": "Repulsive Grand Cruisers", "value": "4" },
+    { "label": "Heldrakers", "value": "3" }
   ]
 }

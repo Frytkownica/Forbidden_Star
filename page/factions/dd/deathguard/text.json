@@ -1,10 +1,10 @@
 {
   "materialsText": [
     { "label": "Poxwalkers", "value": "7" },
-    { "label": "Pestilaan Light Cruisers", "value": "2" },
+    { "label": "Pestilaan Light Cruisers", "value": "3" },
     { "label": "Plague Marines", "value": "7" },
     { "label": "Myphitic Blight-Haulers", "value": "2" },
     { "label": "Executor Grand Cruisers", "value": "3" },
-    { "label": "Plagueburst Crawlers", "value": "3" }
+    { "label": "Plagueburst Crawlers", "value": "2" }
   ]
 }
