@@ -1,0 +1,10 @@
+{
+  "materialsText": [
+    { "label": "Necron Warriors", "value": "4" },
+    { "label": "Scythe-class Harvest Ships", "value": "3" },
+    { "label": "Immortals", "value": "3" },
+    { "label": "Monoliths", "value": "2" },
+    { "label": "Cairn-Class Tomb Ships", "value": "2" },
+    { "label": "C'tan Shard", "value": "1" }
+  ]
+}

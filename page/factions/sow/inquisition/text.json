@@ -148,5 +148,13 @@
             "unit": "Grey Knight: When an enemy unit suffers damage during this execution round, it is destroyed. *newpara* Black Ship: Rout 1 of your opponent's units.",
             "icons": "BBBM"
         }]
+    ],
+    "materialsText": [
+        { "label": "Stormtroopers", "value": "6" },
+        { "label": "Rouge Traders", "value": "3" },
+        { "label": "Deathwatch", "value": "3" },
+        { "label": "Valkyries", "value": "3" },
+        { "label": "Black Ships", "value": "3" },
+        { "label": "Grey Knights", "value": "3" }
     ]
 }

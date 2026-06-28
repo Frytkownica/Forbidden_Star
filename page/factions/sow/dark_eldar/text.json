@@ -156,5 +156,12 @@
                 "icons": "BSM"
             }
         ]
+    ],
+    "materialsText": [
+        { "label": "Kabalite Warriors", "value": "6" },
+        { "label": "Venom Blade Frigates", "value": "6" },
+        { "label": "Wychs", "value": "4" },
+        { "label": "Ravagers", "value": "4" },
+        { "label": "Dying Suns Battleships", "value": "3" }
     ]
 }

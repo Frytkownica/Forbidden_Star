@@ -1,0 +1,10 @@
+{
+  "materialsText": [
+    { "label": "Blood Cultists", "value": "6" },
+    { "label": "Carnage Cruisers", "value": "3" },
+    { "label": "Khorne Berserkers", "value": "6" },
+    { "label": "Helbrutes", "value": "3" },
+    { "label": "Gloriana Battleships", "value": "3" },
+    { "label": "Chaos Predators", "value": "3" }
+  ]
+}

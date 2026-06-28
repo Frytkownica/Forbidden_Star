@@ -1,0 +1,10 @@
+{
+  "materialsText": [
+    { "label": "Gaunts", "value": "6" },
+    { "label": "Devourer Bio-Ships", "value": "6" },
+    { "label": "Tyranid Warriors", "value": "6" },
+    { "label": "Carnifexes", "value": "3" },
+    { "label": "Leviathan Hive Ships", "value": "3" },
+    { "label": "Hierophant Bio-Titans", "value": "3" }
+  ]
+}

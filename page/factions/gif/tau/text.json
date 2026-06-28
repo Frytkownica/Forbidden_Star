@@ -1,0 +1,10 @@
+{
+  "materialsText": [
+    { "label": "Firewarriors", "value": "6" },
+    { "label": "Protector Cruisers", "value": "2" },
+    { "label": "XV8 Crisis Battlesuits", "value": "6" },
+    { "label": "TX7 Hammerhead Gunships", "value": "3" },
+    { "label": "Custodian Carriers", "value": "2" },
+    { "label": "KX139 Supremacy Armours", "value": "3" }
+  ]
+}

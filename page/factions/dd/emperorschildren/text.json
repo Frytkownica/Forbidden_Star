@@ -1,0 +1,10 @@
+{
+  "materialsText": [
+    { "label": "Pleasure Seekers", "value": "9" },
+    { "label": "Murder Cruisers", "value": "3" },
+    { "label": "Noise Marines", "value": "3" },
+    { "label": "Soul Grinders", "value": "3" },
+    { "label": "Furious Grand Cruisers", "value": "3" },
+    { "label": "Vindicators", "value": "3" }
+  ]
+}

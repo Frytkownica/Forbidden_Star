@@ -156,5 +156,13 @@
                 "icons": "BSSM"
             }
         ]
+    ],
+    "materialsText": [
+        { "label": "Sisters Repentia", "value": "6" },
+        { "label": "Endurance Light Cruisers", "value": "3" },
+        { "label": "Battle Sisters", "value": "6" },
+        { "label": "Exorcist Tanks", "value": "3" },
+        { "label": "Apocalypse-Class Battleships", "value": "3" },
+        { "label": "Living Saint", "value": "1" }
     ]
 }

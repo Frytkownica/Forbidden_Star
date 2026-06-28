@@ -156,5 +156,13 @@
                 "icons": "BBSM"
             }
         ]
+    ],
+    "materialsText": [
+        { "label": "Skitarii", "value": "8" },
+        { "label": "Endurance Light Cruisers", "value": "3" },
+        { "label": "Kataphron Battle Servitors", "value": "3" },
+        { "label": "Onager Dunecrawlers", "value": "3" },
+        { "label": "Ark Mechanicus Battleships", "value": "3" },
+        { "label": "Warlord Vattle Titans", "value": "3" }
     ]
 }
