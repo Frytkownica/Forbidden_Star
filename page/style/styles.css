@@ -136,10 +136,11 @@ body {
 }
 .fs-nav { display: flex; flex-direction: column; gap: 3px; }
 .fs-nav-group { display: flex; flex-direction: column; gap: 2px; margin-bottom: 8px; }
-.fs-nav-subs { display: flex; flex-direction: column; gap: 2px; }
+/* sub-container is indented so the faction pills sit clearly nested under the
+   expansion and don't run the full width — all pills share one (shorter) width */
+.fs-nav-subs { display: flex; flex-direction: column; gap: 2px; margin-left: 16px; }
 .fs-nav-subs.collapsed { display: none; }
-/* faction sub-items show a colour dot, so indent a touch less than text-only subs */
-.fs-fac-sub { padding-left: 20px; }
+.fs-nav-subs .fs-fac-sub { padding-left: 12px; }
 .fs-fac-subdot { width: 8px; height: 8px; }
 /* expansion header chevron (collapse toggle) */
 .fs-exp-head { gap: 8px; }

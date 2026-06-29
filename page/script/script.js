@@ -571,16 +571,18 @@
         ensureFactions(e.key); // load every expansion so its factions can nest here
         var facs = DATA.factions[e.key] || [];
         var expActive = state.expansion === e.key;
-        var collapsed = !!state.expCollapsed[e.key];
+        // collapsed by default; the active expansion opens, and explicit chevron
+        // toggles (stored in expCollapsed) win over the default
+        var collapsed = (e.key in state.expCollapsed) ? state.expCollapsed[e.key] : !expActive;
 
         var chevron = el('span', { class: 'fs-exp-chevron' + (collapsed ? '' : ' open'), html: '&rsaquo;' });
         var header = el('button', {
           class: 'fs-fac fs-faq-catnav fs-exp-head' + (expActive ? ' is-active' : ''),
           onclick: (function (key) { return function () { state.expCollapsed[key] = false; selectExpansion(key); }; })(e.key),
         }, [
-          chevron,
           el('span', { class: 'fs-fac-dot fs-faq-dot', style: 'background:var(--fs-accent);' }),
           el('span', { class: 'fs-fac-name', text: e.name }),
+          chevron,
         ]);
 
         var subs = el('div', { class: 'fs-nav-subs' + (collapsed ? ' collapsed' : '') },
