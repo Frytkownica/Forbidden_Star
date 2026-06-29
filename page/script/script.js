@@ -79,7 +79,7 @@
   }
 
   var state = {
-    expansion: null, faction: null, category: 'combat', lb: null, lbFull: false, lbMag: false, lbZoom: 2,
+    expansion: null, faction: null, category: 'combat', lb: null, lbFull: false, lbMag: false, lbZoom: 2, lbLensSize: 204,
     view: 'codex',            // 'codex' | 'faq'
     faqTopic: 'all', faqQuery: '', faqOpen: {},
   };
@@ -222,11 +222,12 @@
   // magnifier flips classes in place (see the toolbar button) — no re-render,
   // so the modal never flashes/reloads.
   function attachMagnifier(wrap, img) {
-    var LENS = 204;
     var lens = el('div', { class: 'fs-lb-lens' });
     wrap.appendChild(lens);
     var ex = null, ey = null;
     function draw() {
+      var L = state.lbLensSize;
+      lens.style.width = L + 'px'; lens.style.height = L + 'px';
       if (!state.lbMag || ex == null) { lens.style.display = 'none'; return; }
       var r = img.getBoundingClientRect(), wr = wrap.getBoundingClientRect();
       var x = ex - r.left, y = ey - r.top;
@@ -235,17 +236,23 @@
       lens.style.display = 'block';
       lens.style.backgroundImage = 'url("' + (img.currentSrc || img.src) + '")';
       lens.style.backgroundSize = (r.width * z) + 'px ' + (r.height * z) + 'px';
-      lens.style.backgroundPosition = (-(x * z - LENS / 2)) + 'px ' + (-(y * z - LENS / 2)) + 'px';
-      lens.style.left = (ex - wr.left - LENS / 2) + 'px';
-      lens.style.top = (ey - wr.top - LENS / 2) + 'px';
+      lens.style.backgroundPosition = (-(x * z - L / 2)) + 'px ' + (-(y * z - L / 2)) + 'px';
+      lens.style.left = (ex - wr.left - L / 2) + 'px';
+      lens.style.top = (ey - wr.top - L / 2) + 'px';
     }
     img.addEventListener('mousemove', function (ev) { ex = ev.clientX; ey = ev.clientY; draw(); });
     img.addEventListener('mouseleave', function () { lens.style.display = 'none'; });
-    // scrollwheel adjusts the loupe magnification (no page scroll while magnifying)
+    // scroll = change magnification; Shift+scroll = resize the loupe circle
     img.addEventListener('wheel', function (ev) {
       if (!state.lbMag) return;
       ev.preventDefault();
-      state.lbZoom = Math.max(1.4, Math.min(6, state.lbZoom + (ev.deltaY < 0 ? 0.3 : -0.3)));
+      var delta = ev.deltaY !== 0 ? ev.deltaY : ev.deltaX; // shift may map wheel to X
+      var up = delta < 0;
+      if (ev.shiftKey) {
+        state.lbLensSize = Math.max(120, Math.min(520, state.lbLensSize + (up ? 20 : -20)));
+      } else {
+        state.lbZoom = Math.max(1.4, Math.min(6, state.lbZoom + (up ? 0.3 : -0.3)));
+      }
       draw();
     }, { passive: false });
   }
@@ -360,26 +367,38 @@
 
   /* ---------------- FAQ (Field Manual) view ---------------- */
 
-  function faqFiltered() {
-    var data = (DATA.faq && DATA.faq.qa) || [];
-    var q = (state.faqQuery || '').trim().toLowerCase();
-    return data
-      .map(function (item, i) { return { item: item, id: i }; })
-      .filter(function (e) { return state.faqTopic === 'all' || e.item.t === state.faqTopic; })
-      .filter(function (e) { return !q || (e.item.q + ' ' + e.item.a).toLowerCase().indexOf(q) >= 0; });
+  function faqTopicName(k) {
+    var ts = (DATA.faq && DATA.faq.navTopics) || [];
+    var t = findKey(ts, k);
+    return t ? t.name : 'All Questions';
   }
 
-  function faqTopicName(k) {
-    var ts = (DATA.faq && DATA.faq.topics) || [];
-    var t = findKey(ts, k);
-    return t ? t.name : '';
+  // one accordion row — the answer is always in the DOM and shown/hidden by CSS,
+  // so toggling is a local class flip (no re-render, no scroll jump).
+  function faqItemNode(it) {
+    var open = !!state.faqOpen[it.id];
+    var icon = el('span', { class: 'fs-faq-icon' + (open ? ' is-open' : '') });
+    var head = el('button', { class: 'fs-faq-qbtn', onclick: function (e) {
+      var o = !state.faqOpen[it.id];
+      state.faqOpen[it.id] = o;
+      e.currentTarget.parentNode.classList.toggle('is-open', o);
+      icon.classList.toggle('is-open', o);
+    } }, [
+      el('span', { class: 'fs-faq-q', text: it.q }),
+      icon,
+    ]);
+    var answer = el('div', { class: 'fs-faq-answer' }, [el('p', { class: 'fs-faq-atext', text: it.a })]);
+    return el('div', { class: 'fs-faq-item' + (open ? ' is-open' : '') }, [head, answer]);
   }
 
   function renderFaqView() {
     ensureFaq();
     var hero = (window.FS_FAQ && window.FS_FAQ.hero) || {};
-    var FAQ = DATA.faq || { topics: [], qa: [] };
+    var FAQ = DATA.faq || { navTopics: [], cats: [], count: {} };
     var ready = !!DATA.faq;
+    var topic = state.faqTopic;
+    var q = (state.faqQuery || '').trim().toLowerCase();
+    var matches = function (it) { return !q || (it.q + ' ' + it.a).toLowerCase().indexOf(q) >= 0; };
 
     var app = el('div', { class: 'fs-app', 'data-accent': ACCENT });
 
@@ -390,7 +409,7 @@
       oninput: function (e) { setState({ faqQuery: e.target.value }); },
     });
     var header = el('header', { class: 'fs-header fs-faq-header' }, [
-      el('div', { class: 'fs-brand' }, [
+      el('div', { class: 'fs-brand fs-brand-link', title: 'Home', onclick: goHome }, [
         el('div', { class: 'fs-logo' }, [el('div', { class: 'fs-logo-ring' }), el('div', { class: 'fs-logo-core' })]),
         el('div', { class: 'fs-brand-text' }, [
           el('span', { class: 'fs-brand-title', text: 'FORBIDDEN STARS' }),
@@ -405,20 +424,17 @@
       el('div', { class: 'fs-header-spacer' }),
     ]);
 
-    // counts per topic
-    var counts = { all: FAQ.qa.length };
-    FAQ.qa.forEach(function (x) { counts[x.t] = (counts[x.t] || 0) + 1; });
-
+    // sidebar: categories with their sub-categories nested
     var topicsNav = el('nav', { class: 'fs-nav' },
-      FAQ.topics.map(function (t) {
-        return el('button', {
-          class: 'fs-fac' + (state.faqTopic === t.key ? ' is-active' : ''),
-          onclick: (function (key) { return function () { setState({ faqTopic: key }); }; })(t.key),
-        }, [
-          el('span', { class: 'fs-fac-dot fs-faq-dot', style: 'background:' + t.dot + ';' }),
-          el('span', { class: 'fs-fac-name', text: t.name }),
-          el('span', { class: 'fs-fac-count', text: String(counts[t.key] || 0) }),
-        ]);
+      FAQ.navTopics.map(function (t) {
+        var active = topic === t.key;
+        var cls = (t.kind === 'sub') ? ('fs-faq-subnav' + (active ? ' is-active' : ''))
+          : ('fs-fac' + (t.kind === 'cat' ? ' fs-faq-catnav' : '') + (active ? ' is-active' : ''));
+        var kids = [];
+        if (t.kind !== 'sub') kids.push(el('span', { class: 'fs-fac-dot fs-faq-dot', style: 'background:' + (t.dot || 'var(--fs-accent)') + ';' }));
+        kids.push(el('span', { class: 'fs-fac-name', text: t.name }));
+        kids.push(el('span', { class: 'fs-fac-count', text: String(FAQ.count[t.key] || 0) }));
+        return el('button', { class: cls, onclick: (function (key) { return function () { setState({ faqTopic: key }); }; })(t.key) }, kids);
       })
     );
     var sidebar = el('aside', { class: 'fs-sidebar fs-scroll' }, [
@@ -431,44 +447,59 @@
       ]),
     ]);
 
-    // main: hero + accordion
-    var list = faqFiltered();
-    var sectionLabel = state.faqTopic === 'all' ? 'All Questions' : faqTopicName(state.faqTopic);
-
-    var items = list.map(function (e, i) {
-      var open = !!state.faqOpen[e.id];
-      var head = el('button', {
-        class: 'fs-faq-qbtn',
-        onclick: (function (id) { return function () {
-          var o = {}; for (var k in state.faqOpen) { if (state.faqOpen.hasOwnProperty(k)) o[k] = state.faqOpen[k]; }
-          o[id] = !o[id]; setState({ faqOpen: o });
-        }; })(e.id),
-      }, [
-        el('span', { class: 'fs-faq-num', text: String(i + 1).length < 2 ? '0' + (i + 1) : String(i + 1) }),
-        el('span', { class: 'fs-faq-q', text: e.item.q }),
-        el('span', { class: 'fs-faq-icon' + (open ? ' is-open' : ''), text: '+' }),
-      ]);
-      var children = [head];
-      if (open) {
-        children.push(el('div', { class: 'fs-faq-answer' }, [
-          el('p', { class: 'fs-faq-atext', text: e.item.a }),
-          e.item.tag ? el('span', { class: 'fs-faq-tag', text: e.item.tag }) : null,
+    // main: hero + grouped content (Category › SubCategory › Faction › questions)
+    var showAll = topic === 'all';
+    var sections = [];
+    var shown = 0;
+    FAQ.cats.forEach(function (cat) {
+      var catSelected = showAll || topic === cat.key || topic.indexOf(cat.key + '_') === 0;
+      if (!catSelected) return;
+      var subNodes = [];
+      cat.subs.forEach(function (sub) {
+        if (!showAll && topic !== cat.key && topic !== sub.key) return;
+        var facNodes = [];
+        sub.factions.forEach(function (fac) {
+          var its = fac.items.filter(matches);
+          if (!its.length) return;
+          shown += its.length;
+          facNodes.push(el('div', { class: 'fs-faq-facgroup' }, [
+            el('div', { class: 'fs-faq-fachead' }, [
+              el('span', { class: 'fs-faq-facname', text: fac.faction || sub.name }),
+              el('span', { class: 'fs-faq-faccount', text: String(its.length) }),
+              fac.picture ? el('img', { class: 'fs-faq-facicon', src: fac.picture, alt: '', loading: 'lazy' }) : null,
+            ]),
+            el('div', { class: 'fs-faq-list' }, its.map(faqItemNode)),
+          ]));
+        });
+        if (facNodes.length) {
+          // skip the sub-heading when this exact sub is the selected topic — the
+          // section row already names it (avoids a duplicate label)
+          var subKids = (topic === sub.key) ? [] : [el('div', { class: 'fs-faq-sublabel', text: sub.name })];
+          subNodes.push(el('div', { class: 'fs-faq-subsection' }, subKids.concat(facNodes)));
+        }
+      });
+      if (subNodes.length) {
+        var catChildren = [];
+        if (showAll) catChildren.push(el('h2', { class: 'fs-faq-cathead' }, [
+          el('span', { class: 'fs-faq-catdot', style: 'background:' + cat.dot + ';' }),
+          cat.name,
         ]));
+        sections.push(el('div', { class: 'fs-faq-catblock' }, catChildren.concat(subNodes)));
       }
-      return el('div', { class: 'fs-faq-item' + (open ? ' is-open' : '') }, children);
     });
 
     var contentInner;
     if (!ready) {
       contentInner = el('div', { class: 'fs-note', text: 'Loading…' });
-    } else if (list.length) {
-      contentInner = el('div', { class: 'fs-faq-list' }, items);
+    } else if (shown) {
+      contentInner = el('div', { class: 'fs-faq-sections' }, sections);
     } else {
       contentInner = el('div', { class: 'fs-faq-empty' }, [
         el('div', { class: 'fs-faq-empty-glyph' }, [el('div', { class: 'ring' })]),
-        el('p', { class: 'fs-note', text: 'No questions match “' + state.faqQuery + '”. Try another term or clear the search.' }),
+        el('p', { class: 'fs-note', text: q ? ('No questions match “' + state.faqQuery + '”. Try another term or clear the search.') : 'No questions in this section.' }),
       ]);
     }
+
     var body = [
       el('div', { class: 'fs-faq-hero' }, [
         el('span', { class: 'fs-faq-kicker', text: hero.kicker || '' }),
@@ -477,8 +508,8 @@
       ]),
       el('div', { class: 'fs-faq-content' }, [
         el('div', { class: 'fs-faq-sectionrow' }, [
-          el('span', { class: 'fs-faq-sectionlabel', text: sectionLabel }),
-          el('span', { class: 'fs-faq-countlabel', text: list.length + ' ' + (list.length === 1 ? 'question' : 'questions') }),
+          el('span', { class: 'fs-faq-sectionlabel', text: faqTopicName(topic) }),
+          el('span', { class: 'fs-faq-countlabel', text: shown + ' ' + (shown === 1 ? 'question' : 'questions') }),
         ]),
         contentInner,
       ]),
@@ -529,7 +560,7 @@
       })
     );
     var header = el('header', { class: 'fs-header' }, [
-      el('div', { class: 'fs-brand' }, [
+      el('div', { class: 'fs-brand fs-brand-link', title: 'Home', onclick: goHome }, [
         el('div', { class: 'fs-logo' }, [
           el('div', { class: 'fs-logo-ring' }),
           el('div', { class: 'fs-logo-core' }),
@@ -676,9 +707,13 @@
             class: 'fs-lb-nav', 'aria-label': 'Next card', html: '&rsaquo;',
             onclick: function (e) { e.stopPropagation(); step(1); },
           }),
+          el('div', { class: 'fs-lb-maghint' + (mag ? '' : ' hidden') }, [
+            'Scroll to zoom · Shift-scroll to resize loupe',
+          ]),
           el('button', {
             class: 'fs-lb-tool fs-lb-mag' + (mag ? ' is-active' : ''),
-            'aria-label': 'Toggle magnifier', title: 'Toggle magnifier (scroll to zoom)',
+            'aria-label': 'Toggle magnifier',
+            'data-tip': 'Magnifier · scroll: zoom · Shift-scroll: resize',
             html: '&#9906;',
             onclick: function (e) {
               e.stopPropagation();
@@ -687,11 +722,14 @@
               var wrap = ov.querySelector('.fs-lb-imgwrap');
               wrap.classList.toggle('mag-on', state.lbMag);
               e.currentTarget.classList.toggle('is-active', state.lbMag);
+              var hint = ov.querySelector('.fs-lb-maghint');
+              if (hint) hint.classList.toggle('hidden', !state.lbMag);
               if (!state.lbMag) { var l = wrap.querySelector('.fs-lb-lens'); if (l) l.style.display = 'none'; }
             },
           }),
           el('button', {
-            class: 'fs-lb-tool fs-lb-full', 'aria-label': 'Toggle full screen', title: 'Toggle full screen',
+            class: 'fs-lb-tool fs-lb-full', 'aria-label': 'Toggle full screen',
+            'data-tip': full ? 'Fit to window' : 'Fill screen',
             html: full ? '&#10532;' : '&#10530;',
             onclick: function (e) {
               e.stopPropagation();
@@ -699,10 +737,11 @@
               var ov = e.currentTarget.closest('.fs-lb');
               ov.querySelector('.fs-lb-fig').classList.toggle('is-full', state.lbFull);
               e.currentTarget.innerHTML = state.lbFull ? '&#10532;' : '&#10530;';
+              e.currentTarget.setAttribute('data-tip', state.lbFull ? 'Fit to window' : 'Fill screen');
             },
           }),
           el('button', {
-            class: 'fs-lb-tool fs-lb-close', 'aria-label': 'Close', html: '&#10005;',
+            class: 'fs-lb-tool fs-lb-close', 'aria-label': 'Close', 'data-tip': 'Close (Esc)', html: '&#10005;',
             onclick: function (e) { e.stopPropagation(); closeLb(); },
           }),
         ];
@@ -713,6 +752,15 @@
     var root = document.getElementById('app');
     root.innerHTML = '';
     root.appendChild(app);
+  }
+
+  // brand/logo click → back to the default codex view (first expansion/faction, Combat)
+  function goHome() {
+    var first = DATA.expansions[0] ? DATA.expansions[0].key : state.expansion;
+    ensureFactions(first);
+    var list = DATA.factions[first];
+    var fac = list && list[0] ? list[0].key : null;
+    setState({ view: 'codex', expansion: first, faction: fac, category: 'combat', lb: null });
   }
 
   function selectExpansion(key) {

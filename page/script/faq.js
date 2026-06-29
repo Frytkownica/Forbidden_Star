@@ -23,28 +23,42 @@
     },
     dots: DOTS,
 
-    // raw FAQ.json -> { topics:[{key,name,dot}], qa:[{t,q,a,tag}] }
+    // raw FAQ.json -> hierarchical model:
+    //   navTopics: [{key,name,kind:'all'|'cat'|'sub',parent?,dot?}]   (sidebar)
+    //   cats:      [{key,name,dot, subs:[{key,name, factions:[{faction,picture,items:[{id,q,a}]}]}]}]
+    //   count:     { <topicKey>: n, all: n }
     flatten: function (raw) {
-      var topics = [{ key: 'all', name: 'All Questions', dot: DOTS[0] }];
-      var qa = [];
+      var navTopics = [{ key: 'all', name: 'All Questions', kind: 'all', dot: DOTS[0] }];
+      var cats = [];
+      var count = { all: 0 };
+      var uid = 0;
       (raw || []).forEach(function (cat, ci) {
-        var key = 'c' + ci;
-        topics.push({ key: key, name: cat.Category || ('Section ' + (ci + 1)), dot: DOTS[(ci + 1) % DOTS.length] });
-        (cat.items || []).forEach(function (sub) {
+        var ckey = 'c' + ci;
+        var catObj = { key: ckey, name: cat.Category || ('Section ' + (ci + 1)), dot: DOTS[(ci + 1) % DOTS.length], subs: [] };
+        navTopics.push({ key: ckey, name: catObj.name, kind: 'cat', dot: catObj.dot });
+        count[ckey] = 0;
+        (cat.items || []).forEach(function (sub, si) {
+          var skey = ckey + '_s' + si;
+          var subObj = { key: skey, name: sub.SubCategory || ('Group ' + (si + 1)), factions: [] };
+          var subCount = 0;
           (sub.items || []).forEach(function (fac) {
+            var facObj = { faction: fac.Faction || '', picture: fac.picture || '', items: [] };
             (fac.items || []).forEach(function (it) {
               if (!it || !it.Phrase) return;
-              qa.push({
-                t: key,
-                q: it.Phrase,
-                a: it.Main || '',
-                tag: sub.SubCategory || fac.Faction || null,
-              });
+              facObj.items.push({ id: uid++, q: it.Phrase, a: it.Main || '' });
+              subCount++; count[ckey]++; count.all++;
             });
+            if (facObj.items.length) subObj.factions.push(facObj);
           });
+          if (subObj.factions.length) {
+            count[skey] = subCount;
+            navTopics.push({ key: skey, name: subObj.name, kind: 'sub', parent: ckey });
+            catObj.subs.push(subObj);
+          }
         });
+        cats.push(catObj);
       });
-      return { topics: topics, qa: qa };
+      return { navTopics: navTopics, cats: cats, count: count };
     },
   };
 })();

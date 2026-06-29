@@ -81,6 +81,7 @@ body {
   z-index: 10;
 }
 .fs-brand { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.fs-brand-link { cursor: pointer; }
 .fs-logo { position: relative; width: 24px; height: 24px; flex-shrink: 0; }
 .fs-logo-ring {
   position: absolute; inset: 2px; transform: rotate(45deg);
@@ -333,9 +334,21 @@ body {
 .fs-lb-tool:hover { border-color: var(--fs-accent); color: #f3efe8; }
 .fs-lb-tool.is-active { border-color: var(--fs-accent); color: var(--fs-accent-fg); background: var(--fs-accent); }
 
-/* full-screen mode: image fills the viewport vertically, caption hidden */
+/* hover tooltip for the top-right tool buttons */
+.fs-lb-tool[data-tip]::after {
+  content: attr(data-tip); position: absolute; top: calc(100% + 9px); right: 0;
+  background: rgba(20, 18, 16, .96); border: 1px solid #38332c; color: #e6e1d8;
+  font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 0.04em;
+  white-space: nowrap; padding: 6px 10px; border-radius: 7px; box-shadow: 0 6px 18px rgba(0, 0, 0, .5);
+  opacity: 0; transform: translateY(-3px); pointer-events: none;
+  transition: opacity .12s ease, transform .12s ease; z-index: 10;
+}
+.fs-lb-tool[data-tip]:hover::after { opacity: 1; transform: translateY(0); }
+
+/* full-screen mode: image actually fills the viewport vertically (upscaling
+   small scans), width capped so landscape sheets don't overflow; caption hidden */
 .fs-lb-fig.is-full { gap: 0; }
-.fs-lb-fig.is-full img { max-height: 96vh; max-width: 94vw; border-radius: 8px; }
+.fs-lb-fig.is-full img { height: 96vh; width: auto; max-width: 94vw; max-height: 96vh; border-radius: 8px; }
 .fs-lb-fig.is-full .fs-lb-cap { display: none; }
 
 /* magnifier loupe */
@@ -346,6 +359,15 @@ body {
   border: 2px solid var(--fs-accent); background-color: #0c0b0a; background-repeat: no-repeat;
   box-shadow: 0 6px 26px rgba(0, 0, 0, .7); pointer-events: none; z-index: 5;
 }
+
+/* magnifier control hint */
+.fs-lb-maghint {
+  position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+  background: rgba(20, 18, 16, .92); border: 1px solid #38332c; color: #c4bdb1;
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em;
+  padding: 7px 14px; border-radius: 20px; z-index: 6; pointer-events: none; white-space: nowrap;
+}
+.fs-lb-maghint.hidden { display: none; }
 
 /* ---- sidebar Reference section + FAQ entry ---- */
 .fs-sidebar-section { margin-top: 22px; }
@@ -420,13 +442,57 @@ body {
 }
 .fs-faq-q { flex: 1; font-size: 14.5px; font-weight: 600; line-height: 1.45; }
 .fs-faq-icon {
-  flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; border: 1px solid #38332c;
-  display: flex; align-items: center; justify-content: center; font-size: 15px; line-height: 1;
-  color: #9a948a; margin-top: 1px; transition: transform .2s ease, border-color .15s;
+  position: relative; flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+  border: 1px solid #38332c; color: #9a948a;
+  transition: transform .2s ease, border-color .15s, color .15s;
 }
+/* plus drawn as two centered bars so it stays perfectly centred and rotates to × */
+.fs-faq-icon::before, .fs-faq-icon::after {
+  content: ''; position: absolute; left: 50%; top: 50%; background: currentColor; border-radius: 1px;
+}
+.fs-faq-icon::before { width: 9px; height: 1.6px; transform: translate(-50%, -50%); }
+.fs-faq-icon::after { width: 1.6px; height: 9px; transform: translate(-50%, -50%); }
 .fs-faq-icon.is-open { transform: rotate(45deg); border-color: var(--fs-accent); color: var(--fs-accent); }
-.fs-faq-answer { padding: 0 19px 19px 64px; animation: fsexpand .2s ease; }
-.fs-faq-atext { font-size: 13.5px; line-height: 1.72; color: #c4bfb5; margin: 0; }
+.fs-faq-answer { display: none; padding: 0 19px 18px; }
+.fs-faq-item.is-open .fs-faq-answer { display: block; animation: fsexpand .2s ease; }
+.fs-faq-atext { font-size: 13.5px; line-height: 1.72; color: #c4bfb5; margin: 0; white-space: pre-wrap; }
+
+/* ---- FAQ sidebar: sub-category nav ---- */
+.fs-faq-catnav { margin-top: 8px; }
+.fs-faq-catnav .fs-fac-name { font-weight: 700; }
+.fs-faq-subnav {
+  display: flex; align-items: center; gap: 8px; width: 100%; text-align: left;
+  appearance: none; border: 1px solid transparent; background: transparent; cursor: pointer;
+  font-family: inherit; color: #9a948a; font-size: 12.5px; font-weight: 500;
+  padding: 6px 11px 6px 30px; border-radius: 9px; transition: all .15s;
+}
+.fs-faq-subnav:hover { background: #1d1b18; color: #c4bdb1; }
+.fs-faq-subnav.is-active {
+  color: #f3efe8; background: #221f1a; font-weight: 600;
+  box-shadow: inset 2px 0 0 var(--fs-accent);
+}
+.fs-faq-subnav .fs-fac-name { flex: 1; }
+.fs-faq-subnav .fs-fac-count { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #6f6a61; }
+
+/* ---- FAQ grouped content ---- */
+.fs-faq-sections { display: flex; flex-direction: column; gap: 28px; }
+.fs-faq-catblock { display: flex; flex-direction: column; gap: 16px; }
+.fs-faq-cathead {
+  display: flex; align-items: center; gap: 11px; font-size: 18px; font-weight: 700;
+  color: #f3efe8; margin: 4px 0 0;
+}
+.fs-faq-catdot { width: 11px; height: 11px; border-radius: 3px; transform: rotate(45deg); display: inline-block; }
+.fs-faq-subsection { display: flex; flex-direction: column; gap: 13px; }
+.fs-faq-sublabel {
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: #bdb7ac; border-bottom: 1px solid #221f1a;
+  padding-bottom: 8px; margin-top: 8px;
+}
+.fs-faq-facgroup { display: flex; flex-direction: column; gap: 8px; }
+.fs-faq-fachead { display: flex; align-items: center; gap: 12px; padding: 4px 2px 2px; }
+.fs-faq-facname { font-size: 13px; font-weight: 600; color: #d8d2c8; letter-spacing: 0.01em; flex: 1; }
+.fs-faq-faccount { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #6f6a61; }
+.fs-faq-facicon { width: 104px; height: 104px; object-fit: contain; flex-shrink: 0; margin-left: 4px; }
 .fs-faq-tag {
   display: inline-block; margin-top: 13px; font-family: 'IBM Plex Mono', monospace;
   font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fs-accent);
