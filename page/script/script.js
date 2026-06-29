@@ -79,7 +79,7 @@
   }
 
   var state = {
-    expansion: null, faction: null, category: 'combat', lb: null, lbFull: false, lbMag: false, lbZoom: 2,
+    expansion: null, faction: null, category: 'combat', lb: null, lbFull: false, lbMag: false, lbZoom: 2, lbLensSize: 204,
     view: 'codex',            // 'codex' | 'faq'
     faqTopic: 'all', faqQuery: '', faqOpen: {},
   };
@@ -222,11 +222,12 @@
   // magnifier flips classes in place (see the toolbar button) — no re-render,
   // so the modal never flashes/reloads.
   function attachMagnifier(wrap, img) {
-    var LENS = 204;
     var lens = el('div', { class: 'fs-lb-lens' });
     wrap.appendChild(lens);
     var ex = null, ey = null;
     function draw() {
+      var L = state.lbLensSize;
+      lens.style.width = L + 'px'; lens.style.height = L + 'px';
       if (!state.lbMag || ex == null) { lens.style.display = 'none'; return; }
       var r = img.getBoundingClientRect(), wr = wrap.getBoundingClientRect();
       var x = ex - r.left, y = ey - r.top;
@@ -235,17 +236,23 @@
       lens.style.display = 'block';
       lens.style.backgroundImage = 'url("' + (img.currentSrc || img.src) + '")';
       lens.style.backgroundSize = (r.width * z) + 'px ' + (r.height * z) + 'px';
-      lens.style.backgroundPosition = (-(x * z - LENS / 2)) + 'px ' + (-(y * z - LENS / 2)) + 'px';
-      lens.style.left = (ex - wr.left - LENS / 2) + 'px';
-      lens.style.top = (ey - wr.top - LENS / 2) + 'px';
+      lens.style.backgroundPosition = (-(x * z - L / 2)) + 'px ' + (-(y * z - L / 2)) + 'px';
+      lens.style.left = (ex - wr.left - L / 2) + 'px';
+      lens.style.top = (ey - wr.top - L / 2) + 'px';
     }
     img.addEventListener('mousemove', function (ev) { ex = ev.clientX; ey = ev.clientY; draw(); });
     img.addEventListener('mouseleave', function () { lens.style.display = 'none'; });
-    // scrollwheel adjusts the loupe magnification (no page scroll while magnifying)
+    // scroll = change magnification; Shift+scroll = resize the loupe circle
     img.addEventListener('wheel', function (ev) {
       if (!state.lbMag) return;
       ev.preventDefault();
-      state.lbZoom = Math.max(1.4, Math.min(6, state.lbZoom + (ev.deltaY < 0 ? 0.3 : -0.3)));
+      var delta = ev.deltaY !== 0 ? ev.deltaY : ev.deltaX; // shift may map wheel to X
+      var up = delta < 0;
+      if (ev.shiftKey) {
+        state.lbLensSize = Math.max(120, Math.min(520, state.lbLensSize + (up ? 20 : -20)));
+      } else {
+        state.lbZoom = Math.max(1.4, Math.min(6, state.lbZoom + (up ? 0.3 : -0.3)));
+      }
       draw();
     }, { passive: false });
   }
@@ -700,9 +707,13 @@
             class: 'fs-lb-nav', 'aria-label': 'Next card', html: '&rsaquo;',
             onclick: function (e) { e.stopPropagation(); step(1); },
           }),
+          el('div', { class: 'fs-lb-maghint' + (mag ? '' : ' hidden') }, [
+            'Scroll to zoom · Shift-scroll to resize loupe',
+          ]),
           el('button', {
             class: 'fs-lb-tool fs-lb-mag' + (mag ? ' is-active' : ''),
-            'aria-label': 'Toggle magnifier', title: 'Toggle magnifier (scroll to zoom)',
+            'aria-label': 'Toggle magnifier',
+            title: 'Magnifier — scroll to zoom, Shift-scroll to resize the loupe',
             html: '&#9906;',
             onclick: function (e) {
               e.stopPropagation();
@@ -711,6 +722,8 @@
               var wrap = ov.querySelector('.fs-lb-imgwrap');
               wrap.classList.toggle('mag-on', state.lbMag);
               e.currentTarget.classList.toggle('is-active', state.lbMag);
+              var hint = ov.querySelector('.fs-lb-maghint');
+              if (hint) hint.classList.toggle('hidden', !state.lbMag);
               if (!state.lbMag) { var l = wrap.querySelector('.fs-lb-lens'); if (l) l.style.display = 'none'; }
             },
           }),

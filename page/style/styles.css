@@ -348,6 +348,15 @@ body {
   box-shadow: 0 6px 26px rgba(0, 0, 0, .7); pointer-events: none; z-index: 5;
 }
 
+/* magnifier control hint */
+.fs-lb-maghint {
+  position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+  background: rgba(20, 18, 16, .92); border: 1px solid #38332c; color: #c4bdb1;
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em;
+  padding: 7px 14px; border-radius: 20px; z-index: 6; pointer-events: none; white-space: nowrap;
+}
+.fs-lb-maghint.hidden { display: none; }
+
 /* ---- sidebar Reference section + FAQ entry ---- */
 .fs-sidebar-section { margin-top: 22px; }
 .fs-faq-entry { margin-top: 2px; }
