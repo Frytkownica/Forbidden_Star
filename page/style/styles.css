@@ -128,12 +128,27 @@ body {
 .fs-sidebar {
   width: 236px; flex-shrink: 0; border-right: 1px solid #2c2925;
   background: #16140f; display: flex; flex-direction: column; padding: 18px 14px;
+  min-height: 0; overflow-y: auto;
 }
 .fs-sidebar-label {
   font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.26em;
   color: #857f74; text-transform: uppercase; padding: 0 8px 12px;
 }
 .fs-nav { display: flex; flex-direction: column; gap: 3px; }
+.fs-nav-group { display: flex; flex-direction: column; gap: 2px; margin-bottom: 8px; }
+/* sub-container is indented so the faction pills sit clearly nested under the
+   expansion and don't run the full width — all pills share one (shorter) width */
+.fs-nav-subs { display: flex; flex-direction: column; gap: 2px; margin-left: 16px; }
+.fs-nav-subs.collapsed { display: none; }
+.fs-nav-subs .fs-fac-sub { padding-left: 12px; }
+.fs-fac-subdot { width: 8px; height: 8px; }
+/* expansion header chevron (collapse toggle) */
+.fs-exp-head { gap: 8px; }
+.fs-exp-chevron {
+  flex-shrink: 0; width: 14px; text-align: center; color: #6f6a61; font-size: 15px; line-height: 1;
+  transition: transform .15s ease; transform: rotate(0deg); cursor: pointer;
+}
+.fs-exp-chevron.open { transform: rotate(90deg); }
 
 .fs-fac {
   display: flex; align-items: center; gap: 11px; width: 100%; text-align: left;
@@ -223,6 +238,25 @@ body {
   font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.04em;
   color: #7a746a; padding: 30px 4px;
 }
+
+/* ---- card search results ---- */
+.fs-search-item { display: flex; flex-direction: column; gap: 8px; }
+.fs-card--search { aspect-ratio: 434 / 615; }
+.fs-card--search img { object-fit: contain; background: #141310; }
+.fs-search-cap { display: flex; flex-direction: column; gap: 2px; padding: 0 2px; }
+.fs-search-cat {
+  font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--fs-accent);
+}
+.fs-search-name {
+  font-size: 11.5px; color: #bdb7ac; line-height: 1.3; overflow: hidden;
+  text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+.fs-search-expcount {
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500;
+  color: #857f74; margin-left: auto; letter-spacing: 0.06em;
+}
+.fs-faq-cathead { width: 100%; }
 
 /* ---- Unit Count (material) table ---- */
 .fs-material-card {

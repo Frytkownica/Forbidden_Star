@@ -45,6 +45,15 @@
     'oklch(0.62 0.16 300)', 'oklch(0.70 0.13 195)', 'oklch(0.60 0.17 350)', 'oklch(0.72 0.14 60)',
   ];
 
+  // per-expansion accent colours (sidebar dots)
+  var EXP_COLORS = {
+    base:    'rgb(31, 136, 255)',
+    gif:     'rgb(37, 240, 31)',
+    sow:     'rgb(157, 30, 255)',
+    dd:      'rgb(255, 255, 255)',
+    emperor: 'rgb(255, 278, 55)',
+  };
+
   var ACC = {
     amber:   { a: 'oklch(0.80 0.12 80)',  fg: '#1c1810' },
     steel:   { a: 'oklch(0.72 0.10 232)', fg: '#0b1019' },
@@ -62,8 +71,15 @@
     manifest: {},           // "exp/fac" -> {combat:[[..]], orders:[..], ...}  (filenames)
     text: {},               // "exp/fac" -> {combat:[[{title,general,unit,icons}]], orders:[..], events:[..]} or null
     faq: null,              // { topics:[{key,name,dot}], qa:[{t,q,a,tag}] } from data/FAQ.json
+    cardnames: {},          // "<exp>/<fac>/<cat>/<file>" -> printed card name (from data/cardnames.json)
     loading: {},            // in-flight guards
   };
+
+  // real card name (OCR'd from the art) when available, else the generic fallback
+  function cardName(exp, fac, cat, file, fallback) {
+    var n = DATA.cardnames[exp + '/' + fac + '/' + cat + '/' + file];
+    return n || fallback;
+  }
 
   function ensureFaq() {
     if (DATA.faq || DATA.loading.faq || !window.FS_FAQ) return;
@@ -82,12 +98,30 @@
     expansion: null, faction: null, category: 'combat', lb: null, lbFull: false, lbMag: false, lbZoom: 2, lbLensSize: 204,
     view: 'codex',            // 'codex' | 'faq'
     faqTopic: 'all', faqQuery: '', faqOpen: {},
+    expOpen: null,            // the single expansion currently expanded in the sidebar
+    cardQuery: '',            // codex card search within the selected faction
   };
   var flat = []; // flat list of currently-visible cards, for the lightbox
 
   function setState(patch) {
     for (var k in patch) { if (patch.hasOwnProperty(k)) state[k] = patch[k]; }
     render();
+  }
+
+  // swap the rendered tree into #app, preserving focus + caret in a search input
+  // (re-render recreates the input, which would otherwise drop focus mid-typing)
+  function mountApp(app) {
+    var root = document.getElementById('app');
+    var ae = document.activeElement, sel = null;
+    if (ae && ae.classList && ae.classList.contains('fs-faq-search')) {
+      sel = { s: ae.selectionStart, e: ae.selectionEnd };
+    }
+    root.innerHTML = '';
+    root.appendChild(app);
+    if (sel) {
+      var inp = root.querySelector('.fs-faq-search');
+      if (inp) { inp.focus(); try { inp.setSelectionRange(sel.s, sel.e); } catch (e) {} }
+    }
   }
 
   function fetchJSON(url) {
@@ -349,13 +383,69 @@
     return { groups: groups, ready: true };
   }
 
+  function facNameOf(exp, fac) { var f = findKey(DATA.factions[exp] || [], fac); return f ? f.name : fac; }
+
+  // every card of one faction across all categories, flattened, with a searchable
+  // label/title and expansion/faction tags — powers the global card search.
+  function collectFaction(exp, fac) {
+    var id = exp + '/' + fac;
+    var man = DATA.manifest[id], txt = DATA.text[id];
+    var out = [];
+    if (!man) return out;
+    var fn = facNameOf(exp, fac), en = expName(exp);
+    DATA.categories.forEach(function (c) {
+      var cat = c.key;
+      if (cat === 'material' || !FOLDER[cat]) return;
+      var base = 'factions/' + exp + '/' + fac + '/' + FOLDER[cat] + '/';
+      function add(file, label, kind, text) {
+        out.push({ src: base + file, kind: kind || null, text: text || null,
+          label: cardName(exp, fac, cat, file, label),
+          catName: catName(cat), exp: exp, expName: en, fac: fac, facName: fn });
+      }
+      if (cat === 'combat') {
+        (man.combat || []).forEach(function (files, ti) {
+          var tierTxt = txt && txt.combat ? txt.combat[ti] : null;
+          var tierName = TIER_LABELS[ti] || ('Set ' + (ti + 1));
+          files.forEach(function (f, i) {
+            var tt = tierTxt && tierTxt[i];
+            var t = tt ? { title: tt.title, background: tt.general, foreground: tt.unit, icons: tt.icons } : null;
+            add(f, (tt && tt.title) ? tt.title : (fn + ' · ' + tierName + ' ' + (i + 1)), 'combat', t);
+          });
+        });
+      } else {
+        var files = man[cat] || [];
+        files.forEach(function (f, i) {
+          var label, kind = null, t = null;
+          if (cat === 'backs') label = BACK_LABELS[f.replace(/\.[a-z]+$/i, '')] || 'Card Back';
+          else if (cat === 'faction_card') label = fn + ' Reference' + (files.length > 1 ? ' ' + (i + 1) : '');
+          else if (cat === 'map') label = 'Map ' + String.fromCharCode(65 + i);
+          else if (cat === 'orders') { kind = 'orders'; t = txt && txt.orders ? txt.orders[i] : null; label = (t && t.title) || ('Order Upgrade ' + (i + 1)); }
+          else { kind = 'events'; t = txt && txt.events ? txt.events[i] : null; label = (t && t.title) || ('Event ' + (i + 1)); }
+          add(f, label, kind, t);
+        });
+      }
+    });
+    return out;
+  }
+
   /* ---------------- lightbox ---------------- */
 
-  function openLb(idx) { setState({ lb: idx, lbFull: true }); } // open zoomed by default
-  function closeLb() { setState({ lb: null }); }
+  // Open/close/step the lightbox by mutating the overlay in place — never a full
+  // re-render — so the grid keeps its scroll position when a card is opened.
+  function showLightbox() {
+    var appEl = document.querySelector('.fs-app');
+    if (!appEl) { render(); return; }
+    var old = appEl.querySelector('.fs-lb'); if (old) old.remove();
+    appendLightbox(appEl);
+  }
+  function hideLightbox() { var lb = document.querySelector('.fs-lb'); if (lb) lb.remove(); }
+
+  function openLb(idx) { state.lb = idx; state.lbFull = true; state.lbMag = false; showLightbox(); } // open zoomed
+  function closeLb() { state.lb = null; hideLightbox(); }
   function step(d) {
     if (!flat.length || state.lb === null) return;
-    setState({ lb: (state.lb + d + flat.length) % flat.length }); // preserve zoom state
+    state.lb = (state.lb + d + flat.length) % flat.length; // preserve zoom state
+    showLightbox();
   }
 
   document.addEventListener('keydown', function (e) {
@@ -519,9 +609,7 @@
     app.appendChild(header);
     app.appendChild(el('div', { class: 'fs-body' }, [sidebar, main]));
 
-    var root = document.getElementById('app');
-    root.innerHTML = '';
-    root.appendChild(app);
+    mountApp(app);
   }
 
   /* ---------------- render ---------------- */
@@ -551,15 +639,7 @@
     var app = el('div', { class: 'fs-app', 'data-accent': ACCENT });
 
     /* ---- header ---- */
-    var exptabs = el('div', { class: 'fs-exptabs fs-scroll' },
-      DATA.expansions.map(function (e) {
-        return el('button', {
-          class: 'fs-tab' + (state.expansion === e.key ? ' is-active' : ''),
-          onclick: (function (key) { return function () { selectExpansion(key); }; })(e.key),
-        }, [el('span', { text: e.name })]);
-      })
-    );
-    var header = el('header', { class: 'fs-header' }, [
+    var header = el('header', { class: 'fs-header fs-faq-header' }, [
       el('div', { class: 'fs-brand fs-brand-link', title: 'Home', onclick: goHome }, [
         el('div', { class: 'fs-logo' }, [
           el('div', { class: 'fs-logo-ring' }),
@@ -570,26 +650,69 @@
           el('span', { class: 'fs-brand-sub', text: 'Card Codex' }),
         ]),
       ]),
-      exptabs,
+      el('div', { class: 'fs-header-spacer' }),
+      el('div', { class: 'fs-faq-searchwrap' }, [
+        el('span', { class: 'fs-faq-searchicon', html: '&#9906;' }),
+        el('input', {
+          class: 'fs-faq-search', type: 'text', value: state.cardQuery,
+          placeholder: 'Search all cards…', spellcheck: 'false',
+          oninput: function (e) { setState({ cardQuery: e.target.value, lb: null }); },
+        }),
+      ]),
+      el('div', { class: 'fs-header-spacer' }),
     ]);
 
-    /* ---- sidebar ---- */
-    var nav = el('nav', { class: 'fs-nav' },
-      facList().map(function (f) {
-        var cnt = manifestCount(DATA.manifest[state.expansion + '/' + f.key]);
-        return el('button', {
-          class: 'fs-fac' + (state.faction === f.key ? ' is-active' : ''),
-          onclick: (function (key) { return function () { setState({ faction: key, lb: null }); }; })(f.key),
+    /* ---- sidebar: two-level Game › Expansion › Faction nav ---- */
+    var libNav = el('nav', { class: 'fs-nav' },
+      DATA.expansions.map(function (e) {
+        ensureFactions(e.key); // load every expansion so its factions can nest here
+        var facs = DATA.factions[e.key] || [];
+        var expActive = state.expansion === e.key;   // holds the selected faction (content)
+        var open = state.expOpen === e.key;            // expanded in the sidebar
+
+        var chevron = el('span', { class: 'fs-exp-chevron' + (open ? ' open' : ''), html: '&rsaquo;' });
+        // header only expands/collapses (accordion) — it does NOT pick a faction.
+        // Toggle in place so the main view (cards) isn't rebuilt.
+        var header = el('button', {
+          class: 'fs-fac fs-faq-catnav fs-exp-head' + (expActive ? ' is-active' : ''),
+          onclick: (function (key) {
+            return function (ev) {
+              state.expOpen = (state.expOpen === key) ? null : key;
+              var nav = ev.currentTarget.closest('.fs-nav');
+              [].forEach.call(nav.querySelectorAll('.fs-nav-group'), function (g) {
+                var isOpen = g.getAttribute('data-exp') === state.expOpen;
+                var s = g.querySelector('.fs-nav-subs'); if (s) s.classList.toggle('collapsed', !isOpen);
+                var c = g.querySelector('.fs-exp-chevron'); if (c) c.classList.toggle('open', isOpen);
+              });
+            };
+          })(e.key),
         }, [
-          el('span', { class: 'fs-fac-dot', style: 'background:' + f.dot + ';' }),
-          el('span', { class: 'fs-fac-name', text: f.name }),
-          el('span', { class: 'fs-fac-count', text: cnt == null ? '' : String(cnt) }),
+          el('span', { class: 'fs-fac-dot fs-faq-dot', style: 'background:' + (EXP_COLORS[e.key] || 'var(--fs-accent)') + ';' }),
+          el('span', { class: 'fs-fac-name', text: e.name }),
+          chevron,
         ]);
+
+        var subs = el('div', { class: 'fs-nav-subs' + (open ? '' : ' collapsed') },
+          facs.map(function (f) {
+            var cnt = manifestCount(DATA.manifest[e.key + '/' + f.key]);
+            var facActive = expActive && state.faction === f.key;
+            return el('button', {
+              class: 'fs-faq-subnav fs-fac-sub' + (facActive ? ' is-active' : ''),
+              onclick: (function (ek, fk) { return function () { setState({ expansion: ek, faction: fk, lb: null, expOpen: ek }); }; })(e.key, f.key),
+            }, [
+              el('span', { class: 'fs-fac-dot fs-fac-subdot', style: 'background:' + f.dot + ';' }),
+              el('span', { class: 'fs-fac-name', text: f.name }),
+              el('span', { class: 'fs-fac-count', text: cnt == null ? '' : String(cnt) }),
+            ]);
+          })
+        );
+
+        return el('div', { class: 'fs-nav-group', 'data-exp': e.key }, [header, subs]);
       })
     );
-    var sidebar = el('aside', { class: 'fs-sidebar' }, [
-      el('div', { class: 'fs-sidebar-label', text: 'Factions' }),
-      nav,
+    var sidebar = el('aside', { class: 'fs-sidebar fs-scroll' }, [
+      el('div', { class: 'fs-sidebar-label', text: 'Game & Expansions' }),
+      libNav,
       el('div', { class: 'fs-sidebar-section' }, [
         el('div', { class: 'fs-sidebar-label', text: 'Reference' }),
         el('button', { class: 'fs-fac fs-faq-entry', onclick: function () { setState({ view: 'faq' }); } }, [
@@ -605,6 +728,92 @@
 
     /* ---- main ---- */
     var main = el('main', { class: 'fs-main' });
+
+    // ---- global card search, grouped by expansion → faction ----
+    if (state.cardQuery.trim()) {
+      var q = state.cardQuery.trim().toLowerCase();
+      flat = [];
+      // match by card name only (label / title)
+      var match = function (c) {
+        return (c.label + ' ' + (c.text && c.text.title ? c.text.title : '')).toLowerCase().indexOf(q) >= 0;
+      };
+      var sres = el('div', { class: 'fs-scrollarea fs-scroll' });
+      DATA.expansions.forEach(function (e) {
+        var facs = DATA.factions[e.key] || [];
+        var facBlocks = [];
+        var expCount = 0;
+        facs.forEach(function (f) {
+          var hits = collectFaction(e.key, f.key).filter(match);
+          if (!hits.length) return;
+          expCount += hits.length;
+          var grid = el('div', {
+            class: 'fs-grid',
+            style: 'grid-template-columns:repeat(' + cols + ', minmax(0, 1fr));justify-content:start;',
+          }, hits.map(function (card) {
+            card.index = flat.length; flat.push(card);
+            var btn = el('button', {
+              class: 'fs-card fs-card--search', title: card.label,
+              onclick: (function (idx) { return function () { openLb(idx); }; })(card.index),
+            }, [el('img', { src: card.src, alt: card.label, loading: 'lazy' })]);
+            var imgEl = btn.querySelector('img');
+            imgEl.addEventListener('error', function () { btn.style.display = 'none'; });
+            applyComposite(imgEl, card);
+            return el('div', { class: 'fs-search-item' }, [
+              btn,
+              el('div', { class: 'fs-search-cap' }, [
+                el('span', { class: 'fs-search-cat', text: card.catName }),
+                el('span', { class: 'fs-search-name', text: card.label }),
+              ]),
+            ]);
+          }));
+          facBlocks.push(el('div', { class: 'fs-faq-subsection' }, [
+            el('div', { class: 'fs-faq-sublabel', text: facNameOf(e.key, f.key) }),
+            grid,
+          ]));
+        });
+        if (facBlocks.length) {
+          sres.appendChild(el('div', { class: 'fs-faq-catblock' }, [
+            el('h2', { class: 'fs-faq-cathead' }, [
+              el('span', { class: 'fs-faq-catdot', style: 'background:' + (EXP_COLORS[e.key] || 'var(--fs-accent)') + ';' }),
+              e.name,
+              el('span', { class: 'fs-search-expcount', text: String(expCount) }),
+            ]),
+          ].concat(facBlocks)));
+        }
+      });
+      main.appendChild(el('div', { class: 'fs-breadcrumb' }, [
+        el('div', { class: 'fs-bc-left' }, [
+          el('span', { class: 'fs-bc-exp', text: 'All cards' }),
+          el('span', { class: 'fs-bc-sep', text: '/' }),
+          el('h1', { class: 'fs-bc-title', text: 'Search “' + state.cardQuery + '”' }),
+        ]),
+        el('span', { class: 'fs-bc-total', text: flat.length + ' ' + (flat.length === 1 ? 'result' : 'results') }),
+      ]));
+      if (!flat.length) {
+        sres.appendChild(el('div', { class: 'fs-note', text: 'No cards match “' + state.cardQuery + '”.' }));
+      }
+      main.appendChild(sres);
+      app.appendChild(header);
+      app.appendChild(el('div', { class: 'fs-body' }, [sidebar, main]));
+      appendLightbox(app);
+      mountApp(app);
+      return;
+    }
+
+    if (!state.expansion || !state.faction) {
+      // nothing chosen yet — invite the user to pick a game + faction
+      main.appendChild(el('div', { class: 'fs-empty' }, [
+        el('div', { class: 'fs-empty-glyph' }, [el('div', { class: 'ring' }), el('div', { class: 'core' })]),
+        el('div', { class: 'fs-empty-stack' }, [
+          el('h2', { text: 'Forbidden Stars — Card Codex' }),
+          el('p', { html: 'Choose a game and a faction from the left to browse its cards — or search all cards above.' }),
+        ]),
+      ]));
+      app.appendChild(header);
+      app.appendChild(el('div', { class: 'fs-body' }, [sidebar, main]));
+      mountApp(app);
+      return;
+    }
 
     var cattabs = el('div', { class: 'fs-cattabs fs-scroll' },
       DATA.categories.map(function (c) {
@@ -676,91 +885,88 @@
 
     app.appendChild(header);
     app.appendChild(el('div', { class: 'fs-body' }, [sidebar, main]));
+    appendLightbox(app);
 
-    /* ---- lightbox ---- */
-    if (state.lb !== null) {
-      var c = flat[state.lb];
-      if (c) {
-        var full = state.lbFull;
-        var mag = state.lbMag;
+    mountApp(app);
+  }
 
-        var imgEl = lbImg(c);
-        var imgWrap = el('div', { class: 'fs-lb-imgwrap' + (mag ? ' mag-on' : '') }, [imgEl]);
-        attachMagnifier(imgWrap, imgEl); // always wired; gated by state.lbMag
+  // Builds the lightbox overlay into `app` when a card is open. Shared by the
+  // normal grid view and the search-results view.
+  function appendLightbox(app) {
+    if (state.lb === null) return;
+    var c = flat[state.lb];
+    if (!c) return;
+    var full = state.lbFull;
+    var mag = state.lbMag;
 
-        var children = [
-          el('button', {
-            class: 'fs-lb-nav', 'aria-label': 'Previous card', html: '&lsaquo;',
-            onclick: function (e) { e.stopPropagation(); step(-1); },
-          }),
-          el('figure', { class: 'fs-lb-fig' + (full ? ' is-full' : ''), onclick: function (e) { e.stopPropagation(); } }, [
-            imgWrap,
-            el('figcaption', { class: 'fs-lb-cap' }, [
-              el('span', { class: 'fs-lb-label', text: c.label }),
-              el('span', {
-                class: 'fs-lb-meta',
-                text: catName(cat) + ' · ' + facName(state.faction) + ' · ' + (state.lb + 1) + ' / ' + flat.length,
-              }),
-            ]),
-          ]),
-          el('button', {
-            class: 'fs-lb-nav', 'aria-label': 'Next card', html: '&rsaquo;',
-            onclick: function (e) { e.stopPropagation(); step(1); },
-          }),
-          el('div', { class: 'fs-lb-maghint' + (mag ? '' : ' hidden') }, [
-            'Scroll to zoom · Shift-scroll to resize loupe',
-          ]),
-          el('button', {
-            class: 'fs-lb-tool fs-lb-mag' + (mag ? ' is-active' : ''),
-            'aria-label': 'Toggle magnifier',
-            'data-tip': 'Magnifier · scroll: zoom · Shift-scroll: resize',
-            html: '&#9906;',
-            onclick: function (e) {
-              e.stopPropagation();
-              state.lbMag = !state.lbMag; // toggle in place — no re-render, no flash
-              var ov = e.currentTarget.closest('.fs-lb');
-              var wrap = ov.querySelector('.fs-lb-imgwrap');
-              wrap.classList.toggle('mag-on', state.lbMag);
-              e.currentTarget.classList.toggle('is-active', state.lbMag);
-              var hint = ov.querySelector('.fs-lb-maghint');
-              if (hint) hint.classList.toggle('hidden', !state.lbMag);
-              if (!state.lbMag) { var l = wrap.querySelector('.fs-lb-lens'); if (l) l.style.display = 'none'; }
-            },
-          }),
-          el('button', {
-            class: 'fs-lb-tool fs-lb-full', 'aria-label': 'Toggle full screen',
-            'data-tip': full ? 'Fit to window' : 'Fill screen',
-            html: full ? '&#10532;' : '&#10530;',
-            onclick: function (e) {
-              e.stopPropagation();
-              state.lbFull = !state.lbFull; // toggle in place — no re-render, no flash
-              var ov = e.currentTarget.closest('.fs-lb');
-              ov.querySelector('.fs-lb-fig').classList.toggle('is-full', state.lbFull);
-              e.currentTarget.innerHTML = state.lbFull ? '&#10532;' : '&#10530;';
-              e.currentTarget.setAttribute('data-tip', state.lbFull ? 'Fit to window' : 'Fill screen');
-            },
-          }),
-          el('button', {
-            class: 'fs-lb-tool fs-lb-close', 'aria-label': 'Close', 'data-tip': 'Close (Esc)', html: '&#10005;',
-            onclick: function (e) { e.stopPropagation(); closeLb(); },
-          }),
-        ];
-        app.appendChild(el('div', { class: 'fs-lb', onclick: closeLb }, children));
-      }
-    }
+    var imgEl = lbImg(c);
+    var imgWrap = el('div', { class: 'fs-lb-imgwrap' + (mag ? ' mag-on' : '') }, [imgEl]);
+    attachMagnifier(imgWrap, imgEl); // always wired; gated by state.lbMag
 
-    var root = document.getElementById('app');
-    root.innerHTML = '';
-    root.appendChild(app);
+    var children = [
+      el('button', {
+        class: 'fs-lb-nav', 'aria-label': 'Previous card', html: '&lsaquo;',
+        onclick: function (e) { e.stopPropagation(); step(-1); },
+      }),
+      el('figure', { class: 'fs-lb-fig' + (full ? ' is-full' : ''), onclick: function (e) { e.stopPropagation(); } }, [
+        imgWrap,
+        el('figcaption', { class: 'fs-lb-cap' }, [
+          el('span', { class: 'fs-lb-label', text: c.label }),
+          el('span', {
+            class: 'fs-lb-meta',
+            text: (c.catName || catName(state.category)) + ' · ' + facName(state.faction) + ' · ' + (state.lb + 1) + ' / ' + flat.length,
+          }),
+        ]),
+      ]),
+      el('button', {
+        class: 'fs-lb-nav', 'aria-label': 'Next card', html: '&rsaquo;',
+        onclick: function (e) { e.stopPropagation(); step(1); },
+      }),
+      el('div', { class: 'fs-lb-maghint' + (mag ? '' : ' hidden') }, [
+        'Scroll to zoom · Shift-scroll to resize loupe',
+      ]),
+      el('button', {
+        class: 'fs-lb-tool fs-lb-mag' + (mag ? ' is-active' : ''),
+        'aria-label': 'Toggle magnifier',
+        'data-tip': 'Magnifier · scroll: zoom · Shift-scroll: resize',
+        html: '&#9906;',
+        onclick: function (e) {
+          e.stopPropagation();
+          state.lbMag = !state.lbMag; // toggle in place — no re-render, no flash
+          var ov = e.currentTarget.closest('.fs-lb');
+          var wrap = ov.querySelector('.fs-lb-imgwrap');
+          wrap.classList.toggle('mag-on', state.lbMag);
+          e.currentTarget.classList.toggle('is-active', state.lbMag);
+          var hint = ov.querySelector('.fs-lb-maghint');
+          if (hint) hint.classList.toggle('hidden', !state.lbMag);
+          if (!state.lbMag) { var l = wrap.querySelector('.fs-lb-lens'); if (l) l.style.display = 'none'; }
+        },
+      }),
+      el('button', {
+        class: 'fs-lb-tool fs-lb-full', 'aria-label': 'Toggle full screen',
+        'data-tip': full ? 'Fit to window' : 'Fill screen',
+        html: full ? '&#10532;' : '&#10530;',
+        onclick: function (e) {
+          e.stopPropagation();
+          state.lbFull = !state.lbFull; // toggle in place — no re-render, no flash
+          var ov = e.currentTarget.closest('.fs-lb');
+          ov.querySelector('.fs-lb-fig').classList.toggle('is-full', state.lbFull);
+          e.currentTarget.innerHTML = state.lbFull ? '&#10532;' : '&#10530;';
+          e.currentTarget.setAttribute('data-tip', state.lbFull ? 'Fit to window' : 'Fill screen');
+        },
+      }),
+      el('button', {
+        class: 'fs-lb-tool fs-lb-close', 'aria-label': 'Close', 'data-tip': 'Close (Esc)', html: '&#10005;',
+        onclick: function (e) { e.stopPropagation(); closeLb(); },
+      }),
+    ];
+    app.appendChild(el('div', { class: 'fs-lb', onclick: closeLb }, children));
   }
 
   // brand/logo click → back to the default codex view (first expansion/faction, Combat)
   function goHome() {
-    var first = DATA.expansions[0] ? DATA.expansions[0].key : state.expansion;
-    ensureFactions(first);
-    var list = DATA.factions[first];
-    var fac = list && list[0] ? list[0].key : null;
-    setState({ view: 'codex', expansion: first, faction: fac, category: 'combat', lb: null });
+    // return to the unselected welcome state
+    setState({ view: 'codex', expansion: null, faction: null, category: 'combat', lb: null, expOpen: null, cardQuery: '' });
   }
 
   function selectExpansion(key) {
@@ -790,9 +996,11 @@
       DATA.categories = (g.cardsDefault.reference || []).map(function (key, i) {
         return { key: key, name: (g.cardsDefault.name && g.cardsDefault.name[i]) || key };
       });
-      state.expansion = DATA.expansions[0] ? DATA.expansions[0].key : null;
+      // no expansion/faction chosen by default — show the welcome prompt
       render();
-      if (state.expansion) ensureFactions(state.expansion);
+      DATA.expansions.forEach(function (e) { ensureFactions(e.key); });
+      // OCR'd card names (optional — improves search); ignore if absent
+      fetchJSON('data/cardnames.json').then(function (names) { DATA.cardnames = names || {}; render(); }).catch(function () {});
     }).catch(function (e) {
       console.error(e);
       var root = document.getElementById('app');
