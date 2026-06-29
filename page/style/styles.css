@@ -334,9 +334,21 @@ body {
 .fs-lb-tool:hover { border-color: var(--fs-accent); color: #f3efe8; }
 .fs-lb-tool.is-active { border-color: var(--fs-accent); color: var(--fs-accent-fg); background: var(--fs-accent); }
 
-/* full-screen mode: image fills the viewport vertically, caption hidden */
+/* hover tooltip for the top-right tool buttons */
+.fs-lb-tool[data-tip]::after {
+  content: attr(data-tip); position: absolute; top: calc(100% + 9px); right: 0;
+  background: rgba(20, 18, 16, .96); border: 1px solid #38332c; color: #e6e1d8;
+  font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 0.04em;
+  white-space: nowrap; padding: 6px 10px; border-radius: 7px; box-shadow: 0 6px 18px rgba(0, 0, 0, .5);
+  opacity: 0; transform: translateY(-3px); pointer-events: none;
+  transition: opacity .12s ease, transform .12s ease; z-index: 10;
+}
+.fs-lb-tool[data-tip]:hover::after { opacity: 1; transform: translateY(0); }
+
+/* full-screen mode: image actually fills the viewport vertically (upscaling
+   small scans), width capped so landscape sheets don't overflow; caption hidden */
 .fs-lb-fig.is-full { gap: 0; }
-.fs-lb-fig.is-full img { max-height: 96vh; max-width: 94vw; border-radius: 8px; }
+.fs-lb-fig.is-full img { height: 96vh; width: auto; max-width: 94vw; max-height: 96vh; border-radius: 8px; }
 .fs-lb-fig.is-full .fs-lb-cap { display: none; }
 
 /* magnifier loupe */

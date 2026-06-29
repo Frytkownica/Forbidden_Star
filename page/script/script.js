@@ -713,7 +713,7 @@
           el('button', {
             class: 'fs-lb-tool fs-lb-mag' + (mag ? ' is-active' : ''),
             'aria-label': 'Toggle magnifier',
-            title: 'Magnifier — scroll to zoom, Shift-scroll to resize the loupe',
+            'data-tip': 'Magnifier · scroll: zoom · Shift-scroll: resize',
             html: '&#9906;',
             onclick: function (e) {
               e.stopPropagation();
@@ -728,7 +728,8 @@
             },
           }),
           el('button', {
-            class: 'fs-lb-tool fs-lb-full', 'aria-label': 'Toggle full screen', title: 'Toggle full screen',
+            class: 'fs-lb-tool fs-lb-full', 'aria-label': 'Toggle full screen',
+            'data-tip': full ? 'Fit to window' : 'Fill screen',
             html: full ? '&#10532;' : '&#10530;',
             onclick: function (e) {
               e.stopPropagation();
@@ -736,10 +737,11 @@
               var ov = e.currentTarget.closest('.fs-lb');
               ov.querySelector('.fs-lb-fig').classList.toggle('is-full', state.lbFull);
               e.currentTarget.innerHTML = state.lbFull ? '&#10532;' : '&#10530;';
+              e.currentTarget.setAttribute('data-tip', state.lbFull ? 'Fit to window' : 'Fill screen');
             },
           }),
           el('button', {
-            class: 'fs-lb-tool fs-lb-close', 'aria-label': 'Close', html: '&#10005;',
+            class: 'fs-lb-tool fs-lb-close', 'aria-label': 'Close', 'data-tip': 'Close (Esc)', html: '&#10005;',
             onclick: function (e) { e.stopPropagation(); closeLb(); },
           }),
         ];
