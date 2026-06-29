@@ -370,7 +370,7 @@
   // so toggling is a local class flip (no re-render, no scroll jump).
   function faqItemNode(it) {
     var open = !!state.faqOpen[it.id];
-    var icon = el('span', { class: 'fs-faq-icon' + (open ? ' is-open' : ''), text: '+' });
+    var icon = el('span', { class: 'fs-faq-icon' + (open ? ' is-open' : '') });
     var head = el('button', { class: 'fs-faq-qbtn', onclick: function (e) {
       var o = !state.faqOpen[it.id];
       state.faqOpen[it.id] = o;
@@ -465,9 +465,10 @@
           ]));
         });
         if (facNodes.length) {
-          subNodes.push(el('div', { class: 'fs-faq-subsection' }, [
-            el('div', { class: 'fs-faq-sublabel', text: sub.name }),
-          ].concat(facNodes)));
+          // skip the sub-heading when this exact sub is the selected topic — the
+          // section row already names it (avoids a duplicate label)
+          var subKids = (topic === sub.key) ? [] : [el('div', { class: 'fs-faq-sublabel', text: sub.name })];
+          subNodes.push(el('div', { class: 'fs-faq-subsection' }, subKids.concat(facNodes)));
         }
       });
       if (subNodes.length) {
