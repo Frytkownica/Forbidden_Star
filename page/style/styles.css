@@ -425,8 +425,46 @@ body {
   color: #9a948a; margin-top: 1px; transition: transform .2s ease, border-color .15s;
 }
 .fs-faq-icon.is-open { transform: rotate(45deg); border-color: var(--fs-accent); color: var(--fs-accent); }
-.fs-faq-answer { padding: 0 19px 19px 64px; animation: fsexpand .2s ease; }
-.fs-faq-atext { font-size: 13.5px; line-height: 1.72; color: #c4bfb5; margin: 0; }
+.fs-faq-answer { display: none; padding: 0 19px 18px; }
+.fs-faq-item.is-open .fs-faq-answer { display: block; animation: fsexpand .2s ease; }
+.fs-faq-atext { font-size: 13.5px; line-height: 1.72; color: #c4bfb5; margin: 0; white-space: pre-wrap; }
+
+/* ---- FAQ sidebar: sub-category nav ---- */
+.fs-faq-catnav { margin-top: 8px; }
+.fs-faq-catnav .fs-fac-name { font-weight: 700; }
+.fs-faq-subnav {
+  display: flex; align-items: center; gap: 8px; width: 100%; text-align: left;
+  appearance: none; border: 1px solid transparent; background: transparent; cursor: pointer;
+  font-family: inherit; color: #9a948a; font-size: 12.5px; font-weight: 500;
+  padding: 6px 11px 6px 30px; border-radius: 9px; transition: all .15s;
+}
+.fs-faq-subnav:hover { background: #1d1b18; color: #c4bdb1; }
+.fs-faq-subnav.is-active {
+  color: #f3efe8; background: #221f1a; font-weight: 600;
+  box-shadow: inset 2px 0 0 var(--fs-accent);
+}
+.fs-faq-subnav .fs-fac-name { flex: 1; }
+.fs-faq-subnav .fs-fac-count { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #6f6a61; }
+
+/* ---- FAQ grouped content ---- */
+.fs-faq-sections { display: flex; flex-direction: column; gap: 28px; }
+.fs-faq-catblock { display: flex; flex-direction: column; gap: 16px; }
+.fs-faq-cathead {
+  display: flex; align-items: center; gap: 11px; font-size: 18px; font-weight: 700;
+  color: #f3efe8; margin: 4px 0 0;
+}
+.fs-faq-catdot { width: 11px; height: 11px; border-radius: 3px; transform: rotate(45deg); display: inline-block; }
+.fs-faq-subsection { display: flex; flex-direction: column; gap: 13px; }
+.fs-faq-sublabel {
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: #bdb7ac; border-bottom: 1px solid #221f1a;
+  padding-bottom: 8px; margin-top: 8px;
+}
+.fs-faq-facgroup { display: flex; flex-direction: column; gap: 8px; }
+.fs-faq-fachead { display: flex; align-items: center; gap: 10px; padding: 4px 2px 2px; }
+.fs-faq-facicon { width: 24px; height: 24px; object-fit: contain; flex-shrink: 0; }
+.fs-faq-facname { font-size: 13px; font-weight: 600; color: #d8d2c8; letter-spacing: 0.01em; flex: 1; }
+.fs-faq-faccount { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #6f6a61; }
 .fs-faq-tag {
   display: inline-block; margin-top: 13px; font-family: 'IBM Plex Mono', monospace;
   font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fs-accent);

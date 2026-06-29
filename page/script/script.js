@@ -360,26 +360,38 @@
 
   /* ---------------- FAQ (Field Manual) view ---------------- */
 
-  function faqFiltered() {
-    var data = (DATA.faq && DATA.faq.qa) || [];
-    var q = (state.faqQuery || '').trim().toLowerCase();
-    return data
-      .map(function (item, i) { return { item: item, id: i }; })
-      .filter(function (e) { return state.faqTopic === 'all' || e.item.t === state.faqTopic; })
-      .filter(function (e) { return !q || (e.item.q + ' ' + e.item.a).toLowerCase().indexOf(q) >= 0; });
+  function faqTopicName(k) {
+    var ts = (DATA.faq && DATA.faq.navTopics) || [];
+    var t = findKey(ts, k);
+    return t ? t.name : 'All Questions';
   }
 
-  function faqTopicName(k) {
-    var ts = (DATA.faq && DATA.faq.topics) || [];
-    var t = findKey(ts, k);
-    return t ? t.name : '';
+  // one accordion row — the answer is always in the DOM and shown/hidden by CSS,
+  // so toggling is a local class flip (no re-render, no scroll jump).
+  function faqItemNode(it) {
+    var open = !!state.faqOpen[it.id];
+    var icon = el('span', { class: 'fs-faq-icon' + (open ? ' is-open' : ''), text: '+' });
+    var head = el('button', { class: 'fs-faq-qbtn', onclick: function (e) {
+      var o = !state.faqOpen[it.id];
+      state.faqOpen[it.id] = o;
+      e.currentTarget.parentNode.classList.toggle('is-open', o);
+      icon.classList.toggle('is-open', o);
+    } }, [
+      el('span', { class: 'fs-faq-q', text: it.q }),
+      icon,
+    ]);
+    var answer = el('div', { class: 'fs-faq-answer' }, [el('p', { class: 'fs-faq-atext', text: it.a })]);
+    return el('div', { class: 'fs-faq-item' + (open ? ' is-open' : '') }, [head, answer]);
   }
 
   function renderFaqView() {
     ensureFaq();
     var hero = (window.FS_FAQ && window.FS_FAQ.hero) || {};
-    var FAQ = DATA.faq || { topics: [], qa: [] };
+    var FAQ = DATA.faq || { navTopics: [], cats: [], count: {} };
     var ready = !!DATA.faq;
+    var topic = state.faqTopic;
+    var q = (state.faqQuery || '').trim().toLowerCase();
+    var matches = function (it) { return !q || (it.q + ' ' + it.a).toLowerCase().indexOf(q) >= 0; };
 
     var app = el('div', { class: 'fs-app', 'data-accent': ACCENT });
 
@@ -405,20 +417,17 @@
       el('div', { class: 'fs-header-spacer' }),
     ]);
 
-    // counts per topic
-    var counts = { all: FAQ.qa.length };
-    FAQ.qa.forEach(function (x) { counts[x.t] = (counts[x.t] || 0) + 1; });
-
+    // sidebar: categories with their sub-categories nested
     var topicsNav = el('nav', { class: 'fs-nav' },
-      FAQ.topics.map(function (t) {
-        return el('button', {
-          class: 'fs-fac' + (state.faqTopic === t.key ? ' is-active' : ''),
-          onclick: (function (key) { return function () { setState({ faqTopic: key }); }; })(t.key),
-        }, [
-          el('span', { class: 'fs-fac-dot fs-faq-dot', style: 'background:' + t.dot + ';' }),
-          el('span', { class: 'fs-fac-name', text: t.name }),
-          el('span', { class: 'fs-fac-count', text: String(counts[t.key] || 0) }),
-        ]);
+      FAQ.navTopics.map(function (t) {
+        var active = topic === t.key;
+        var cls = (t.kind === 'sub') ? ('fs-faq-subnav' + (active ? ' is-active' : ''))
+          : ('fs-fac' + (t.kind === 'cat' ? ' fs-faq-catnav' : '') + (active ? ' is-active' : ''));
+        var kids = [];
+        if (t.kind !== 'sub') kids.push(el('span', { class: 'fs-fac-dot fs-faq-dot', style: 'background:' + (t.dot || 'var(--fs-accent)') + ';' }));
+        kids.push(el('span', { class: 'fs-fac-name', text: t.name }));
+        kids.push(el('span', { class: 'fs-fac-count', text: String(FAQ.count[t.key] || 0) }));
+        return el('button', { class: cls, onclick: (function (key) { return function () { setState({ faqTopic: key }); }; })(t.key) }, kids);
       })
     );
     var sidebar = el('aside', { class: 'fs-sidebar fs-scroll' }, [
@@ -431,44 +440,58 @@
       ]),
     ]);
 
-    // main: hero + accordion
-    var list = faqFiltered();
-    var sectionLabel = state.faqTopic === 'all' ? 'All Questions' : faqTopicName(state.faqTopic);
-
-    var items = list.map(function (e, i) {
-      var open = !!state.faqOpen[e.id];
-      var head = el('button', {
-        class: 'fs-faq-qbtn',
-        onclick: (function (id) { return function () {
-          var o = {}; for (var k in state.faqOpen) { if (state.faqOpen.hasOwnProperty(k)) o[k] = state.faqOpen[k]; }
-          o[id] = !o[id]; setState({ faqOpen: o });
-        }; })(e.id),
-      }, [
-        el('span', { class: 'fs-faq-num', text: String(i + 1).length < 2 ? '0' + (i + 1) : String(i + 1) }),
-        el('span', { class: 'fs-faq-q', text: e.item.q }),
-        el('span', { class: 'fs-faq-icon' + (open ? ' is-open' : ''), text: '+' }),
-      ]);
-      var children = [head];
-      if (open) {
-        children.push(el('div', { class: 'fs-faq-answer' }, [
-          el('p', { class: 'fs-faq-atext', text: e.item.a }),
-          e.item.tag ? el('span', { class: 'fs-faq-tag', text: e.item.tag }) : null,
+    // main: hero + grouped content (Category › SubCategory › Faction › questions)
+    var showAll = topic === 'all';
+    var sections = [];
+    var shown = 0;
+    FAQ.cats.forEach(function (cat) {
+      var catSelected = showAll || topic === cat.key || topic.indexOf(cat.key + '_') === 0;
+      if (!catSelected) return;
+      var subNodes = [];
+      cat.subs.forEach(function (sub) {
+        if (!showAll && topic !== cat.key && topic !== sub.key) return;
+        var facNodes = [];
+        sub.factions.forEach(function (fac) {
+          var its = fac.items.filter(matches);
+          if (!its.length) return;
+          shown += its.length;
+          facNodes.push(el('div', { class: 'fs-faq-facgroup' }, [
+            el('div', { class: 'fs-faq-fachead' }, [
+              fac.picture ? el('img', { class: 'fs-faq-facicon', src: fac.picture, alt: '', loading: 'lazy' }) : null,
+              el('span', { class: 'fs-faq-facname', text: fac.faction || sub.name }),
+              el('span', { class: 'fs-faq-faccount', text: String(its.length) }),
+            ]),
+            el('div', { class: 'fs-faq-list' }, its.map(faqItemNode)),
+          ]));
+        });
+        if (facNodes.length) {
+          subNodes.push(el('div', { class: 'fs-faq-subsection' }, [
+            el('div', { class: 'fs-faq-sublabel', text: sub.name }),
+          ].concat(facNodes)));
+        }
+      });
+      if (subNodes.length) {
+        var catChildren = [];
+        if (showAll) catChildren.push(el('h2', { class: 'fs-faq-cathead' }, [
+          el('span', { class: 'fs-faq-catdot', style: 'background:' + cat.dot + ';' }),
+          cat.name,
         ]));
+        sections.push(el('div', { class: 'fs-faq-catblock' }, catChildren.concat(subNodes)));
       }
-      return el('div', { class: 'fs-faq-item' + (open ? ' is-open' : '') }, children);
     });
 
     var contentInner;
     if (!ready) {
       contentInner = el('div', { class: 'fs-note', text: 'Loading…' });
-    } else if (list.length) {
-      contentInner = el('div', { class: 'fs-faq-list' }, items);
+    } else if (shown) {
+      contentInner = el('div', { class: 'fs-faq-sections' }, sections);
     } else {
       contentInner = el('div', { class: 'fs-faq-empty' }, [
         el('div', { class: 'fs-faq-empty-glyph' }, [el('div', { class: 'ring' })]),
-        el('p', { class: 'fs-note', text: 'No questions match “' + state.faqQuery + '”. Try another term or clear the search.' }),
+        el('p', { class: 'fs-note', text: q ? ('No questions match “' + state.faqQuery + '”. Try another term or clear the search.') : 'No questions in this section.' }),
       ]);
     }
+
     var body = [
       el('div', { class: 'fs-faq-hero' }, [
         el('span', { class: 'fs-faq-kicker', text: hero.kicker || '' }),
@@ -477,8 +500,8 @@
       ]),
       el('div', { class: 'fs-faq-content' }, [
         el('div', { class: 'fs-faq-sectionrow' }, [
-          el('span', { class: 'fs-faq-sectionlabel', text: sectionLabel }),
-          el('span', { class: 'fs-faq-countlabel', text: list.length + ' ' + (list.length === 1 ? 'question' : 'questions') }),
+          el('span', { class: 'fs-faq-sectionlabel', text: faqTopicName(topic) }),
+          el('span', { class: 'fs-faq-countlabel', text: shown + ' ' + (shown === 1 ? 'question' : 'questions') }),
         ]),
         contentInner,
       ]),
