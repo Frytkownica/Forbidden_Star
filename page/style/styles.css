@@ -461,10 +461,10 @@ body {
   padding-bottom: 8px; margin-top: 8px;
 }
 .fs-faq-facgroup { display: flex; flex-direction: column; gap: 8px; }
-.fs-faq-fachead { display: flex; align-items: center; gap: 10px; padding: 4px 2px 2px; }
-.fs-faq-facicon { width: 24px; height: 24px; object-fit: contain; flex-shrink: 0; }
+.fs-faq-fachead { display: flex; align-items: center; gap: 12px; padding: 4px 2px 2px; }
 .fs-faq-facname { font-size: 13px; font-weight: 600; color: #d8d2c8; letter-spacing: 0.01em; flex: 1; }
 .fs-faq-faccount { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #6f6a61; }
+.fs-faq-facicon { width: 52px; height: 52px; object-fit: contain; flex-shrink: 0; margin-left: 4px; }
 .fs-faq-tag {
   display: inline-block; margin-top: 13px; font-family: 'IBM Plex Mono', monospace;
   font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fs-accent);

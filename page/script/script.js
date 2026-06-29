@@ -457,9 +457,9 @@
           shown += its.length;
           facNodes.push(el('div', { class: 'fs-faq-facgroup' }, [
             el('div', { class: 'fs-faq-fachead' }, [
-              fac.picture ? el('img', { class: 'fs-faq-facicon', src: fac.picture, alt: '', loading: 'lazy' }) : null,
               el('span', { class: 'fs-faq-facname', text: fac.faction || sub.name }),
               el('span', { class: 'fs-faq-faccount', text: String(its.length) }),
+              fac.picture ? el('img', { class: 'fs-faq-facicon', src: fac.picture, alt: '', loading: 'lazy' }) : null,
             ]),
             el('div', { class: 'fs-faq-list' }, its.map(faqItemNode)),
           ]));
