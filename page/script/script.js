@@ -402,7 +402,7 @@
       oninput: function (e) { setState({ faqQuery: e.target.value }); },
     });
     var header = el('header', { class: 'fs-header fs-faq-header' }, [
-      el('div', { class: 'fs-brand' }, [
+      el('div', { class: 'fs-brand fs-brand-link', title: 'Home', onclick: goHome }, [
         el('div', { class: 'fs-logo' }, [el('div', { class: 'fs-logo-ring' }), el('div', { class: 'fs-logo-core' })]),
         el('div', { class: 'fs-brand-text' }, [
           el('span', { class: 'fs-brand-title', text: 'FORBIDDEN STARS' }),
@@ -553,7 +553,7 @@
       })
     );
     var header = el('header', { class: 'fs-header' }, [
-      el('div', { class: 'fs-brand' }, [
+      el('div', { class: 'fs-brand fs-brand-link', title: 'Home', onclick: goHome }, [
         el('div', { class: 'fs-logo' }, [
           el('div', { class: 'fs-logo-ring' }),
           el('div', { class: 'fs-logo-core' }),
@@ -737,6 +737,15 @@
     var root = document.getElementById('app');
     root.innerHTML = '';
     root.appendChild(app);
+  }
+
+  // brand/logo click → back to the default codex view (first expansion/faction, Combat)
+  function goHome() {
+    var first = DATA.expansions[0] ? DATA.expansions[0].key : state.expansion;
+    ensureFactions(first);
+    var list = DATA.factions[first];
+    var fac = list && list[0] ? list[0].key : null;
+    setState({ view: 'codex', expansion: first, faction: fac, category: 'combat', lb: null });
   }
 
   function selectExpansion(key) {

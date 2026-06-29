@@ -81,6 +81,7 @@ body {
   z-index: 10;
 }
 .fs-brand { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.fs-brand-link { cursor: pointer; }
 .fs-logo { position: relative; width: 24px; height: 24px; flex-shrink: 0; }
 .fs-logo-ring {
   position: absolute; inset: 2px; transform: rotate(45deg);
