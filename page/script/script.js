@@ -71,8 +71,15 @@
     manifest: {},           // "exp/fac" -> {combat:[[..]], orders:[..], ...}  (filenames)
     text: {},               // "exp/fac" -> {combat:[[{title,general,unit,icons}]], orders:[..], events:[..]} or null
     faq: null,              // { topics:[{key,name,dot}], qa:[{t,q,a,tag}] } from data/FAQ.json
+    cardnames: {},          // "<exp>/<fac>/<cat>/<file>" -> printed card name (from data/cardnames.json)
     loading: {},            // in-flight guards
   };
+
+  // real card name (OCR'd from the art) when available, else the generic fallback
+  function cardName(exp, fac, cat, file, fallback) {
+    var n = DATA.cardnames[exp + '/' + fac + '/' + cat + '/' + file];
+    return n || fallback;
+  }
 
   function ensureFaq() {
     if (DATA.faq || DATA.loading.faq || !window.FS_FAQ) return;
@@ -391,7 +398,8 @@
       if (cat === 'material' || !FOLDER[cat]) return;
       var base = 'factions/' + exp + '/' + fac + '/' + FOLDER[cat] + '/';
       function add(file, label, kind, text) {
-        out.push({ src: base + file, kind: kind || null, text: text || null, label: label,
+        out.push({ src: base + file, kind: kind || null, text: text || null,
+          label: cardName(exp, fac, cat, file, label),
           catName: catName(cat), exp: exp, expName: en, fac: fac, facName: fn });
       }
       if (cat === 'combat') {
@@ -980,6 +988,8 @@
       // no expansion/faction chosen by default — show the welcome prompt
       render();
       DATA.expansions.forEach(function (e) { ensureFactions(e.key); });
+      // OCR'd card names (optional — improves search); ignore if absent
+      fetchJSON('data/cardnames.json').then(function (names) { DATA.cardnames = names || {}; render(); }).catch(function () {});
     }).catch(function (e) {
       console.error(e);
       var root = document.getElementById('app');
