@@ -128,12 +128,26 @@ body {
 .fs-sidebar {
   width: 236px; flex-shrink: 0; border-right: 1px solid #2c2925;
   background: #16140f; display: flex; flex-direction: column; padding: 18px 14px;
+  min-height: 0; overflow-y: auto;
 }
 .fs-sidebar-label {
   font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.26em;
   color: #857f74; text-transform: uppercase; padding: 0 8px 12px;
 }
 .fs-nav { display: flex; flex-direction: column; gap: 3px; }
+.fs-nav-group { display: flex; flex-direction: column; gap: 2px; margin-bottom: 8px; }
+.fs-nav-subs { display: flex; flex-direction: column; gap: 2px; }
+.fs-nav-subs.collapsed { display: none; }
+/* faction sub-items show a colour dot, so indent a touch less than text-only subs */
+.fs-fac-sub { padding-left: 20px; }
+.fs-fac-subdot { width: 8px; height: 8px; }
+/* expansion header chevron (collapse toggle) */
+.fs-exp-head { gap: 8px; }
+.fs-exp-chevron {
+  flex-shrink: 0; width: 14px; text-align: center; color: #6f6a61; font-size: 15px; line-height: 1;
+  transition: transform .15s ease; transform: rotate(0deg); cursor: pointer;
+}
+.fs-exp-chevron.open { transform: rotate(90deg); }
 
 .fs-fac {
   display: flex; align-items: center; gap: 11px; width: 100%; text-align: left;

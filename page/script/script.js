@@ -82,6 +82,7 @@
     expansion: null, faction: null, category: 'combat', lb: null, lbFull: false, lbMag: false, lbZoom: 2, lbLensSize: 204,
     view: 'codex',            // 'codex' | 'faq'
     faqTopic: 'all', faqQuery: '', faqOpen: {},
+    expCollapsed: {},         // expansion key -> true when its factions are collapsed (default: expanded)
   };
   var flat = []; // flat list of currently-visible cards, for the lightbox
 
@@ -551,14 +552,6 @@
     var app = el('div', { class: 'fs-app', 'data-accent': ACCENT });
 
     /* ---- header ---- */
-    var exptabs = el('div', { class: 'fs-exptabs fs-scroll' },
-      DATA.expansions.map(function (e) {
-        return el('button', {
-          class: 'fs-tab' + (state.expansion === e.key ? ' is-active' : ''),
-          onclick: (function (key) { return function () { selectExpansion(key); }; })(e.key),
-        }, [el('span', { text: e.name })]);
-      })
-    );
     var header = el('header', { class: 'fs-header' }, [
       el('div', { class: 'fs-brand fs-brand-link', title: 'Home', onclick: goHome }, [
         el('div', { class: 'fs-logo' }, [
@@ -570,26 +563,58 @@
           el('span', { class: 'fs-brand-sub', text: 'Card Codex' }),
         ]),
       ]),
-      exptabs,
     ]);
 
-    /* ---- sidebar ---- */
-    var nav = el('nav', { class: 'fs-nav' },
-      facList().map(function (f) {
-        var cnt = manifestCount(DATA.manifest[state.expansion + '/' + f.key]);
-        return el('button', {
-          class: 'fs-fac' + (state.faction === f.key ? ' is-active' : ''),
-          onclick: (function (key) { return function () { setState({ faction: key, lb: null }); }; })(f.key),
+    /* ---- sidebar: two-level Game › Expansion › Faction nav ---- */
+    var libNav = el('nav', { class: 'fs-nav' },
+      DATA.expansions.map(function (e) {
+        ensureFactions(e.key); // load every expansion so its factions can nest here
+        var facs = DATA.factions[e.key] || [];
+        var expActive = state.expansion === e.key;
+        var collapsed = !!state.expCollapsed[e.key];
+
+        var chevron = el('span', { class: 'fs-exp-chevron' + (collapsed ? '' : ' open'), html: '&rsaquo;' });
+        var header = el('button', {
+          class: 'fs-fac fs-faq-catnav fs-exp-head' + (expActive ? ' is-active' : ''),
+          onclick: (function (key) { return function () { state.expCollapsed[key] = false; selectExpansion(key); }; })(e.key),
         }, [
-          el('span', { class: 'fs-fac-dot', style: 'background:' + f.dot + ';' }),
-          el('span', { class: 'fs-fac-name', text: f.name }),
-          el('span', { class: 'fs-fac-count', text: cnt == null ? '' : String(cnt) }),
+          chevron,
+          el('span', { class: 'fs-fac-dot fs-faq-dot', style: 'background:var(--fs-accent);' }),
+          el('span', { class: 'fs-fac-name', text: e.name }),
         ]);
+
+        var subs = el('div', { class: 'fs-nav-subs' + (collapsed ? ' collapsed' : '') },
+          facs.map(function (f) {
+            var cnt = manifestCount(DATA.manifest[e.key + '/' + f.key]);
+            var facActive = expActive && state.faction === f.key;
+            return el('button', {
+              class: 'fs-faq-subnav fs-fac-sub' + (facActive ? ' is-active' : ''),
+              onclick: (function (ek, fk) { return function () { setState({ expansion: ek, faction: fk, lb: null }); }; })(e.key, f.key),
+            }, [
+              el('span', { class: 'fs-fac-dot fs-fac-subdot', style: 'background:' + f.dot + ';' }),
+              el('span', { class: 'fs-fac-name', text: f.name }),
+              el('span', { class: 'fs-fac-count', text: cnt == null ? '' : String(cnt) }),
+            ]);
+          })
+        );
+
+        // chevron toggles collapse in place (no full re-render)
+        chevron.addEventListener('click', (function (key) {
+          return function (ev) {
+            ev.stopPropagation();
+            var c = !state.expCollapsed[key];
+            state.expCollapsed[key] = c;
+            subs.classList.toggle('collapsed', c);
+            chevron.classList.toggle('open', !c);
+          };
+        })(e.key));
+
+        return el('div', { class: 'fs-nav-group' }, [header, subs]);
       })
     );
-    var sidebar = el('aside', { class: 'fs-sidebar' }, [
-      el('div', { class: 'fs-sidebar-label', text: 'Factions' }),
-      nav,
+    var sidebar = el('aside', { class: 'fs-sidebar fs-scroll' }, [
+      el('div', { class: 'fs-sidebar-label', text: 'Game & Expansions' }),
+      libNav,
       el('div', { class: 'fs-sidebar-section' }, [
         el('div', { class: 'fs-sidebar-label', text: 'Reference' }),
         el('button', { class: 'fs-fac fs-faq-entry', onclick: function () { setState({ view: 'faq' }); } }, [
