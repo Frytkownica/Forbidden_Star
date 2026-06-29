@@ -430,11 +430,22 @@
 
   /* ---------------- lightbox ---------------- */
 
-  function openLb(idx) { setState({ lb: idx, lbFull: true }); } // open zoomed by default
-  function closeLb() { setState({ lb: null }); }
+  // Open/close/step the lightbox by mutating the overlay in place — never a full
+  // re-render — so the grid keeps its scroll position when a card is opened.
+  function showLightbox() {
+    var appEl = document.querySelector('.fs-app');
+    if (!appEl) { render(); return; }
+    var old = appEl.querySelector('.fs-lb'); if (old) old.remove();
+    appendLightbox(appEl);
+  }
+  function hideLightbox() { var lb = document.querySelector('.fs-lb'); if (lb) lb.remove(); }
+
+  function openLb(idx) { state.lb = idx; state.lbFull = true; state.lbMag = false; showLightbox(); } // open zoomed
+  function closeLb() { state.lb = null; hideLightbox(); }
   function step(d) {
     if (!flat.length || state.lb === null) return;
-    setState({ lb: (state.lb + d + flat.length) % flat.length }); // preserve zoom state
+    state.lb = (state.lb + d + flat.length) % flat.length; // preserve zoom state
+    showLightbox();
   }
 
   document.addEventListener('keydown', function (e) {
