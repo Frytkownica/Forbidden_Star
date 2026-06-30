@@ -396,3 +396,10 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+.codex/
+.agents/
+__pycache__/
+_pycache_/
+graphify-out/
+graphiphy-out/

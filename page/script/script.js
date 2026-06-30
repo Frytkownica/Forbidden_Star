@@ -39,10 +39,28 @@
   };
   var TIER_LABELS = ['Staring', 'Tier 0', 'Tier 1', 'Tier 2', 'Tier 3', 'Tier 4'];
   var BACK_LABELS = { combat: 'Combat Deck Back', order: 'Order Deck Back', event: 'Event Deck Back' };
-  // a palette so every faction (across all expansions) gets a distinct dot
+  // fallback palette so every faction (across all expansions) gets a distinct dot
   var DOTS = [
-    'oklch(0.64 0.12 245)', 'oklch(0.57 0.19 25)', 'oklch(0.66 0.15 142)', 'oklch(0.80 0.13 90)',
-    'oklch(0.62 0.16 300)', 'oklch(0.70 0.13 195)', 'oklch(0.60 0.17 350)', 'oklch(0.72 0.14 60)',
+    'oklch(0.598 0.221 277.4)',
+    'oklch(0.600 0.240 28.7)',
+    'oklch(0.870 0.281 143.2)',
+    'oklch(0.968 0.209 109.7)',
+    'oklch(0.683 0.000 89.9)',
+    'oklch(0.623 0.280 310.7)',
+    'oklch(0.000 0.000 0.0)',
+    'oklch(0.802 0.168 72.7)',
+    'oklch(1.000 0.000 89.9)',
+    'oklch(0.545 0.128 48.1)',
+    'oklch(0.854 0.149 185.6)',
+    'oklch(0.539 0.294 296.5)',
+    'oklch(0.6809 0.1406 83.12)',
+    'oklch(0.5544 0.1184 349.94)',
+    'oklch(0.5544 0.1727 265.24)',
+    'oklch(0.5544 0.0641 185.82)',
+    'oklch(0.649 0.237 27.0)',
+    'oklch(0.612 0.246 342.7)',
+    'oklch(0.475 0.297 267.3)',
+    'oklch(0.409 0.102 132.8)'
   ];
 
   // per-expansion accent colours (sidebar dots)
@@ -131,13 +149,23 @@
     });
   }
 
+  function factionDot(fj, exp, index) {
+    var c = fj.color && fj.color[index];
+    if (typeof c === 'string') return c;
+    if (c && c.accent) return c.accent;
+
+    var expIndex = DATA.expansions.findIndex(function (e) { return e.key === exp; });
+    var fallbackIndex = (Math.max(expIndex, 0) * 4) + index;
+    return DOTS[fallbackIndex % DOTS.length];
+  }
+
   // load factions for an expansion (once)
   function ensureFactions(exp) {
     if (DATA.factions[exp] || DATA.loading['fac:' + exp]) return;
     DATA.loading['fac:' + exp] = true;
     fetchJSON('factions/' + exp + '/faction.json').then(function (fj) {
       var list = (fj.folder || []).map(function (key, i) {
-        return { key: key, name: (fj.name && fj.name[i]) || key, dot: DOTS[i % DOTS.length] };
+        return { key: key, name: (fj.name && fj.name[i]) || key, dot: factionDot(fj, exp, i) };
       });
       DATA.factions[exp] = list;
       // prefetch manifests so sidebar counts populate
