@@ -37,7 +37,7 @@
     combat: 'Combat', orders: 'Orders', events: 'Events',
     backs: 'Card Backs', faction_card: 'Faction Card', map: 'Maps', material: 'Unit Count',
   };
-  var TIER_LABELS = ['Standard', 'Tier I', 'Tier II', 'Tier III', 'Tier IV', 'Tier V'];
+  var TIER_LABELS = ['Staring', 'Tier 0', 'Tier 1', 'Tier 2', 'Tier 3', 'Tier 4'];
   var BACK_LABELS = { combat: 'Combat Deck Back', order: 'Order Deck Back', event: 'Event Deck Back' };
   // a palette so every faction (across all expansions) gets a distinct dot
   var DOTS = [
@@ -47,11 +47,11 @@
 
   // per-expansion accent colours (sidebar dots)
   var EXP_COLORS = {
-    base:    'rgb(31, 136, 255)',
-    gif:     'rgb(37, 240, 31)',
+    base:    'rgb(30, 130, 255)',
+    gif:     'rgb(30, 255, 30)',
     sow:     'rgb(157, 30, 255)',
     dd:      'rgb(255, 255, 255)',
-    emperor: 'rgb(255, 278, 55)',
+    emperor: 'rgb(255, 178, 55)',
   };
 
   var ACC = {
