@@ -118,7 +118,7 @@
             {
                 "title": "ANGELIC DESCENT",
                 "general": "Gain 1 (S) for each of your unrouted units, to a maximum of 3.",
-                "unit": "Battle Sister/Light Cruiser:  Gain 2 (B). During the assess damage step of this execution round, your opponent assigns damage 1 at a time.",
+                "unit": "Battle Sister/Light Cruiser:  Gain 2 (B). During the assess damage step of this execution round, your opponent assigns damage 1 at a time. The damage is not accumulated between assignments.",
                 "icons": "BM"
             }
         ],
