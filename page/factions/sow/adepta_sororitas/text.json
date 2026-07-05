@@ -123,6 +123,8 @@
             }
         ],
         [
+        ],
+        [
             {
                 "title": "MARTYR'S IMMOLATION",
                 "general": "Gain 3 (S) unless your opponent spends 1 die of his choice. If he does, gain 1 [M].",
@@ -155,7 +157,8 @@
                 "unit": "Living Saint/Grand Cruiser: Gain 1 (B) for each [M] you have. *newline* During this execution round, none of the [B] are added to offence values.",
                 "icons": "BSSM"
             }
-        ]
+        ],
+        []
     ],
     "materialsText": [
         { "label": "Sisters Repentia", "value": "6" },
