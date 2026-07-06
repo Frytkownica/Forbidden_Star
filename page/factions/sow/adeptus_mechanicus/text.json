@@ -97,6 +97,8 @@
             }
         ],
         [
+        ],
+        [
             {
                 "title": "TRANSCENDENT COGITATION",
                 "general": "",
@@ -155,6 +157,8 @@
                 "unit": "Titan/Ark Mechanicus: Do not discard your (B) at the end of this execution round.",
                 "icons": "BBSM"
             }
+        ],
+        [
         ]
     ],
     "materialsText": [
