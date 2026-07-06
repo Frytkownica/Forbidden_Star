@@ -118,6 +118,7 @@
             "unit": "",
             "icons": "MMM"
         }],
+        [],
         [{
             "title": "LIDLESS STARE",
             "general": "Gain 1 [D].",
@@ -147,7 +148,8 @@
             "general": "Either gain 1 (B) or convert up to 3 of your dice into [B].",
             "unit": "Grey Knight: When an enemy unit suffers damage during this execution round, it is destroyed. *newpara* Black Ship: Rout 1 of your opponent's units.",
             "icons": "BBBM"
-        }]
+        }],
+        []
     ],
     "materialsText": [
         { "label": "Stormtroopers", "value": "6" },
