@@ -55,5 +55,13 @@
             "system_tile_front_1.jpg",
             "system_tile_back_1.jpg"
         ]
-    }
+    },
+        "materialsText": [
+        { "label": "Tzaangors", "value": "9" },
+        { "label": "Rubrician Frigates", "value": "3" },
+        { "label": "Rubric Marines", "value": "6" },
+        { "label": "Exalted Sorcerers", "value": "2" },
+        { "label": "Silver Towers", "value": "2" },
+        { "label": "Lords of Change", "value": "3" }
+    ]
 }

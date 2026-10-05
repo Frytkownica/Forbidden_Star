@@ -55,5 +55,13 @@
             "system_tile_front_1.jpg",
             "system_tile_back_1.jpg"
         ]
-    }
+    },
+        "materialsText": [
+        { "label": "Neophyte Hybrids", "value": "10" },
+        { "label": "Stolen Freighters", "value": "3" },
+        { "label": "Hybrid Metamorphs", "value": "6" },
+        { "label": "Purestrain Genestealers", "value": "5" },
+        { "label": "Stolen Battleships", "value": "2" },
+        { "label": "Patriarch", "value": "1" }
+    ]
 }

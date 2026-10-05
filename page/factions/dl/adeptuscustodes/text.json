@@ -59,5 +59,13 @@
             "system_tile_front_1.jpg",
             "system_tile_back_1.jpg"
         ]
-    }
+    },
+        "materialsText": [
+        { "label": "Custodian Guards", "value": "3" },
+        { "label": "Classified Cruisers", "value": "2" },
+        { "label": "Blade Champions", "value": "2" },
+        { "label": "Contemptor Galatus Dreadnoughts", "value": "2" },
+        { "label": "Moiraideis", "value": "3" },
+        { "label": "Trajann Valoris", "value": "1" }
+    ]
 }

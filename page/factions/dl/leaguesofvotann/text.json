@@ -58,5 +58,13 @@
             "system_tile_front_1.jpg",
             "system_tile_back_1.jpg"
         ]
-    }
+    },
+        "materialsText": [
+        { "label": "Hearthkyn Warriors", "value": "6" },
+        { "label": "Einhyr Hearthguards", "value": "6" },
+        { "label": "Bastion Commerce Vessels", "value": "5" },
+        { "label": "Hernkyn Pioneers", "value": "3" },
+        { "label": "Stronghold Commerce Vessels", "value": "3" },
+        { "label": "Hekaton Land Fortresses", "value": "3" }
+    ]
 }
