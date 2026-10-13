@@ -2,7 +2,7 @@
     "ordersText": [
         {
             "title": "CYBERNETIC AFFINITY",
-            "general": "After you resolve this order, you may either replace 1 Skitarii in the active system with 1 free Kataphron or destroy 1 of your units in the active system to purchase 1 additional upgrade card, reducing its materiel cost by the materiel cost of the destroyed unit. *newline* LIMIT ONCE PER ROUND."
+            "general": "When you reveal this order token, you may either replace 1 Skitarii in the active system with 1 free Kataphron or destroy 1 of your units in the active system to purchase 1 additional upgrade card, reducing its materiel cost by the materiel cost of the destroyed unit. *newline* LIMIT ONCE PER ROUND."
         },
         {
             "title": "MASTER OF THE MACHINES",
@@ -126,7 +126,7 @@
         [
             {
                 "title": "MACHINE SUPERIORITY",
-                "general": "Gain 1 [D], 2 (B), or 2 (S). *newpara* Spend 1 [M] to rally 1 of your units.",
+                "general": "Gain 1 [D], 2 (B), or 2 (S). *newpara* Spend 1 forge token to rally all of your units.",
                 "unit": "Onager/Ark Mechanicus: Choose [B], [S] or [M]. Force your opponent to convert up to 2 of the chosen dice to a different icon of your choice.",
                 "icons": "BSM"
             },
